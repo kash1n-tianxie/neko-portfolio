@@ -1,0 +1,207 @@
+import type { Metadata } from 'next'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { notFound } from 'next/navigation'
+import { Link } from '@/i18n/navigation'
+import { routing } from '@/i18n/routing'
+import { works } from '@/content/works'
+import { Footer } from '@/components/sections/footer'
+import { ArrowUpRightIcon } from '@/components/ui/icons'
+import { CaseStudyProgress } from '@/components/works/case-study-progress'
+import { ImageLightbox } from '@/components/works/image-lightbox'
+import { ProjectNextPreview } from '@/components/works/project-next-preview'
+import { TechStackChips } from '@/components/works/tech-stack-chips'
+
+export function generateStaticParams() {
+  return routing.locales.flatMap((locale) =>
+    works.map((work) => ({ locale, slug: work.slug })),
+  )
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>
+}): Promise<Metadata> {
+  const { locale, slug } = await params
+  const work = works.find((item) => item.slug === slug)
+  if (!work) return {}
+  const language = locale === 'en' ? 'en' : 'ja'
+  return {
+    title: `${work.title} | Kashin Ou`,
+    description: work.summary[language],
+  }
+}
+
+export default async function WorkPage({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>
+}) {
+  const { locale: rawLocale, slug } = await params
+  const locale = rawLocale === 'en' ? 'en' : 'ja'
+  setRequestLocale(locale)
+  const t = await getTranslations('caseStudy')
+  const work = works.find((item) => item.slug === slug)
+  if (!work) notFound()
+  const statusLabel = work.status === 'LIVE'
+    ? t('statusLive')
+    : work.status === 'ARCHIVED'
+      ? t('statusArchived')
+      : t('statusProgress')
+
+  return (
+    <main id="main-content" className="case-study">
+      <CaseStudyProgress label={t('progress')} />
+
+      <article>
+        <header className="case-hero">
+          <div className="mx-auto max-w-[1180px] px-[clamp(20px,6vw,64px)] pt-36 pb-20">
+            <Link href="/#works" className="case-back">
+              <span aria-hidden="true">←</span>
+              {t('back')}
+            </Link>
+
+            <div className="mt-14 grid gap-12 lg:grid-cols-[1fr_320px] lg:items-end">
+              <div>
+                <p className="font-mono m-0 text-[11px] tracking-[0.22em] text-accent">
+                  {work.tag} / {work.year}
+                </p>
+                <h1 className="case-title font-mincho m-0 mt-5 max-w-[16ch] text-[clamp(44px,9vw,108px)] font-extrabold leading-[0.95]">
+                  {work.title}
+                </h1>
+                <p className="m-0 mt-7 max-w-[62ch] text-[clamp(16px,2vw,20px)] leading-[1.9] text-muted">
+                  {work.summary[locale]}
+                </p>
+              </div>
+
+              <dl className="case-meta">
+                <div>
+                  <dt>{t('role')}</dt>
+                  <dd>{work.role?.[locale] ?? t('pending')}</dd>
+                </div>
+                <div>
+                  <dt>{t('status')}</dt>
+                  <dd>{statusLabel}</dd>
+                </div>
+                <div>
+                  <dt>{t('stack')}</dt>
+                  <dd><TechStackChips items={work.tech ?? []} /></dd>
+                </div>
+              </dl>
+            </div>
+
+            {(work.links?.demo || work.links?.itch || work.links?.repo || work.links?.video) && (
+              <div className="mt-10 flex flex-wrap gap-3">
+                {work.links.demo && (
+                  <a href={work.links.demo} target="_blank" rel="noopener noreferrer" className="cta">
+                    {t('liveDemo')} <ArrowUpRightIcon className="h-4 w-4" />
+                  </a>
+                )}
+                {work.links.itch && (
+                  <a href={work.links.itch} target="_blank" rel="noopener noreferrer" className="cta">
+                    {t('itch')} <ArrowUpRightIcon className="h-4 w-4" />
+                  </a>
+                )}
+                {work.links.repo && (
+                  <a href={work.links.repo} target="_blank" rel="noopener noreferrer" className="cta">
+                    GitHub <ArrowUpRightIcon className="h-4 w-4" />
+                  </a>
+                )}
+                {work.links.video && (
+                  <a href={work.links.video} target="_blank" rel="noopener noreferrer" className="cta">
+                    {t('video')} <ArrowUpRightIcon className="h-4 w-4" />
+                  </a>
+                )}
+              </div>
+            )}
+
+            <div className="case-cover">
+              <picture>
+                <source media="(prefers-reduced-motion: reduce)" srcSet={work.thumbnail} />
+                <img
+                  src={work.coverGif ?? work.thumbnail}
+                  alt={`${work.title} — ${work.summary[locale]}`}
+                  width="1200"
+                  height="800"
+                  decoding="async"
+                />
+              </picture>
+              <span aria-hidden="true">PROJECT / {work.year}</span>
+            </div>
+          </div>
+        </header>
+
+        <div className="mx-auto max-w-[1180px] px-[clamp(20px,6vw,64px)] py-[clamp(80px,12vw,150px)]">
+          {work.caseStudy ? (
+            <>
+              {work.caseStudy.highlights && work.caseStudy.highlights.length > 0 && (
+                <ul className="case-highlights" aria-label={t('highlights')}>
+                  {work.caseStudy.highlights.map((highlight, index) => (
+                    <li key={highlight[locale]}>
+                      <span>{String(index + 1).padStart(2, '0')}</span>
+                      <strong>{highlight[locale]}</strong>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              <div className="case-sections">
+                {[
+                  ['01', t('problem'), work.caseStudy.problem[locale]],
+                  ['02', t('challenge'), work.caseStudy.challenge[locale]],
+                  ['03', t('solution'), work.caseStudy.solution[locale]],
+                  ['04', t('result'), work.caseStudy.result[locale]],
+                ].map(([index, title, body]) => (
+                  <section key={index} className="case-section">
+                    <span className="case-section__index">{index}</span>
+                    <div>
+                      <h2 className="font-mincho m-0 text-[clamp(26px,4vw,46px)] font-bold">{title}</h2>
+                      <p className="m-0 mt-5 max-w-[70ch] whitespace-pre-line text-[15px] leading-[2] text-muted">
+                        {body}
+                      </p>
+                    </div>
+                  </section>
+                ))}
+              </div>
+            </>
+          ) : (
+            <section className="case-ready">
+              <p className="font-mono m-0 text-[10px] tracking-[0.22em] text-accent">
+                CASE STUDY / READY
+              </p>
+              <h2 className="font-mincho m-0 mt-3 text-[clamp(28px,4vw,48px)] font-bold">
+                {t('readyTitle')}
+              </h2>
+              <p className="m-0 mt-4 max-w-[56ch] text-[14px] text-muted">{t('readyBody')}</p>
+            </section>
+          )}
+
+          {work.gallery && work.gallery.length > 0 && (
+            <section className="mt-24" aria-labelledby="gallery-title">
+              <h2 id="gallery-title" className="font-mincho text-[clamp(26px,4vw,46px)]">
+                {t('gallery')}
+              </h2>
+              <ImageLightbox
+                items={work.gallery}
+                locale={locale}
+                closeLabel={t('close')}
+                openLabel={t('openImage')}
+              />
+            </section>
+          )}
+
+          <div className="mt-24">
+            <ProjectNextPreview
+              currentSlug={work.slug}
+              works={works}
+              label={t('next')}
+              fallbackLabel={t('back')}
+            />
+          </div>
+        </div>
+      </article>
+
+      <Footer />
+    </main>
+  )
+}
