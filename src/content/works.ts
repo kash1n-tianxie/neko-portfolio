@@ -357,6 +357,7 @@ export const works: Work[] = [
       ],
     },
     links: {
+      itch: 'https://kashin-ou.itch.io/orbit-defense',
       repo: 'https://github.com/kash1n-tianxie/Orbit-Defense',
       video: '/assets/works/orbit-defense-promo-15s.mp4',
     },
