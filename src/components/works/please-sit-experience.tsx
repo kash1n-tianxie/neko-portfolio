@@ -68,7 +68,7 @@ export function PleaseSitExperience({ locale }: { locale: 'ja' | 'en' }) {
               tabIndex={0}
               allow="autoplay; fullscreen; gamepad"
               allowFullScreen
-              onLoad={(event) => { setLoaded(true); event.currentTarget.focus({ preventScroll: true }) }}
+              onLoad={(event) => { setLoaded(true); setSlow(false); event.currentTarget.focus({ preventScroll: true }) }}
               onError={() => setSlow(true)}
             />
           ) : (
