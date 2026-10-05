@@ -40,7 +40,7 @@ export const tamagoWork: Work = {
       en: 'Playtest feedback that the game was text-heavy and hard to understand became the starting point. The redesign goes beyond removing copy: it replaces repetitive feeding with meals that players actively shape.',
     },
     challenge: {
-      ja: '操作を増やしすぎず、ランダムな5つの食材に「残す理由」と「並べ替える理由」を作ること。さらに、見た目が3回変わっても操作位置を保ち、初めて遊ぶ人が次の一手を見失わない構成を目指しました。',
+      ja: '操作を増やしすぎず、ランダムな5つの食材に「残す理由」と「並べ替える理由」を作ること。さらに、2回の進化で見た目が変わっても操作位置を保ち、初めて遊ぶ人が次の一手を見失わない構成を目指しました。',
       en: 'The challenge was giving players a reason to keep or reposition each of five random ingredients without piling on controls. Three visual eras also needed a consistent layout so that evolution would not hide the next action.',
     },
     solution: {
