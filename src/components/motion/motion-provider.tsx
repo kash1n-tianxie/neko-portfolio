@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { usePathname } from '@/i18n/navigation'
 
 /**
  * Motion layer L3: Lenis smooth scroll + one scroll-driven world timeline.
@@ -9,17 +10,34 @@ import { useEffect } from 'react'
  * prefers-reduced-motion — the site stays fully readable without it.
  *
  * Targets:
- *  - Hero: watching cat -> ink gate
+ *  - Hero: watching cat and restrained artwork parallax
  *  - [data-chapter]: subtle shared-camera entrance
  *  - [data-split]: per-character masked ink reveal
  */
 export function MotionProvider() {
+  const pathname = usePathname()
+  const [reducedMotion, setReducedMotion] = useState(true)
+
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const preference = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const updatePreference = () => setReducedMotion(preference.matches)
+    updatePreference()
+    preference.addEventListener('change', updatePreference)
+    return () => preference.removeEventListener('change', updatePreference)
+  }, [])
+
+  useEffect(() => {
+    if (pathname === '/world' || reducedMotion) return
     document.documentElement.classList.add('motion-ready')
 
     let disposed = false
-    let cleanup: (() => void) | undefined
+    const disposers: Array<() => void> = []
+    const cleanup = () => {
+      if (disposed) return
+      disposed = true
+      for (const dispose of disposers.reverse()) dispose()
+      document.documentElement.classList.remove('motion-ready')
+    }
 
     ;(async () => {
       const [{ default: Lenis }, { gsap }, { ScrollTrigger }, { SplitText }, { DrawSVGPlugin }] =
@@ -35,16 +53,22 @@ export function MotionProvider() {
       gsap.registerPlugin(ScrollTrigger, SplitText, DrawSVGPlugin)
 
       const lenis = new Lenis({ lerp: 0.12, anchors: true })
+      disposers.push(() => lenis.destroy())
       lenis.on('scroll', ScrollTrigger.update)
       const tick = (time: number) => lenis.raf(time * 1000)
       gsap.ticker.add(tick)
+      disposers.push(() => gsap.ticker.remove(tick))
       gsap.ticker.lagSmoothing(0)
 
       // wait for the mincho webfont so SplitText measures real glyphs
       await document.fonts.ready
       if (disposed) return
 
-      const ctx = gsap.context(() => {
+      const media = gsap.matchMedia()
+      disposers.push(() => media.revert())
+      const ctx = gsap.context(() => {})
+      disposers.push(() => ctx.revert())
+      ctx.add(() => {
         const hero = document.querySelector<HTMLElement>('[data-hero-story]')
         if (hero) {
           const awake = hero.querySelector<HTMLElement>('.hero-awake')
@@ -53,48 +77,44 @@ export function MotionProvider() {
           const art = hero.querySelector<HTMLElement>('[data-hero-art]')
           const ink = hero.querySelector<HTMLElement>('[data-hero-ink]')
           const kanji = hero.querySelector<HTMLElement>('[data-hero-kanji]')
-          const gate = hero.querySelector<HTMLElement>('[data-hero-gate]')
-          const gateLabel = hero.querySelector<HTMLElement>('[data-hero-gate-label]')
+          // Keep the short desktop departure local to the artwork. Mobile scrolls normally.
+          media.add('(min-width: 768px)', () => {
+            const heroTl = gsap.timeline({
+              defaults: { ease: 'none' },
+              scrollTrigger: {
+                trigger: hero,
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 0.5,
+                invalidateOnRefresh: true,
+              },
+            })
 
-          gsap.set(gate, { autoAlpha: 0, clipPath: 'inset(100% 0 0 0)' })
-          gsap.set(gateLabel, { autoAlpha: 0, yPercent: 28 })
-
-          const heroTl = gsap.timeline({
-            defaults: { ease: 'none' },
-            scrollTrigger: {
-              trigger: hero,
-              start: 'top top',
-              end: 'bottom bottom',
-              scrub: 0.85,
-              invalidateOnRefresh: true,
-            },
+            heroTl
+              .to(art, { scale: 1.04, duration: 1 }, 0)
+              .to(ink, { autoAlpha: 0.65, duration: 1 }, 0)
+              .to(kanji, { yPercent: -4, duration: 1 }, 0)
+              .to(details, { autoAlpha: 0.5, y: -8, duration: 0.5 }, 0.5)
+              .to(title, { y: -18, duration: 1 }, 0)
+              .to(awake, { y: -12, scale: 0.97, duration: 1 }, 0)
           })
-
-          heroTl
-            .to(art, { scale: 1.055, xPercent: -1, duration: 0.58 }, 0.12)
-            .to(ink, { scale: 1.08, rotate: 0.8, duration: 0.58 }, 0.12)
-            .to(kanji, { xPercent: -5, yPercent: -3, rotate: -1.2, duration: 0.48 }, 0.2)
-            .to(details, { autoAlpha: 0, y: -20, duration: 0.18, stagger: 0.016 }, 0.48)
-            .to(title, { scale: 0.82, yPercent: -14, xPercent: -1, duration: 0.22 }, 0.48)
-            .to(awake, { autoAlpha: 0, xPercent: 24, yPercent: 10, scale: 0.9, duration: 0.22 }, 0.5)
-            .to(gate, { autoAlpha: 1, clipPath: 'inset(0% 0 0 0)', duration: 0.22 }, 0.72)
-            .to(gateLabel, { autoAlpha: 1, yPercent: 0, duration: 0.14, ease: 'power3.out' }, 0.84)
         }
 
-        document.querySelectorAll<HTMLElement>('[data-chapter]').forEach((chapter) => {
+        // Animate headings, never a whole long chapter or footer: transforms distort
+        // scroll limits and can leave the footer unreachable with smooth scrolling.
+        document.querySelectorAll<HTMLElement>('[data-chapter] > div > h2').forEach((chapter) => {
           gsap.fromTo(
             chapter,
-            { y: 76, scale: 0.985, autoAlpha: 0.58 },
+            { y: 18, autoAlpha: 0.7 },
             {
               y: 0,
-              scale: 1,
               autoAlpha: 1,
               ease: 'none',
               scrollTrigger: {
                 trigger: chapter,
                 start: 'top 92%',
                 end: 'top 38%',
-                scrub: 0.7,
+                scrub: 0.4,
               },
             },
           )
@@ -146,20 +166,13 @@ export function MotionProvider() {
 
         ScrollTrigger.refresh()
       })
+    })().catch(() => {
+      // Failed optional enhancements must restore the readable static page.
+      cleanup()
+    })
 
-      cleanup = () => {
-        ctx.revert()
-        gsap.ticker.remove(tick)
-        lenis.destroy()
-      }
-    })()
-
-    return () => {
-      disposed = true
-      cleanup?.()
-      document.documentElement.classList.remove('motion-ready')
-    }
-  }, [])
+    return cleanup
+  }, [pathname, reducedMotion])
 
   return null
 }

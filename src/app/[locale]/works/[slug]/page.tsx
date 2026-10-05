@@ -10,6 +10,7 @@ import { CaseStudyProgress } from '@/components/works/case-study-progress'
 import { ImageLightbox } from '@/components/works/image-lightbox'
 import { ProjectNextPreview } from '@/components/works/project-next-preview'
 import { TechStackChips } from '@/components/works/tech-stack-chips'
+import { HyakkiCredits, HyakkiExperience } from '@/components/works/hyakki-experience'
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
@@ -26,6 +27,17 @@ export async function generateMetadata({
   const work = works.find((item) => item.slug === slug)
   if (!work) return {}
   const language = locale === 'en' ? 'en' : 'ja'
+  if (work.slug === 'hyakki-lantern') {
+    const title = `${language === 'en' ? 'Hyakki Lantern City (百鬼灯市)' : '百鬼灯市'} | Kashin Ou`
+    const canonical = `https://kashin.ink/${language === 'en' ? 'en/' : ''}works/hyakki-lantern`
+    return {
+      title,
+      description: work.summary[language],
+      alternates: { canonical, languages: { ja: 'https://kashin.ink/works/hyakki-lantern', en: 'https://kashin.ink/en/works/hyakki-lantern' } },
+      openGraph: { title, description: work.summary[language], url: canonical, type: 'website', images: [{ url: 'https://kashin.ink/assets/works/hyakki-lantern/cover.webp', width: 1408, height: 1117, alt: '百鬼灯市 — Hyakki Lantern City' }] },
+      twitter: { card: 'summary_large_image', title, description: work.summary[language], images: ['https://kashin.ink/assets/works/hyakki-lantern/cover.webp'] },
+    }
+  }
   return {
     title: `${work.title} | Kashin Ou`,
     description: work.summary[language],
@@ -43,14 +55,15 @@ export default async function WorkPage({
   const t = await getTranslations('caseStudy')
   const work = works.find((item) => item.slug === slug)
   if (!work) notFound()
-  const statusLabel = work.status === 'LIVE'
+  const isHyakki = work.slug === 'hyakki-lantern'
+  const statusLabel = work.releaseLabel?.[locale] ?? (work.status === 'LIVE'
     ? t('statusLive')
     : work.status === 'ARCHIVED'
       ? t('statusArchived')
-      : t('statusProgress')
+      : t('statusProgress'))
 
   return (
-    <main id="main-content" className="case-study">
+    <main id="main-content" className={`case-study${isHyakki ? ' case-study--hyakki' : ''}`}>
       <CaseStudyProgress label={t('progress')} />
 
       <article>
@@ -69,6 +82,7 @@ export default async function WorkPage({
                 <h1 className="case-title font-mincho m-0 mt-5 max-w-[16ch] text-[clamp(44px,9vw,108px)] font-extrabold leading-[0.95]">
                   {work.title}
                 </h1>
+                {isHyakki && <p className="hyakki-subtitle">HYAKKI LANTERN CITY / 2048 × AUTO DEFENSE</p>}
                 <p className="m-0 mt-7 max-w-[62ch] text-[clamp(16px,2vw,20px)] leading-[1.9] text-muted">
                   {work.summary[locale]}
                 </p>
@@ -92,6 +106,7 @@ export default async function WorkPage({
 
             {(work.links?.demo || work.links?.itch || work.links?.repo || work.links?.video) && (
               <div className="mt-10 flex flex-wrap gap-3">
+                {isHyakki && <a href="#play" className="cta">{locale === 'ja' ? '無料体験版を遊ぶ' : 'Try the free demo'}<span aria-hidden="true">↓</span></a>}
                 {work.links.demo && (
                   <a href={work.links.demo} target="_blank" rel="noopener noreferrer" className="cta">
                     {t('liveDemo')} <ArrowUpRightIcon className="h-4 w-4" />
@@ -99,7 +114,7 @@ export default async function WorkPage({
                 )}
                 {work.links.itch && (
                   <a href={work.links.itch} target="_blank" rel="noopener noreferrer" className="cta">
-                    {t('itch')} <ArrowUpRightIcon className="h-4 w-4" />
+                    {isHyakki ? (locale === 'ja' ? 'itch.ioで遊ぶ・ダウンロード' : 'Play or download on itch.io') : t('itch')} <ArrowUpRightIcon className="h-4 w-4" />
                   </a>
                 )}
                 {work.links.repo && (
@@ -121,17 +136,18 @@ export default async function WorkPage({
                 <img
                   src={work.coverGif ?? work.thumbnail}
                   alt={`${work.title} — ${work.summary[locale]}`}
-                  width="1200"
-                  height="800"
+                  width={isHyakki ? 1440 : 1200}
+                  height={isHyakki ? 900 : 800}
                   decoding="async"
                 />
               </picture>
-              <span aria-hidden="true">PROJECT / {work.year}</span>
+              <span aria-hidden="true">{isHyakki ? 'ACTUAL GAMEPLAY / v0.6.0' : `PROJECT / ${work.year}`}</span>
             </div>
           </div>
         </header>
 
         <div className="mx-auto max-w-[1180px] px-[clamp(20px,6vw,64px)] py-[clamp(80px,12vw,150px)]">
+          {isHyakki && <HyakkiExperience locale={locale} />}
           {work.caseStudy ? (
             <>
               {work.caseStudy.highlights && work.caseStudy.highlights.length > 0 && (
@@ -189,6 +205,8 @@ export default async function WorkPage({
               />
             </section>
           )}
+
+          {isHyakki && <div className="mt-24"><HyakkiCredits locale={locale} /></div>}
 
           <div className="mt-24">
             <ProjectNextPreview

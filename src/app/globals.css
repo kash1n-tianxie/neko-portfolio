@@ -165,7 +165,7 @@ button {
 .hero-story {
   min-height: 100svh;
 }
-.motion-ready .hero-story {
+.motion-ready .hero-story:not(.editorial-hero) {
   height: 185svh;
 }
 .hero-stage {
@@ -436,8 +436,8 @@ html.ink-cursor-active * {
 
 /* ---------- hero entrance (CSS only, instant content) ---------- */
 .hero-enter {
-  opacity: 0;
-  animation: heroEnter 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 1;
+  animation: heroEnter 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 @keyframes heroEnter {
   from {
@@ -1458,6 +1458,22 @@ html.ink-cursor-active * {
 }
 
 /* ---------- reduced motion ---------- */
+.ink-cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+.ink-cursor-ring[data-active='true'] { opacity: .65; }
+@media (pointer: coarse), (prefers-reduced-motion: reduce) { .ink-cursor-ring { display: none; } }
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -1546,10 +1562,10 @@ html.ink-cursor-active * {
 }
 
 @media (max-width: 767px) {
-  .motion-ready .hero-story {
+  .motion-ready .hero-story:not(.editorial-hero) {
     height: 175svh;
   }
-  .hero-copy {
+  .hero-copy:not(.editorial-hero__copy) {
     padding-bottom: 32svh;
   }
   .hero-awake {
@@ -1562,7 +1578,7 @@ html.ink-cursor-active * {
     bottom: 24px !important;
     transform: none !important;
   }
-  .hero-copy > p:first-child {
+  .hero-copy:not(.editorial-hero__copy) > p:first-child {
     max-width: 31ch;
     font-size: 11px;
     letter-spacing: 0.22em;

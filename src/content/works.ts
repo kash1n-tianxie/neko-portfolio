@@ -1,3 +1,5 @@
+import { hyakkiLanternWork } from './hyakki-lantern'
+
 export type L10n = { ja: string; en: string }
 
 export type WorkGalleryItem = {
@@ -22,6 +24,7 @@ export type Work = {
   role?: L10n
   tech?: string[]
   status?: 'LIVE' | 'IN_PROGRESS' | 'ARCHIVED'
+  releaseLabel?: L10n
   /** 3:2 thumbnail, put the file at /public/assets/works/<slug>.webp */
   thumbnail: string
   /** Animated 3:2 cover used by the project card; thumbnail remains the reduced-motion fallback. */
@@ -36,6 +39,7 @@ export type Work = {
  * カード、フィルター、詳細ページ、ギャラリーはこの配列から自動生成される。
  */
 export const works: Work[] = [
+  hyakkiLanternWork,
   {
     slug: 'tamago-exe',
     tag: 'GAME',

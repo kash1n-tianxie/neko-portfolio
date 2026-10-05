@@ -1,0 +1,35 @@
+.world-toolbar { position: absolute; z-index: 30; left: 24px; top: 80px; display: flex; gap: 8px; }
+.world-tool { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: 8px; padding: 0 14px; border: 1px solid #655d4d35; background: #faf7efe8; color: #34352d; font: 12px var(--font-mono), monospace; letter-spacing: .07em; cursor: pointer; backdrop-filter: blur(8px); transition: background .2s, color .2s; }
+.world-tool:hover, .world-tool[aria-expanded="true"] { background: #2c3028; color: #faf7ef; }
+.world-tool:focus-visible, .world-dialog button:focus-visible, .world-dialog a:focus-visible { outline: 2px solid #a62c22; outline-offset: 4px; }
+.world-tool svg { width: 16px; height: 16px; flex-shrink: 0; }
+.world-modal-backdrop { position: absolute; z-index: 50; inset: 0; display: grid; place-items: center; padding: 24px; background: #22271f55; backdrop-filter: blur(6px); }
+.world-dialog { width: min(780px, 100%); max-height: calc(100dvh - 48px); overflow: auto; padding: 28px; border: 1px solid #766c5140; background: #f7f3e8; color: #272b23; box-shadow: 0 24px 100px #1c261e30; }
+.world-dialog-head { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; padding-bottom: 22px; border-bottom: 1px solid #766c5130; }
+.world-dialog-kicker { margin: 0 0 8px; color: #ad3025; font: 10px var(--font-mono), monospace; letter-spacing: .2em; }
+.world-dialog h2 { margin: 0; font-size: clamp(24px, 4vw, 34px); font-weight: 700; line-height: 1.3; }
+.world-dialog-close { display: grid; flex-shrink: 0; width: 44px; height: 44px; place-items: center; border: 1px solid #766c5140; background: transparent; color: inherit; cursor: pointer; font-size: 22px; }
+.world-map-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; padding-top: 24px; }
+.world-map-drawing { position: relative; min-height: 270px; background: #e8e9dc; border: 1px solid #766c5120; }
+.world-map-drawing svg { display: block; width: 100%; height: 300px; }
+.world-map-position { display: flex; justify-content: center; gap: 8px; align-items: center; padding: 12px; font: 11px var(--font-mono), monospace; }
+.world-map-position i { width: 10px; height: 10px; border: 1px solid #252720; border-radius: 50%; background: white; }
+.world-destinations p { margin: 0 0 16px; font-size: 12px; line-height: 1.8; color: #5c6154; }
+.world-destinations button { display: flex; width: 100%; min-height: 46px; align-items: center; gap: 12px; border: 0; border-bottom: 1px solid #766c5130; background: transparent; color: #272b23; text-align: left; font-size: 13px; cursor: pointer; }
+.world-destinations button:hover { color: #aa3025; background: #fff9ed; }
+.world-destinations button > :last-child { margin-left: auto; }
+.world-destination-number { width: 24px; font: 11px var(--font-mono), monospace; color: #aa3025; }
+.world-featured-status { display: inline-block; margin-top: 28px; border: 1px solid #ad302540; padding: 6px 10px; font: 10px var(--font-mono), monospace; color: #ad3025; letter-spacing: .15em; }
+.world-featured-copy { max-width: 54ch; margin: 18px 0 0; font-size: 15px; line-height: 1.9; }
+.world-featured-note { margin: 20px 0 0; border-top: 1px solid #766c5130; padding-top: 20px; font-size: 13px; line-height: 1.9; color: #65695c; }
+.world-help-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 24px 0; }
+.world-help-grid > div { border: 1px solid #766c5125; padding: 16px; font-size: 13px; line-height: 1.8; }
+.world-help-grid p { margin: 0; }
+.world-settings { display: flex; flex-wrap: wrap; gap: 10px; padding-top: 20px; border-top: 1px solid #766c5130; }
+.world-settings .world-tool[aria-pressed="true"] { border-color: #a62c22; color: #a62c22; }
+.world-help-note { margin: 20px 0 0; color: #626858; font-size: 12px; line-height: 1.8; }
+.world-arrival { position: absolute; z-index: 40; inset: 0; pointer-events: none; background: #f7f3e8; animation: world-arrive .38s ease-out forwards; }
+@keyframes world-arrive { from { opacity: .9; } to { opacity: 0; } }
+@media (max-width: 640px) { .world-toolbar { left: 16px; top: 75px; gap: 6px; } .world-tool { padding: 0 12px; font-size: 11px; } .world-modal-backdrop { padding: 12px; } .world-dialog { padding: 20px; max-height: calc(100dvh - 24px); } .world-map-layout { grid-template-columns: 1fr; gap: 14px; } .world-map-drawing { min-height: 0; } .world-map-drawing svg { height: 200px; } .world-map-position { padding: 4px 8px 10px; } .world-help-grid { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .world-progress { flex-direction: row !important; gap: 6px !important; } .world-progress > div { padding: 5px 8px; } .world-progress > div > span:first-child { font-size: 8px; letter-spacing: .02em; } .world-progress > div > span:last-child { font-size: 14px; } }
+@media (prefers-reduced-motion: reduce) { .world-arrival { animation: none; background: transparent; } .world-tool { transition: none; } }

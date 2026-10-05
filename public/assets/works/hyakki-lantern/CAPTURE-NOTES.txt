@@ -1,0 +1,98 @@
+百鬼灯市 / Hyakki Lantern City — v0.6.0 gameplay montage
+Captured: 2026-10-06 (Japan time)
+
+FILES
+- hyakki-lantern-gameplay.mp4: 38.000-second real gameplay digest, 1280 x 800, 30 fps.
+- poster.jpg: a frame extracted from the final encoded video at 28.2 seconds; no painted or fabricated HUD.
+- capture-metadata.json: exact model states, input seed, skill events and balance hash.
+- encoding-metadata.json: ffprobe stream/container inspection.
+
+WHAT THE VIDEO SHOWS
+This is an editorial montage of three intervals from one normal mainline run,
+not an uninterrupted human playthrough. The on-screen caption explicitly says
+「プレイダイジェスト / GAMEPLAY MONTAGE」 throughout the video.
+
+Output 00:00–00:12: simulation 00:20–00:32, 60–96 valid moves, highest 64→128.
+Output 00:12–00:24: simulation 01:52–02:04, 336–372 moves, highest 512;
+                     Freeze and Rally use earned currency at move 350.
+Output 00:24–00:38: simulation 05:39–05:53, 1017–1059 moves, highest 1024→2048;
+                     the naturally triggered final Boss takes actual damage.
+Edit boundaries are rounded to video frames (up to 1 frame / 0.034 s difference).
+The final Boss is still alive at the end; the video does not claim victory.
+
+AUTHENTICITY AND CAPTURE
+Production Godot 4.7 game model and MainScene, seed 207, normal mode, no training.
+The corner heuristic chooses a legal direction at 3 inputs per simulated second.
+Each candidate move is evaluated only after discarding its random spawn, so the
+policy does not know the next random birth. This is automated demonstration play.
+
+Every model step is 1/30 second. Intervals between the three selected clips are
+simulated offline without recording. The filmed intervals use 1 simulated second
+per 1 video second. Moves enter queue_move; skills enter queue_item and cost their
+normal earned gold. The tool never sets board cells, HP, gold, enemy state, damage,
+threat thresholds, Boss state or random outcomes in the live model.
+
+The same production rendering code draws real movement, merges, spawns, combat,
+health bars, spells and the Japanese UI. Game logic keeps running during recording;
+no pause menu is used. Only the small bilingual montage/section caption is added.
+No AI-generated gameplay motion, external compositing, fake HUD or image retouching.
+The game itself uses its existing released visual and audio assets.
+
+AUDIO AND EDITING
+Godot Movie Maker records the game's actual AudioStreamPlayer output: merge,
+attack, summon and skill effects, plus the two in-game BGM tracks. Capture does not
+rewrite the user's sound settings. It uses presentation volumes 0.55 music / 0.70 FX.
+BGM playback seeks to the simulated run time at the two labelled editorial cuts.
+There is no voice-over or added third-party soundtrack.
+
+Editing: hard cuts between the three real intervals; opening video fade 0.18 s;
+opening audio fade 0.10 s; ending picture/audio fade 0.50 s; uniform audio gain +7 dB.
+The source game music and effects are mixed and AAC encoded for this video.
+No gameplay is sped up inside the shown intervals.
+
+MUSIC ATTRIBUTION — retain with any website upload or video redistribution
+“Taiko drums” by jobro — https://freesound.org/people/jobro/sounds/112248/
+Licensed under CC BY 3.0: https://creativecommons.org/licenses/by/3.0/
+Seamless-loop edit and OGG encoding by congusbongus:
+https://opengameart.org/content/taiko-drums-seamless-loop
+Used as boss_ritual.ogg. For this gameplay video the track is excerpted, mixed with
+game sounds, gain-adjusted, faded and encoded to AAC. No endorsement is implied.
+
+“Asianoriental1” by Tozan — https://opengameart.org/content/asianoriental1
+CC0 1.0 Universal: https://creativecommons.org/publicdomain/zero/1.0/
+Used as lantern_night.ogg, excerpted and mixed in this video. Credit is voluntary.
+
+Game effects and summon cues are project-generated audio. Full source notes and
+license texts: game/assets/audio/music/SOURCE-LICENSES.md, CC-BY-3.0.txt, CC0-1.0.txt.
+A website may link this file prominently beside the player as the full attribution.
+
+REPRODUCE FROM PROJECT ROOT
+bash game/tools/make_gameplay_video.sh
+
+Requirements: Godot 4.7 with the native macOS renderer; FFmpeg/ffprobe with libx264.
+Default executable paths are /opt/homebrew/bin/{godot,ffmpeg,ffprobe}; override with
+GODOT_BIN, FFMPEG_BIN, FFPROBE_BIN if needed. Imported project assets are required.
+The capture tool is game/tools/capture_gameplay_video.gd. A headless -- --scan option
+runs the same progression to validate clip states, without making video.
+
+The shell script writes a temporary Movie Maker AVI into a unique temporary folder,
+encodes an H.264 yuv420p / BT.709 limited-range MP4 with AAC stereo 48 kHz, enables
+faststart, saves the poster and ffprobe metadata, then deletes the intermediate AVI.
+Product code, exported game builds and website files are not changed by capture.
+
+VALIDATION
+Final checks are recorded in game/captures/video-recording.log,
+video-encode.log, video-audio-check.log, and video-loudness.log.
+
+FINAL CHECKS (2026-10-06)
+38.000 seconds; 1,140 video frames; H.264 High profile, yuv420p, BT.709
+limited range, 1280 x 800 at 30 fps; AAC-LC stereo, 48 kHz.
+Final file size: 16261110 bytes (16.26 MB decimal). MP4 moov precedes mdat (faststart).
+Full video/audio decoding: zero errors. Godot recording: zero warnings/errors.
+Measured final audio: -21.0 LUFS integrated; -2.2 dBFS sample peak; no clipping.
+Actual extracted frames inspected at 5.2, 16.7, 28.2 and 37.0 seconds: Japanese
+HUD, mini-board, skill feedback, Boss HP and the natural 2048 merge are visible.
+The last section ends with a living final Boss, not a manufactured victory.
+No manual listening claim: audio checks establish real signal, level and decodability.
+The Movie Maker AVI intermediates have been deleted.
+SHA256SUMS.txt identifies this final delivery.

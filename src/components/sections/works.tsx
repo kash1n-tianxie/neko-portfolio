@@ -4,6 +4,8 @@ import { Reveal } from '../reveal'
 import { WorksGallery } from '../works/works-gallery'
 import { BrushUnderline } from '../motion/brush-underline'
 import { ArrowUpRightIcon } from '../ui/icons'
+import { FeaturedWorks } from '../works/featured-works'
+import '../works/works-showcase.css'
 
 export async function Works() {
   const t = await getTranslations('works')
@@ -34,10 +36,21 @@ export async function Works() {
         </div>
       </Reveal>
 
+      <FeaturedWorks locale={locale} />
+
+      <div className="works-archive-heading">
+        <div>
+          <p className="works-archive-heading__label">MORE EXPLORATIONS</p>
+          <h3>{locale === 'ja' ? 'このほかにも、小さな実験を。' : 'And a few more experiments.'}</h3>
+        </div>
+        <p>{locale === 'ja' ? 'ゲーム、Web、研究。つくりながら、広げてきたこと。' : 'Games, the web, and research. Ideas explored through making.'}</p>
+      </div>
+
       <Reveal delay={40}>
         <WorksGallery
-          works={works}
+          works={works.filter((work) => !['tamago-exe', 'hyakki-lantern'].includes(work.slug))}
           locale={locale}
+          compact
           labels={{
             filters: {
               ALL: t('filterAll'),

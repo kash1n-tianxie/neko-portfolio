@@ -16,16 +16,18 @@ export function ProjectCard({
   locale,
   index,
   labels,
+  compact = false,
 }: {
   work: Work
   locale: 'ja' | 'en'
   index: number
   labels: ProjectCardLabels
+  compact?: boolean
 }) {
   const status = work.status ?? 'IN_PROGRESS'
 
   return (
-    <article className="project-card group">
+    <article className={`project-card group${compact ? ' project-card--compact' : ''}`}>
       <Link
         href={`/works/${work.slug}`}
         className="project-card__media"
@@ -57,22 +59,22 @@ export function ProjectCard({
           <span className="font-mono text-[10px] tracking-[0.2em] text-accent">
             {work.tag} / {work.year}
           </span>
-          {work.role && (
+          {work.role && !compact && (
             <span className="text-right text-[11px] text-muted">{work.role[locale]}</span>
           )}
         </div>
 
-        <h3 className="font-mincho m-0 mt-3 text-[clamp(22px,3vw,32px)] font-bold leading-tight">
+        <h3 className="project-card__title font-mincho m-0 mt-3 text-[clamp(22px,3vw,32px)] font-bold leading-tight">
           <Link href={`/works/${work.slug}`} className="text-ink no-underline" data-canvas-transition>
             {work.title}
           </Link>
         </h3>
-        <p className="m-0 mt-3 max-w-[58ch] text-[14px] leading-[1.85] text-muted">
+        <p className="project-card__summary m-0 mt-3 max-w-[58ch] text-[14px] leading-[1.85] text-muted">
           {work.summary[locale]}
         </p>
-        <TechStackChips items={work.tech ?? []} className="mt-5" />
+        <TechStackChips items={compact ? (work.tech ?? []).slice(0, 3) : (work.tech ?? [])} className="mt-5" />
 
-        <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-line-soft pt-5">
+        <div className="project-card__actions mt-7 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-line-soft pt-5">
           <Link
             href={`/works/${work.slug}`}
             className="project-card__link text-ink"

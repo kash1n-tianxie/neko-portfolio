@@ -1,9 +1,10 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { Link, useRouter } from '@/i18n/navigation'
 import { works, githubUrl } from '@/content/works'
+import { featuredWorks, type FeaturedWork } from '@/content/featured-works'
 import { email, languages, pr, skills, timeline } from '@/content/profile'
 import {
   NekoWorld,
@@ -12,6 +13,9 @@ import {
   type InteractKind,
   type PromptTarget,
 } from './engine/engine'
+import { WorldMap } from './world-map'
+import { WORLD_DESTINATIONS, type WorldDestinationId, type WorldPosition } from './destinations'
+import './world-ui.css'
 
 type PanelId = 'skills' | 'about' | 'contact'
 
@@ -31,6 +35,7 @@ const PROMPT_KEYS: Record<InteractKind, string> = {
   kitten: 'promptKitten',
   viewpoint: 'promptViewpoint',
   milestone: 'promptMilestone',
+  featured: 'promptFeatured',
 }
 
 const NPC_KEYS: Record<string, { name: string; lines: string }> = {
@@ -46,6 +51,7 @@ const KITTEN_KEYS: Record<string, string> = {
 }
 
 const TOTAL_KITTENS = 3
+const worldWorks = works.filter((work) => work.slug !== 'tamago-exe' && work.slug !== 'hyakki-lantern')
 
 type Dialogue = { name: string; lines: string[]; index: number }
 
@@ -78,6 +84,17 @@ export function NekoWorld3D() {
   const [revealing, setRevealing] = useState(false)
   const [locked, setLocked] = useState(false)
   const [showControls, setShowControls] = useState(false)
+  const [mapOpen, setMapOpen] = useState(false)
+  const [helpOpen, setHelpOpen] = useState(false)
+  const [featuredId, setFeaturedId] = useState<FeaturedWork['id'] | null>(null)
+  const [position, setPosition] = useState<WorldPosition>({ x: 0, z: 27, heading: Math.PI / 2 })
+  const [goldenHour, setGoldenHour] = useState(false)
+  const [lowPower, setLowPower] = useState(false)
+  const [reducedMotion, setReducedMotion] = useState(false)
+  const [arrival, setArrival] = useState(0)
+  const mapOpenRef = useRef(false)
+
+  useEffect(() => { mapOpenRef.current = mapOpen }, [mapOpen])
 
   const toastTimer = useRef<number>(0)
   const showToast = useCallback((text: string) => {
@@ -139,12 +156,17 @@ export function NekoWorld3D() {
     const canvas = canvasRef.current
     if (!canvas) return
     setCoarse(window.matchMedia('(pointer: coarse)').matches)
+    setLowPower(window.innerWidth < 768)
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setReducedMotion(motionQuery.matches)
+    const updateMotion = (event: MediaQueryListEvent) => setReducedMotion(event.matches)
+    motionQuery.addEventListener('change', updateMotion)
 
     let engine: NekoWorld
     try {
       engine = new NekoWorld(
         canvas,
-        works.map((w) => ({ slug: w.slug, tag: w.tag })),
+        worldWorks.map((w) => ({ slug: w.slug, tag: w.tag })),
         {
           onPrompt: (target) => setPrompt(target),
           onFishing: (phase: FishingPhase, note?: FishingNote) => {
@@ -165,22 +187,28 @@ export function NekoWorld3D() {
           onMilestone: (index) => setMilestone(index),
           onReveal: (active) => setRevealing(active),
           onPointerLock: (isLocked) => setLocked(isLocked),
+          onFeatured: (id) => setFeaturedId(id),
+          onPosition: (next) => { if (mapOpenRef.current) setPosition(next) },
         },
+        { locale },
       )
     } catch {
       setWebglFailed(true)
+      motionQuery.removeEventListener('change', updateMotion)
       return
     }
     engineRef.current = engine
     engine.run()
     return () => {
       engine.dispose()
+      motionQuery.removeEventListener('change', updateMotion)
+      window.clearTimeout(toastTimer.current)
       engineRef.current = null
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const overlayOpen = panel !== null || caughtSlug !== null || dialogue !== null || milestone !== null
+  const overlayOpen = panel !== null || caughtSlug !== null || dialogue !== null || milestone !== null || mapOpen || helpOpen || featuredId !== null
 
   useEffect(() => {
     engineRef.current?.setUIOpen(!started || overlayOpen)
@@ -190,6 +218,7 @@ export function NekoWorld3D() {
   useEffect(() => {
     if (kittens.size >= TOTAL_KITTENS) {
       engineRef.current?.setGoldenHour(true)
+      setGoldenHour(true)
       showToast(t('kittensAllFound'))
     }
   }, [kittens, t, showToast])
@@ -213,7 +242,10 @@ export function NekoWorld3D() {
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        if (caughtSlug) closeCaught()
+        if (mapOpen) setMapOpen(false)
+        else if (helpOpen) setHelpOpen(false)
+        else if (featuredId) setFeaturedId(null)
+        else if (caughtSlug) closeCaught()
         else if (panel) setPanel(null)
         else if (milestone !== null) setMilestone(null)
         else if (dialogue) setDialogue(null)
@@ -226,14 +258,46 @@ export function NekoWorld3D() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [caughtSlug, panel, dialogue, milestone, closeCaught, advanceDialogue])
+  }, [caughtSlug, panel, dialogue, milestone, mapOpen, helpOpen, featuredId, closeCaught, advanceDialogue])
+
+  useEffect(() => {
+    if (!started) return
+    const timeout = window.setTimeout(() => setShowControls(false), 9000)
+    return () => window.clearTimeout(timeout)
+  }, [started])
 
   const start = () => {
     setStarted(true)
     setShowControls(true)
-    window.setTimeout(() => setShowControls(false), 9000)
     engineRef.current?.start()
   }
+
+  const openMap = () => {
+    const current = engineRef.current?.getPosition()
+    if (current) setPosition(current)
+    setMapOpen(true)
+  }
+
+  const travel = (id: WorldDestinationId) => {
+    setMapOpen(false)
+    engineRef.current?.travelTo(id)
+    requestAnimationFrame(() => canvasRef.current?.focus())
+    const destination = WORLD_DESTINATIONS.find((item) => item.id === id)!
+    showToast(t('arrivalMessage', { place: t(destination.labelKey) }))
+    if (!reducedMotion) setArrival((value) => value + 1)
+  }
+
+  const toggleGolden = () => {
+    setGoldenHour((current) => {
+      engineRef.current?.setGoldenHour(!current)
+      return !current
+    })
+  }
+
+  const featuredWork = featuredWorks.find((work) => work.id === featuredId)
+  const featuredTitle = featuredWork?.id === '2048' && locale === 'en'
+    ? 'Hyakki Lantern City'
+    : featuredWork?.title
 
   const caughtWork = caughtSlug ? works.find((w) => w.slug === caughtSlug) : null
 
@@ -249,7 +313,7 @@ export function NekoWorld3D() {
     <div className="fixed inset-0 z-[60] bg-[#e8e6dd] text-ink">
       <canvas
         ref={canvasRef}
-        tabIndex={0}
+        tabIndex={overlayOpen ? -1 : 0}
         aria-label={locale === 'ja' ? '猫の3D世界' : '3D cat world'}
         className="absolute inset-0 h-full w-full outline-none"
       />
@@ -274,21 +338,21 @@ export function NekoWorld3D() {
       {/* ---------- 常時 HUD ---------- */}
       {started && !revealing && (
         <>
-          <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between gap-3 p-4 md:p-6">
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-30 flex items-start justify-between gap-3 p-4 md:p-6">
             <Link
               href="/"
-              className="pointer-events-auto border border-line bg-surface/80 px-4 py-2 font-mono text-[11px] tracking-[0.18em] text-muted backdrop-blur-sm transition-colors hover:text-ink"
+              className="pointer-events-auto inline-flex min-h-11 items-center border border-line bg-surface/90 px-4 py-2 font-mono text-[11px] tracking-[0.18em] text-muted backdrop-blur-sm transition-colors hover:text-ink"
             >
               ← {t('back')}
             </Link>
-            <div className="flex flex-col items-end gap-2">
+            <div className="world-progress flex flex-col items-end gap-2">
               <div className="border border-line bg-surface/80 px-4 py-2 text-right backdrop-blur-sm">
                 <span className="font-mono block text-[9px] tracking-[0.2em] text-muted">
                   {t('progress')}
                 </span>
                 <span className="font-display text-[17px] tracking-[0.1em]">
                   {caughtSet.size}
-                  <span className="text-muted"> / {works.length}</span>
+                  <span className="text-muted"> / {worldWorks.length}</span>
                 </span>
               </div>
               <div className="border border-line bg-surface/80 px-4 py-2 text-right backdrop-blur-sm">
@@ -303,9 +367,18 @@ export function NekoWorld3D() {
             </div>
           </div>
 
+          <nav className="world-toolbar" aria-label={t('toolsLabel')}>
+            <button type="button" className="world-tool" aria-expanded={mapOpen} onClick={openMap}>
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2zM9 3v16M15 5v16" /></svg>
+              {t('mapTitle')}
+            </button>
+            <button type="button" className="world-tool" aria-expanded={helpOpen} onClick={() => setHelpOpen(true)}>{t('helpTitle')}</button>
+            <button type="button" className="world-tool" aria-label={t('respawnLabel')} onClick={() => travel('entry')}>↺ {t('respawn')}</button>
+          </nav>
+
           {/* 操作の手引き（入場後しばらくだけ） */}
-          {showControls && !coarse && (
-            <div className="pointer-events-none absolute bottom-6 left-6 border border-line bg-surface/80 px-4 py-3 backdrop-blur-sm">
+          {showControls && !coarse && !overlayOpen && (
+            <div className="pointer-events-none absolute bottom-6 left-6 z-20 border border-line bg-surface/80 px-4 py-3 backdrop-blur-sm">
               <p className="font-mono m-0 text-[10.5px] leading-[2] tracking-[0.08em] text-muted">
                 {t('hintMove')}<br />
                 {t('hintLook')}<br />
@@ -317,7 +390,7 @@ export function NekoWorld3D() {
           )}
 
           {/* 画面下：釣り状態・調べるプロンプト */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-24 flex flex-col items-center gap-3 md:bottom-14">
+          <div className="pointer-events-none absolute inset-x-0 bottom-24 z-20 flex flex-col items-center gap-3 md:bottom-14" aria-live="polite">
             {toast && (
               <p className="m-0 border border-line bg-surface/85 px-4 py-2 font-mincho text-[13px] text-ink backdrop-blur-sm">
                 {toast}
@@ -341,7 +414,9 @@ export function NekoWorld3D() {
                     E
                   </span>
                 )}
-                <span className="font-mincho text-[14px] font-bold">{t(PROMPT_KEYS[prompt.kind])}</span>
+                <span className="font-mincho text-[14px] font-bold">{prompt.kind === 'featured' && prompt.id === '2048'
+                  ? (locale === 'ja' ? '百鬼灯市の無料体験版を見る' : 'Discover the Hyakki Lantern City demo')
+                  : t(PROMPT_KEYS[prompt.kind])}</span>
               </p>
             )}
           </div>
@@ -351,7 +426,7 @@ export function NekoWorld3D() {
             <button
               type="button"
               onClick={() => engineRef.current?.requestLock()}
-              className="absolute bottom-6 right-6 cursor-pointer border border-line bg-surface/80 px-4 py-2.5 font-mono text-[10.5px] tracking-[0.14em] text-muted backdrop-blur-sm transition-colors hover:text-ink"
+              className="absolute right-6 bottom-6 z-30 min-h-11 cursor-pointer border border-line bg-surface/80 px-4 py-2.5 font-mono text-[10.5px] tracking-[0.14em] text-muted backdrop-blur-sm transition-colors hover:text-ink"
             >
               {t('lockHint')}
             </button>
@@ -362,7 +437,7 @@ export function NekoWorld3D() {
             <>
               <LookPad onLook={(dx, dy) => engineRef.current?.lookDelta(dx, dy)} />
               <Joystick onChange={(x, z) => engineRef.current?.setJoystick(x, z)} />
-              <div className="absolute right-6 bottom-8 flex flex-col items-center gap-3">
+              <div className="absolute right-6 bottom-8 z-20 flex flex-col items-center gap-3">
                 <button
                   type="button"
                   onClick={() => engineRef.current?.jump()}
@@ -404,7 +479,7 @@ export function NekoWorld3D() {
       {/* ---------- 会話 ---------- */}
       {dialogue && (
         <div
-          className="absolute inset-0 flex cursor-pointer items-end justify-center p-4 pb-10 md:pb-16"
+          className="absolute inset-0 z-40 flex cursor-pointer items-end justify-center p-4 pb-10 md:pb-16"
           onClick={advanceDialogue}
         >
           <div className="w-full max-w-[620px] border border-line bg-surface/95 p-6 backdrop-blur-md md:p-7">
@@ -427,7 +502,7 @@ export function NekoWorld3D() {
       {/* ---------- 年輪の道の石碑 ---------- */}
       {milestone !== null && (
         <div
-          className="absolute inset-0 flex cursor-pointer items-center justify-center p-4"
+          className="absolute inset-0 z-40 flex cursor-pointer items-center justify-center p-4"
           onClick={() => setMilestone(null)}
         >
           <div className="w-full max-w-[460px] border border-line bg-surface/95 p-7 text-center backdrop-blur-md">
@@ -449,7 +524,7 @@ export function NekoWorld3D() {
 
       {/* ---------- 釣果カード ---------- */}
       {caughtWork && (
-        <div className="absolute inset-0 overflow-y-auto bg-[#1c1a1733] p-4 py-10 md:grid md:place-items-center">
+        <div className="absolute inset-0 z-40 overflow-y-auto bg-[#1c1a1733] p-4 py-10 md:grid md:place-items-center">
           <div
             className={`mx-auto border border-line bg-surface/95 p-6 backdrop-blur-md transition-[max-width] duration-300 md:p-8 ${
               caseOpen ? 'max-w-[720px]' : 'max-w-[560px]'
@@ -574,7 +649,7 @@ export function NekoWorld3D() {
 
       {/* ---------- 建物パネル ---------- */}
       {panel && (
-        <div className="absolute inset-0 flex justify-end bg-[#1c1a1733]" onClick={() => setPanel(null)}>
+        <div className="absolute inset-0 z-40 flex justify-end bg-[#1c1a1733]" onClick={() => setPanel(null)}>
           <aside
             className="h-full w-full max-w-[440px] overflow-y-auto border-l border-line bg-surface p-7 md:p-9"
             onClick={(event) => event.stopPropagation()}
@@ -650,6 +725,45 @@ export function NekoWorld3D() {
         </div>
       )}
 
+      {mapOpen && <WorldDialog title={t('mapTitle')} kicker="NEKO WORLD / FIELD GUIDE" closeLabel={t('close')} onClose={() => setMapOpen(false)}>
+        <WorldMap position={position} onTravel={travel} />
+      </WorldDialog>}
+
+      {helpOpen && <WorldDialog title={t('helpTitle')} kicker="MAKE YOURSELF AT HOME" closeLabel={t('close')} onClose={() => setHelpOpen(false)}>
+        <div className="world-help-grid">
+          <div><p className="whitespace-pre-line">{coarse ? t('introControlsTouch') : t('introControlsPc')}</p></div>
+          <div><p>{t('helpNavigation')}</p></div>
+        </div>
+        <div className="world-settings">
+          <button type="button" className="world-tool" aria-pressed={goldenHour} onClick={toggleGolden}>{goldenHour ? t('settingEvening') : t('settingDay')}</button>
+          <button type="button" className="world-tool" aria-pressed={lowPower} onClick={() => {
+            engineRef.current?.setLowPower(!lowPower)
+            setLowPower(!lowPower)
+          }}>{lowPower ? t('qualityLight') : t('qualityFull')}</button>
+          <button type="button" className="world-tool" aria-pressed={reducedMotion} onClick={() => {
+            engineRef.current?.setReducedMotion(!reducedMotion)
+            setReducedMotion(!reducedMotion)
+          }}>{reducedMotion ? t('motionReduced') : t('motionFull')}</button>
+        </div>
+        <p className="world-help-note">{t('helpSettingsNote')}</p>
+      </WorldDialog>}
+
+      {featuredWork && <WorldDialog title={featuredTitle ?? featuredWork.title} kicker={`FEATURED PROJECT / ${featuredWork.index}`} closeLabel={t('close')} onClose={() => setFeaturedId(null)}>
+        <span className="world-featured-status">{featuredWork.status === 'LIVE'
+          ? (locale === 'ja' ? '無料体験版 公開中' : 'FREE DEMO AVAILABLE')
+          : t('featuredInProgress')}{featuredWork.version ? ` · v${featuredWork.version}` : ''}</span>
+        <p className="world-featured-copy">{featuredWork.summary[locale]}</p>
+        <p className="world-featured-note">{featuredWork.note[locale]}</p>
+        <div className="mt-7 flex flex-wrap gap-3">
+          {featuredWork.slug && <Link href={`/works/${featuredWork.slug}`} className="cta !px-5 !py-3 text-[12px]">
+            {locale === 'ja' ? '無料体験版・作品紹介へ' : 'Free demo & project details'} →
+          </Link>}
+          <button type="button" className="world-tool" onClick={() => setFeaturedId(null)}>{t('continueExploring')} →</button>
+        </div>
+      </WorldDialog>}
+
+      {arrival > 0 && <div key={arrival} className="world-arrival" aria-hidden="true" onAnimationEnd={() => setArrival(0)} />}
+
       {/* ---------- 序章 ---------- */}
       {!started && !webglFailed && introStage === 'prologue' && (
         <div
@@ -657,6 +771,11 @@ export function NekoWorld3D() {
             prologueVisible ? 'opacity-100' : 'opacity-0'
           }`}
           onClick={() => setIntroStage('ready')}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setIntroStage('ready') }
+          }}
         >
           <div className="max-w-[540px] text-center">
             <p className="font-mincho m-0 text-[clamp(24px,4.4vw,38px)] font-bold leading-[1.6] text-[#f0ede4]">
@@ -706,15 +825,64 @@ export function NekoWorld3D() {
   )
 }
 
+function WorldDialog({ title, kicker, closeLabel, onClose, children }: {
+  title: string
+  kicker: string
+  closeLabel: string
+  onClose: () => void
+  children: ReactNode
+}) {
+  const titleId = useId()
+  const dialogRef = useRef<HTMLDivElement>(null)
+  const closeRef = useRef(onClose)
+  useEffect(() => { closeRef.current = onClose }, [onClose])
+
+  useEffect(() => {
+    const previous = document.activeElement as HTMLElement | null
+    const dialog = dialogRef.current
+    dialog?.querySelector<HTMLButtonElement>('button')?.focus()
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') { event.preventDefault(); closeRef.current(); return }
+      if (event.key !== 'Tab' || !dialog) return
+      const items = Array.from(dialog.querySelectorAll<HTMLElement>('button:not(:disabled), a[href], input, select, textarea, [tabindex="0"]'))
+      const first = items[0]
+      const last = items.at(-1)
+      if (event.shiftKey && (document.activeElement === first || !dialog.contains(document.activeElement))) {
+        event.preventDefault(); last?.focus()
+      } else if (!event.shiftKey && (document.activeElement === last || !dialog.contains(document.activeElement))) {
+        event.preventDefault(); first?.focus()
+      }
+    }
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      if (previous?.isConnected) previous.focus()
+    }
+  }, [])
+
+  return (
+    <div className="world-modal-backdrop" onClick={(event) => { if (event.target === event.currentTarget) onClose() }}>
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={titleId} className="world-dialog">
+        <div className="world-dialog-head">
+          <div><p className="world-dialog-kicker">{kicker}</p><h2 id={titleId}>{title}</h2></div>
+          <button type="button" className="world-dialog-close" aria-label={closeLabel} onClick={onClose}>×</button>
+        </div>
+        {children}
+      </div>
+    </div>
+  )
+}
+
 /* ---------- スマホ：視点ドラッグ ---------- */
 
 function LookPad({ onLook }: { onLook: (dx: number, dy: number) => void }) {
   const last = useRef<{ x: number; y: number } | null>(null)
   return (
     <div
-      className="absolute inset-0 touch-none"
+      className="absolute inset-0 z-10 touch-none"
       onPointerDown={(event) => {
         last.current = { x: event.clientX, y: event.clientY }
+        event.currentTarget.setPointerCapture(event.pointerId)
       }}
       onPointerMove={(event) => {
         if (!last.current) return
@@ -759,7 +927,7 @@ function Joystick({ onChange }: { onChange: (x: number, z: number) => void }) {
 
   return (
     <div
-      className="absolute bottom-8 left-6 h-28 w-28 touch-none rounded-full border border-line bg-surface/50 backdrop-blur-sm"
+      className="absolute bottom-8 left-6 z-20 h-28 w-28 touch-none rounded-full border border-line bg-surface/50 backdrop-blur-sm"
       onPointerDown={(event) => {
         active.current = true
         event.currentTarget.setPointerCapture(event.pointerId)

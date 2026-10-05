@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { COLORS, addOutline, mulberry32, outlineDark, outlineInk, toonMat } from './materials'
 import { islandField } from './island'
+import { WORLD_DESTINATIONS } from '../destinations'
 
 function mesh(
   geo: THREE.BufferGeometry,
@@ -28,6 +29,7 @@ export const FISHING_SPOT = { x: -12, z: 19.2, heading: Math.PI / 2 }
 
 export function buildPond() {
   const group = new THREE.Group()
+  const waves: THREE.Mesh[] = []
   const water = flat(
     new THREE.Mesh(new THREE.CircleGeometry(1, 44), toonMat(COLORS.water)),
   )
@@ -47,6 +49,91 @@ export function buildPond() {
   shore.scale.set(POND.rx, POND.rz, 1)
   shore.position.set(POND.x, POND.surfaceY + 0.01, POND.z)
   group.add(shore)
+
+  // Sparse, fine contour lines keep the water illustrated rather than mirror-like.
+  const waveGeometry = new THREE.RingGeometry(0.99, 1, 64)
+  for (let i = 0; i < 4; i += 1) {
+    const wave = new THREE.Mesh(waveGeometry, new THREE.MeshBasicMaterial({
+      color: COLORS.pale, transparent: true, opacity: 0.12, depthWrite: false,
+    }))
+    wave.rotation.x = -Math.PI / 2
+    wave.position.set(POND.x, POND.surfaceY + 0.025, POND.z)
+    const size = 0.3 + i * 0.18
+    wave.scale.set(POND.rx * size, POND.rz * size, 1)
+    wave.userData.baseScale = size
+    waves.push(wave)
+    group.add(wave)
+  }
+  return { group, waves }
+}
+
+/* ---------- Featured projects: small exhibits with their current release status ---------- */
+
+function labelTexture(title: string, subtitle?: string) {
+  const canvas = document.createElement('canvas')
+  canvas.width = 1024
+  canvas.height = subtitle ? 384 : 256
+  const ctx = canvas.getContext('2d')!
+  ctx.fillStyle = '#272b23'
+  ctx.fillRect(0, 0, canvas.width, canvas.height)
+  ctx.fillStyle = '#faf7ef'
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.font = `700 ${subtitle ? 130 : 156}px monospace`
+  ctx.fillText(title, 512, subtitle ? 151 : 136, 960)
+  if (subtitle) {
+    ctx.fillStyle = '#d6c9aa'
+    ctx.font = '48px sans-serif'
+    ctx.fillText(subtitle, 512, 285, 940)
+  }
+  const texture = new THREE.CanvasTexture(canvas)
+  texture.colorSpace = THREE.SRGBColorSpace
+  return texture
+}
+
+export function buildFeaturedStand(id: '2048' | 'tamago-exe', title: string, locale: 'ja' | 'en', status: 'IN_PROGRESS' | 'LIVE' = 'IN_PROGRESS') {
+  const group = new THREE.Group()
+  const base = mesh(new THREE.CylinderGeometry(1.85, 2.02, 0.28, 8), COLORS.wood, { outline: 1.025 })
+  base.position.y = 0.15
+  group.add(base)
+  const pedestal = mesh(new THREE.CylinderGeometry(1.13, 1.35, 0.75, 8), COLORS.pale, { outline: 1.025 })
+  pedestal.position.y = 0.67
+  group.add(pedestal)
+  if (id === '2048') {
+    const geometry = new THREE.BoxGeometry(0.68, 0.68, 0.4)
+    for (let i = 0; i < 4; i += 1) {
+      const tile = mesh(geometry, i === 3 ? COLORS.accent : COLORS.path, { outline: 1.025 })
+      tile.position.set((i % 2 - 0.5) * 0.78, 1.42 + Math.floor(i / 2) * 0.77, 0)
+      const number = new THREE.Mesh(new THREE.PlaneGeometry(0.58, 0.35), new THREE.MeshBasicMaterial({
+        map: labelTexture(String(2 ** (i + 1))), toneMapped: false,
+      }))
+      number.position.z = 0.211
+      tile.add(number)
+      group.add(tile)
+    }
+  } else {
+    const egg = mesh(new THREE.SphereGeometry(0.69, 16, 12), COLORS.pale, { outline: 1.035 })
+    egg.scale.set(0.92, 1.2, 0.86)
+    egg.position.y = 1.87
+    group.add(egg)
+    const dotGeo = new THREE.SphereGeometry(0.05, 8, 6)
+    for (const x of [-0.19, 0.19]) {
+      const eye = mesh(dotGeo, COLORS.ink, { shadow: false })
+      eye.position.set(x, 1.92, 0.57)
+      group.add(eye)
+    }
+  }
+  const sign = new THREE.Mesh(new THREE.PlaneGeometry(3.55, 1.33), new THREE.MeshBasicMaterial({
+    map: labelTexture(title, status === 'LIVE'
+      ? (locale === 'ja' ? '無料体験版 公開中' : 'FREE DEMO AVAILABLE')
+      : (locale === 'ja' ? '制作中 · FEATURED PROJECT' : 'IN PROGRESS · FEATURED PROJECT')),
+    toneMapped: false,
+  }))
+  sign.position.set(0, 3.75, -0.25)
+  group.add(sign)
+  const pole = mesh(new THREE.CylinderGeometry(0.055, 0.055, 3.75, 6), COLORS.woodDark, { shadow: false })
+  pole.position.set(0, 1.88, -0.35)
+  group.add(pole)
   return group
 }
 
@@ -492,6 +579,7 @@ export function buildNapSpot() {
 
 /** ここには木を生やさない（建物・道・イベント地点） */
 const CLEARINGS: [number, number, number][] = [
+  ...WORLD_DESTINATIONS.filter((item) => item.landmark).map((item): [number, number, number] => [item.landmark!.x, item.landmark!.z, 4.8]),
   // 出生地（島の南端）と鳥居
   [0, 27, 8], [0, 37, 5], [0, 32, 4.5],
   // 各区画

@@ -23,10 +23,12 @@ export function WorksGallery({
   works,
   locale,
   labels,
+  compact = false,
 }: {
   works: Work[]
   locale: 'ja' | 'en'
   labels: WorksGalleryLabels
+  compact?: boolean
 }) {
   const [active, setActive] = useState<Filter>('ALL')
   const filtered = useMemo(
@@ -35,9 +37,9 @@ export function WorksGallery({
   )
 
   return (
-    <div>
+    <div className={compact ? 'works-gallery works-gallery--compact' : 'works-gallery'}>
       <div className="works-toolbar">
-        <div className="works-filters" role="group" aria-label="Project filter">
+        <div className="works-filters" role="group" aria-label={locale === 'ja' ? 'その他の作品を絞り込む' : 'Filter other projects'}>
           {filters.map((filter) => {
             const count =
               filter === 'ALL' ? works.length : works.filter((work) => work.tag === filter).length
@@ -62,7 +64,7 @@ export function WorksGallery({
         </p>
       </div>
 
-      {works.length === 0 ? (
+      {filtered.length === 0 ? (
         <div className="works-empty" role="status">
           <span className="works-empty__index" aria-hidden="true">00</span>
           <div>
@@ -78,13 +80,14 @@ export function WorksGallery({
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-7 lg:grid-cols-2">
+        <div className={compact ? 'works-archive-grid' : 'grid grid-cols-1 gap-7 lg:grid-cols-2'} data-count={filtered.length}>
           {filtered.map((work) => (
             <ProjectCard
               key={work.slug}
               work={work}
               locale={locale}
-              index={works.indexOf(work)}
+              index={works.indexOf(work) + (compact ? 2 : 0)}
+              compact={compact}
               labels={{
                 viewCase: labels.viewCase,
                 demo: labels.demo,

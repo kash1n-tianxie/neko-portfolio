@@ -1,0 +1,58 @@
+.case-study--hyakki .case-cover { aspect-ratio: 16 / 10; }
+.case-study--hyakki .case-title { line-height: 1.2; }
+.hyakki-subtitle { margin: 16px 0 0; color: var(--muted); font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; }
+.hyakki-experience { display: grid; gap: clamp(64px, 10vw, 120px); margin-bottom: clamp(72px, 10vw, 120px); }
+.hyakki-section { min-width: 0; scroll-margin-top: 112px; }
+.hyakki-kicker { margin: 0 0 16px; color: var(--accent); font-family: var(--font-mono); font-size: 11px; line-height: 1.7; letter-spacing: 0.12em; }
+.hyakki-section h2 { margin: 0; font-family: var(--font-mincho); font-size: clamp(26px, 4vw, 44px); font-weight: 700; line-height: 1.5; text-wrap: balance; }
+.hyakki-section__intro { max-width: 70ch; margin: 20px 0 28px; color: var(--muted); font-size: 16px; line-height: 1.9; }
+.hyakki-video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; border: 1px solid var(--line); background: #171c2d; }
+.hyakki-play__stage { position: relative; isolation: isolate; width: 100%; aspect-ratio: 16 / 10; overflow: hidden; border: 1px solid var(--line); background: #171c2d; }
+.hyakki-play__stage iframe { display: block; width: 100%; height: 100%; border: 0; }
+.hyakki-play__stage iframe:fullscreen { width: 100vw; height: 100dvh; background: #171c2d; }
+.hyakki-play__poster { display: block; width: 100%; height: 100%; object-fit: cover; opacity: 0.46; }
+.hyakki-play__launch { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 22px; padding: 24px; text-align: center; background: linear-gradient(transparent, #171c2d88); }
+.hyakki-play__number { color: #fff3ce; font-family: var(--font-display); font-size: clamp(36px, 8vw, 80px); letter-spacing: 0.1em; line-height: 1; }
+.hyakki-play__button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 52px; padding: 15px 24px; border: 1px solid #efd8a3; color: #171c2d; background: #efd8a3; font-size: 15px; font-weight: 700; line-height: 1.6; text-decoration: none; cursor: pointer; transition: background-color 180ms ease; }
+.hyakki-play__button:hover { background: #fff3ce; }
+.hyakki-play__toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; margin-top: 14px; }
+.hyakki-play__actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.hyakki-play__actions button { min-height: 44px; padding: 9px 16px; border: 1px solid var(--line); color: var(--ink); background: var(--surface); font-size: 13px; cursor: pointer; }
+.hyakki-play__actions button:hover { border-color: var(--ink); }
+.hyakki-inline-link { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; color: var(--ink); font-size: 14px; text-underline-offset: 5px; text-decoration: underline; text-decoration-color: var(--line); }
+.hyakki-inline-link:hover { text-decoration-color: currentColor; }
+.hyakki-note { margin: 10px 0 0; color: var(--muted); font-size: 14px; line-height: 1.8; }
+.hyakki-note a { text-decoration: underline; text-underline-offset: 3px; }
+.hyakki-controls__title { margin: 42px 0 18px; font-family: var(--font-mincho); font-size: 23px; }
+.hyakki-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.hyakki-controls li { padding: 26px 24px; }
+.hyakki-controls li:first-child { padding-left: 0; }
+.hyakki-controls li + li { border-left: 1px solid var(--line); }
+.hyakki-controls li > span { color: var(--accent); font-family: var(--font-mono); font-size: 12px; }
+.hyakki-controls h4 { margin: 10px 0 12px; font-size: 18px; }
+.hyakki-controls p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.9; }
+.hyakki-credits { border-top: 1px solid var(--line); padding-top: 40px; }
+.hyakki-credits dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px; margin: 0 0 22px; }
+.hyakki-credits dt { color: var(--muted); font-size: 12px; margin-bottom: 9px; }
+.hyakki-credits dd { margin: 0; font-size: 14px; line-height: 1.9; }
+.hyakki-credits dd > span { display: block; color: var(--muted); font-size: 12px; }
+.hyakki-credits dd a { text-decoration: underline; text-underline-offset: 5px; text-decoration-color: var(--line); }
+.hyakki-mobile-only { display: none; }
+@media (max-width: 1023px) {
+  .hyakki-desktop-only { display: none; }
+  .hyakki-mobile-only { display: inline-flex; }
+  p.hyakki-mobile-only { display: block; }
+}
+@media (max-width: 640px) {
+  .hyakki-controls { grid-template-columns: minmax(0, 1fr); }
+  .hyakki-controls li, .hyakki-controls li:first-child { padding: 22px 0; }
+  .hyakki-controls li + li { border-left: 0; border-top: 1px solid var(--line); }
+  .hyakki-controls p { font-size: 15px; }
+  .hyakki-credits dl { grid-template-columns: minmax(0, 1fr); }
+  .hyakki-play__launch { gap: 14px; padding: 18px; }
+  .hyakki-play__button { padding: 12px 16px; font-size: 13px; }
+  .hyakki-play__number { font-size: 38px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hyakki-play__button { transition: none; }
+}

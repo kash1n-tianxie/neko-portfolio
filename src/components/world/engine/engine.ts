@@ -1,4 +1,6 @@
 import * as THREE from 'three'
+import { featuredWorks } from '@/content/featured-works'
+import { WORLD_DESTINATIONS, type WorldDestinationId, type WorldPosition } from '../destinations'
 import { COLORS, toonMat } from './materials'
 import { animateCat, buildCat, type CatPose, type CatRig } from './cat'
 import {
@@ -19,6 +21,7 @@ import {
   buildButterfly,
   buildEngawa,
   buildFish,
+  buildFeaturedStand,
   buildHut,
   buildKitten,
   buildLantern,
@@ -41,7 +44,7 @@ import { animateNpc, buildAgent, buildNpcCat, type Npc } from './npc'
 
 export type InteractKind =
   | 'fish' | 'skills' | 'about' | 'contact' | 'exit'
-  | 'npc' | 'kitten' | 'viewpoint' | 'milestone'
+  | 'npc' | 'kitten' | 'viewpoint' | 'milestone' | 'featured'
 
 export type PromptTarget = { kind: InteractKind; id: string; index?: number }
 export type FishingPhase = 'none' | 'cast' | 'wait' | 'bite' | 'reel' | 'caught'
@@ -58,6 +61,8 @@ export type WorldCallbacks = {
   onMilestone: (index: number) => void
   onReveal: (active: boolean) => void
   onPointerLock: (locked: boolean) => void
+  onFeatured: (id: '2048' | 'tamago-exe') => void
+  onPosition: (position: WorldPosition) => void
 }
 
 type Interactable = PromptTarget & {
@@ -128,6 +133,12 @@ export class NekoWorld {
   private raf = 0
   private disposed = false
   private canvas: HTMLCanvasElement
+  private animationTime = 0
+  private positionTimer = 0
+  private reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  private motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+  private lowPower = window.innerWidth < 768
+  private pondWaves: THREE.Mesh[] = []
 
   private cat: CatRig
   private heading = SPAWN_HEADING
@@ -149,6 +160,9 @@ export class NekoWorld {
   private prompt: Interactable | null = null
   private interactables: Interactable[] = []
   private colliders: [number, number, number][] = []
+  private cameraObstacles: THREE.Object3D[] = []
+  private cameraRay = new THREE.Raycaster()
+  private cameraRayHits: THREE.Intersection[] = []
 
   private fishingPhase: FishingPhase = 'none'
   private fishingT = 0
@@ -189,6 +203,7 @@ export class NekoWorld {
     canvas: HTMLCanvasElement,
     works: { slug: string; tag: FishTag }[],
     private callbacks: WorldCallbacks,
+    private options: { locale: 'ja' | 'en' } = { locale: 'ja' },
   ) {
     this.canvas = canvas
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
@@ -201,7 +216,7 @@ export class NekoWorld {
     this.renderer.shadowMap.enabled = true
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
-    this.scene.fog = new THREE.Fog(DAY.fog.getHex(), 70, 260)
+    this.scene.fog = new THREE.Fog(DAY.fog.getHex(), 58, 230)
     this.camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 700)
 
     this.ambient = new THREE.AmbientLight(DAY.amb.getHex(), DAY.ambI)
@@ -213,7 +228,7 @@ export class NekoWorld {
     this.sunlight.position.set(SPAWN.x + 34, 46, SPAWN.z + 26)
     this.sunlight.target = this.sunTarget
     this.sunlight.castShadow = true
-    this.sunlight.shadow.mapSize.set(2048, 2048)
+    this.sunlight.shadow.mapSize.set(this.lowPower ? 1024 : 2048, this.lowPower ? 1024 : 2048)
     this.sunlight.shadow.camera.left = -20
     this.sunlight.shadow.camera.right = 20
     this.sunlight.shadow.camera.top = 20
@@ -231,7 +246,12 @@ export class NekoWorld {
     this.skyMat = sky.material
     this.scene.add(sky.mesh)
     this.scene.add(buildClouds())
-    this.scene.add(buildIsland(), buildMounds(), buildPond(), buildPier(), buildNapSpot())
+    const pond = buildPond()
+    this.pondWaves = pond.waves
+    const island = buildIsland()
+    const mounds = buildMounds()
+    this.cameraObstacles.push(island, mounds)
+    this.scene.add(island, mounds, pond.group, buildPier(), buildNapSpot())
 
     const motes = buildMotes()
     this.motes = motes.points
@@ -240,6 +260,7 @@ export class NekoWorld {
 
     const scatter = buildScatter()
     this.scene.add(scatter.group)
+    this.cameraObstacles.push(scatter.group)
     this.colliders = [...scatter.colliders]
 
     this.placeWorld()
@@ -294,6 +315,9 @@ export class NekoWorld {
     window.addEventListener('mouseup', this.onMouseUp)
     canvas.addEventListener('wheel', this.onWheel, { passive: false })
     document.addEventListener('pointerlockchange', this.onLockChange)
+    document.addEventListener('visibilitychange', this.onVisibilityChange)
+    this.motionQuery.addEventListener('change', this.onMotionChange)
+    this.scene.updateMatrixWorld(true)
   }
 
   /* ---------- 世界を組み立てる ---------- */
@@ -302,6 +326,7 @@ export class NekoWorld {
     object.position.set(x, y, z)
     object.rotation.y = rotY
     this.scene.add(object)
+    this.cameraObstacles.push(object)
     return object
   }
 
@@ -311,6 +336,14 @@ export class NekoWorld {
   }
 
   private placeWorld() {
+    for (const work of featuredWorks) {
+      const destination = WORLD_DESTINATIONS.find((item) => item.id === work.id)!
+      const { x, z } = destination.landmark!
+      const title = work.id === '2048' && this.options.locale === 'en' ? 'Hyakki Lantern City' : work.title
+      this.add(buildFeaturedStand(work.id, title, this.options.locale, work.status), x, z)
+      this.colliders.push([x, z, 1.9])
+      this.interactable({ kind: 'featured', id: work.id, x: destination.x, z: destination.z, y: 0, r: 2.7 })
+    }
     // 出生地の広場（島の南端、鳥居をくぐった内側）
     this.add(buildStatue(), -3.8, 28.5, 0, 0.5)
     this.colliders.push([-3.8, 28.5, 1.1])
@@ -406,7 +439,58 @@ export class NekoWorld {
   start() {
     this.started = true
     this.uiOpen = false
-    this.requestLock()
+    this.canvas.focus()
+    if (!window.matchMedia('(pointer: coarse)').matches) this.requestLock()
+  }
+
+  getPosition(): WorldPosition {
+    return { x: this.cat.root.position.x, z: this.cat.root.position.z, heading: this.heading }
+  }
+
+  travelTo(id: WorldDestinationId) {
+    const destination = WORLD_DESTINATIONS.find((item) => item.id === id)
+    if (!destination || !this.started) return
+    this.keys.clear()
+    this.joystick = { x: 0, z: 0 }
+    this.running = false
+    this.moving = false
+    this.velY = 0
+    this.grounded = true
+    this.napping = false
+    this.napTimer = 0
+    this.stopFishing()
+    this.reveal.active = false
+    this.callbacks.onReveal(false)
+    const fog = this.scene.fog as THREE.Fog
+    fog.near = 58
+    fog.far = 230
+    this.cat.root.position.set(destination.x, groundHeightAt(destination.x, destination.z), destination.z)
+    this.heading = destination.heading
+    this.cat.root.rotation.y = this.heading
+    // The central path gives both exhibit signs room below the HUD and keeps
+    // the arrival view clear of the trees along the southern approach.
+    this.yaw = destination.id === '2048' ? 0.4 : destination.id === 'tamago-exe' ? -0.4 : 0
+    this.pitch = destination.landmark ? 0.25 : 0.32
+    this.dist = destination.landmark ? 13.5 : 8.4
+    this.camera.position.copy(this.safeCameraPosition(this.desiredCameraPosition()))
+    this.camera.lookAt(this.cat.root.position.clone().add(new THREE.Vector3(0, 1.05, 0)))
+    this.callbacks.onPosition(this.getPosition())
+    this.canvas.focus()
+  }
+
+  setReducedMotion(on: boolean) {
+    this.reducedMotion = on
+    this.motes.visible = !on
+  }
+
+  setLowPower(on: boolean) {
+    this.lowPower = on
+    this.renderer.setPixelRatio(this.pixelRatio())
+    const size = on ? 1024 : 2048
+    this.sunlight.shadow.map?.dispose()
+    this.sunlight.shadow.map = null
+    this.sunlight.shadow.mapSize.set(size, size)
+    this.sunlight.shadow.needsUpdate = true
   }
 
   setUIOpen(open: boolean) {
@@ -463,15 +547,31 @@ export class NekoWorld {
   }
 
   run() {
-    const tick = () => {
-      if (this.disposed) return
-      const dt = Math.min(this.clock.getDelta(), 0.05)
-      this.update(dt, this.clock.elapsedTime)
-      this.renderer.render(this.scene, this.camera)
-      this.raf = requestAnimationFrame(tick)
-    }
-    this.raf = requestAnimationFrame(tick)
+    this.setReducedMotion(this.reducedMotion)
+    this.clock.start()
+    this.raf = requestAnimationFrame(this.tick)
   }
+
+  private tick = () => {
+    if (this.disposed || document.hidden) return
+    const dt = Math.min(this.clock.getDelta(), 0.05)
+    this.animationTime += dt
+    this.update(dt, this.animationTime)
+    this.renderer.render(this.scene, this.camera)
+    this.raf = requestAnimationFrame(this.tick)
+  }
+
+  private onVisibilityChange = () => {
+    cancelAnimationFrame(this.raf)
+    this.onBlur()
+    if (document.hidden) this.clock.stop()
+    else if (!this.disposed) {
+      this.clock.start()
+      this.raf = requestAnimationFrame(this.tick)
+    }
+  }
+
+  private onMotionChange = (event: MediaQueryListEvent) => this.setReducedMotion(event.matches)
 
   dispose() {
     this.disposed = true
@@ -485,12 +585,25 @@ export class NekoWorld {
     window.removeEventListener('mouseup', this.onMouseUp)
     this.canvas.removeEventListener('wheel', this.onWheel)
     document.removeEventListener('pointerlockchange', this.onLockChange)
+    document.removeEventListener('visibilitychange', this.onVisibilityChange)
+    this.motionQuery.removeEventListener('change', this.onMotionChange)
     if (document.pointerLockElement === this.canvas) document.exitPointerLock()
+    const geometries = new Set<THREE.BufferGeometry>()
+    const materials = new Set<THREE.Material>()
+    const textures = new Set<THREE.Texture>()
     this.scene.traverse((obj) => {
       if (obj instanceof THREE.Mesh || obj instanceof THREE.Points || obj instanceof THREE.Line) {
-        obj.geometry.dispose()
+        geometries.add(obj.geometry)
+        const list = Array.isArray(obj.material) ? obj.material : [obj.material]
+        for (const material of list) {
+          materials.add(material)
+          for (const value of Object.values(material)) if (value instanceof THREE.Texture) textures.add(value)
+        }
       }
     })
+    geometries.forEach((geometry) => geometry.dispose())
+    materials.forEach((material) => material.dispose())
+    textures.forEach((texture) => texture.dispose())
     this.renderer.dispose()
   }
 
@@ -498,6 +611,8 @@ export class NekoWorld {
 
   private onKeyDown = (event: KeyboardEvent) => {
     if (this.uiOpen || this.reveal.active) return
+    // Native buttons, links and fields must keep their own Enter / arrow behavior.
+    if (event.target instanceof HTMLElement && event.target !== this.canvas && event.target.closest('button,a,input,textarea,select,[role="dialog"]')) return
     if (MOVE_KEYS[event.code]) {
       event.preventDefault()
       this.keys.add(event.code)
@@ -526,11 +641,13 @@ export class NekoWorld {
   private onBlur = () => {
     this.keys.clear()
     this.running = false
+    this.joystick = { x: 0, z: 0 }
+    this.dragging = false
   }
 
   private pixelRatio() {
     // 3D ワールドは高密度画面での描画負荷が大きい。見た目を保ったまま端末別に上限を設ける。
-    const cap = window.innerWidth < 768 ? 1.3 : 1.75
+    const cap = this.lowPower ? 1.15 : window.innerWidth < 768 ? 1.3 : 1.75
     return Math.min(window.devicePixelRatio, cap)
   }
 
@@ -595,6 +712,9 @@ export class NekoWorld {
     if (!target) return
 
     switch (target.kind) {
+      case 'featured':
+        this.callbacks.onFeatured(target.id as '2048' | 'tamago-exe')
+        break
       case 'fish':
         this.startFishing()
         break
@@ -647,8 +767,8 @@ export class NekoWorld {
     this.reveal.t += dt
     const high = new THREE.Vector3(8, 138, 26)
     const look = new THREE.Vector3(8, 0, -7)
-    const rise = 2.2
-    const hold = 5.4
+    const rise = this.reducedMotion ? 0 : 2.2
+    const hold = this.reducedMotion ? 3 : 5.4
 
     if (this.reveal.t < rise) {
       const k = this.easeInOut(this.reveal.t / rise)
@@ -657,19 +777,19 @@ export class NekoWorld {
       this.camera.lookAt(target.lerp(look, k))
     } else if (this.reveal.t < rise + hold) {
       const k = (this.reveal.t - rise) / hold
-      this.camera.position.set(high.x, high.y, high.z - k * 8)
+      this.camera.position.set(high.x, high.y, high.z - (this.reducedMotion ? 0 : k * 8))
       this.camera.lookAt(look)
     } else if (this.reveal.t < rise + hold + rise) {
       const k = this.easeInOut((this.reveal.t - rise - hold) / rise)
-      const back = this.desiredCameraPosition()
+      const back = this.safeCameraPosition(this.desiredCameraPosition())
       this.camera.position.lerpVectors(high, back, k)
       const target = this.cat.root.position.clone().setY(this.cat.root.position.y + 1.1)
       this.camera.lookAt(look.clone().lerp(target, k))
     } else {
       this.reveal.active = false
       const fog = this.scene.fog as THREE.Fog
-      fog.near = 70
-      fog.far = 260
+      fog.near = 58
+      fog.far = 230
       this.callbacks.onReveal(false)
     }
     return false
@@ -908,12 +1028,21 @@ export class NekoWorld {
   private updateAmbient(dt: number, t: number) {
     const catPos = this.cat.root.position
 
+    for (let i = 0; i < this.pondWaves.length; i += 1) {
+      const wave = this.pondWaves[i]
+      const base = wave.userData.baseScale as number
+      const swell = this.reducedMotion ? 0 : Math.sin(t * 0.38 + i * 1.7) * 0.025
+      wave.scale.set(POND.rx * (base + swell), POND.rz * (base + swell), 1)
+      ;(wave.material as THREE.MeshBasicMaterial).opacity = this.reducedMotion ? 0.1 : 0.12 + Math.sin(t * 0.32 + i) * 0.045
+    }
+
     const chimeDist = this.chimePos.distanceTo(catPos)
     const boost = chimeDist < 3.4 ? 1.9 : 1
-    this.chimeSwing.rotation.z = Math.sin(t * 1.6) * 0.1 * boost
-    this.chimeSwing.rotation.x = Math.cos(t * 1.3) * 0.055 * boost
+    this.chimeSwing.rotation.z = this.reducedMotion ? 0 : Math.sin(t * 1.6) * 0.1 * boost
+    this.chimeSwing.rotation.x = this.reducedMotion ? 0 : Math.cos(t * 1.3) * 0.055 * boost
 
     for (const b of this.butterflies) {
+      if (this.reducedMotion) continue
       const dist = b.group.position.distanceTo(catPos)
       if (dist < 1.9) b.fleeing = 1
       b.fleeing = Math.max(0, b.fleeing - dt * 0.4)
@@ -1022,18 +1151,46 @@ export class NekoWorld {
     )
   }
 
+  /** Five rays approximate the camera's near-plane clearance, including canopy edges. */
+  private safeCameraPosition(wanted: THREE.Vector3) {
+    const target = this.cat.root.position.clone().add(new THREE.Vector3(0, 1.05, 0))
+    const floor = groundHeightAt(wanted.x, wanted.z) + 0.65
+    wanted.y = Math.max(wanted.y, floor)
+    const direction = wanted.clone().sub(target)
+    const distance = direction.length()
+    if (distance < 0.01) return wanted
+    direction.divideScalar(distance)
+    const right = new THREE.Vector3(direction.z, 0, -direction.x).normalize().multiplyScalar(0.32)
+    const up = new THREE.Vector3(0, 0.28, 0)
+    const offsets = [new THREE.Vector3(), right, right.clone().negate(), up, up.clone().negate()]
+    let safeDistance = distance
+    for (const offset of offsets) {
+      this.cameraRay.set(target.clone().add(offset), direction)
+      this.cameraRay.near = 0.15
+      this.cameraRay.far = distance + 0.45
+      this.cameraRayHits.length = 0
+      this.cameraRay.intersectObjects(this.cameraObstacles, true, this.cameraRayHits)
+      const hit = this.cameraRayHits.find((item) => item.object.visible)
+      if (hit) safeDistance = Math.min(safeDistance, Math.max(0.6, hit.distance - 0.55))
+    }
+    return target.addScaledVector(direction, safeDistance)
+  }
+
   private updateCamera(dt: number) {
     if (!this.started) {
       // 入場前：島をゆっくり見回す
-      const a = this.clock.elapsedTime * 0.05
+      const a = this.reducedMotion ? 0.24 : this.animationTime * 0.05
       this.camera.position.set(Math.sin(a) * 46 + 6, 26, Math.cos(a) * 46 - 6)
       this.camera.lookAt(4, 0, -4)
       return
     }
+    // Keep the already-safe view while reading a map or project panel.
+    if (this.uiOpen) return
     const want = this.desiredCameraPosition()
-    const floor = groundHeightAt(want.x, want.z) + 1
-    if (want.y < floor) want.y = floor
     this.camera.position.lerp(want, 1 - Math.exp(-dt * 14))
+    // A smooth follow can itself cross an obstacle after a turn: clamp that
+    // intermediate position too, then ease back out when the view is clear.
+    this.camera.position.copy(this.safeCameraPosition(this.camera.position.clone()))
     const look = this.cat.root.position.clone()
     look.y += 1.05
     this.camera.lookAt(look)
@@ -1080,5 +1237,10 @@ export class NekoWorld {
     this.updateAmbient(dt, t)
     if (!cinematic) this.updateCamera(dt)
     this.updatePrompt()
+    this.positionTimer += dt
+    if (this.positionTimer >= 0.1) {
+      this.positionTimer = 0
+      this.callbacks.onPosition(this.getPosition())
+    }
   }
 }
