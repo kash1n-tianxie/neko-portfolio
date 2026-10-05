@@ -1,4 +1,5 @@
 import { hyakkiLanternWork } from './hyakki-lantern'
+import { tamagoWork } from './tamago'
 
 export type L10n = { ja: string; en: string }
 
@@ -40,74 +41,7 @@ export type Work = {
  */
 export const works: Work[] = [
   hyakkiLanternWork,
-  {
-    slug: 'tamago-exe',
-    tag: 'GAME',
-    title: 'たまご.exe',
-    year: '2026',
-    summary: {
-      ja: 'スロットで出た5つの道具から3つを選び、ビルドを組みながら電子ペットを育てる縦画面ローグライク。成長の先では、竜が画面枠そのものを破って進化します。',
-      en: 'A portrait roguelike that combines slot drafting, score builds, and virtual-pet growth, culminating in a dragon evolution that breaks through the game UI.',
-    },
-    role: {
-      ja: '企画・ゲーム設計・実装・UI/UX・テスト・Webリリース',
-      en: 'Concept, game design, implementation, UI/UX, testing, and web release',
-    },
-    tech: ['Godot 4.7', 'GDScript', 'PWA', 'HTML5', 'Automated Testing'],
-    status: 'LIVE',
-    thumbnail: '/assets/works/tamago-exe.webp',
-    coverGif: '/assets/works/tamago-exe-cover.gif',
-    gallery: [
-      {
-        src: '/assets/works/tamago-slot.webp',
-        alt: {
-          ja: '5つの道具から食べさせる3つを選ぶスロット画面',
-          en: 'Slot screen for choosing three items from five',
-        },
-      },
-      {
-        src: '/assets/works/tamago-dimension.webp',
-        alt: {
-          ja: '不可逆な竜化を選択する「次元の呼び声」イベント',
-          en: 'Dimension Call event for choosing irreversible dragon evolution',
-        },
-      },
-      {
-        src: '/assets/works/tamago-dragon.webp',
-        alt: {
-          ja: '画面枠を破って現れるpseudo 3D次元竜',
-          en: 'Pseudo-3D dimensional dragon breaking through the frame',
-        },
-      },
-    ],
-    caseStudy: {
-      problem: {
-        ja: '短時間で理解できる操作と、何度も試したくなるビルド構築を両立したゲームを目標にしました。単にボタンを押して数値が増えるだけではなく、中央のペットが食事・成長・変異に反応し、プレイヤーの選択が画面全体へ返ってくる体験が必要でした。',
-        en: 'The goal was to combine immediately understandable controls with a build system worth replaying. Every choice needed visible feedback through the pet, progression, mutations, and the entire interface.',
-      },
-      challenge: {
-        ja: '幅390pxでも、5択3選・順番・位置・レシピ・DNA・依存・暴走率を読める情報量に整理することが最大の課題でした。さらに、12ラウンドの状態保存、タッチとキーボード操作、PWA、演出中断からの復元を同時に成立させる必要がありました。',
-        en: 'The main challenge was keeping item order, recipes, DNA, dependency, and risk readable on a 390px-wide screen while supporting saves, touch and keyboard input, PWA installation, and restoration after interruption.',
-      },
-      solution: {
-        ja: '計算ロジックと表示を分離したデータ駆動構成を採用し、選択前に成長・リスク・レシピ結果を確認できるプレビューを実装しました。ペットの反応、吹き出し、ヒットストップ、スコア演出を一つのフィードバック連鎖として設計し、通常育成の先に3段階の竜化演出を配置しました。',
-        en: 'A data-driven core separates calculations from presentation. Previews expose growth and risk before confirmation, while pet reactions, speech, hit-stop, and score motion form one feedback chain leading to a three-stage dragon transformation.',
-      },
-      result: {
-        ja: '17種の道具、18種のレシピ、24種のDNA、12種の進化器官、4種類のエンディングを実装し、ブラウザで遊べる正式版として公開しました。ロジックとセーブの178項目を検証し、UI自動プレイでは計9ランをフリーズなしで完走しています。',
-        en: 'The released browser version includes 17 items, 18 recipes, 24 DNA traits, 12 organs, and four endings. It passed 178 logic/save checks and nine automated UI runs without freezes.',
-      },
-      highlights: [
-        { ja: '正式版 v1.1.1・ブラウザ公開', en: 'Released v1.1.1 in browser' },
-        { ja: '178項目チェック・失敗0', en: '178 checks, zero failures' },
-        { ja: '自動プレイ9ラン完走', en: 'Nine automated runs completed' },
-      ],
-    },
-    links: {
-      itch: 'https://kashin-ou.itch.io/exe',
-      repo: 'https://github.com/kash1n-tianxie/tamago-exe',
-    },
-  },
+  tamagoWork,
   {
     slug: 'rerpg',
     tag: 'TOOL',

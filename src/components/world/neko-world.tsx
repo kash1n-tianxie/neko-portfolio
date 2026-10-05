@@ -750,13 +750,13 @@ export function NekoWorld3D() {
 
       {featuredWork && <WorldDialog title={featuredTitle ?? featuredWork.title} kicker={`FEATURED PROJECT / ${featuredWork.index}`} closeLabel={t('close')} onClose={() => setFeaturedId(null)}>
         <span className="world-featured-status">{featuredWork.status === 'LIVE'
-          ? (locale === 'ja' ? '無料体験版 公開中' : 'FREE DEMO AVAILABLE')
-          : t('featuredInProgress')}{featuredWork.version ? ` · v${featuredWork.version}` : ''}</span>
+          ? featuredWork.releaseLabel[locale]
+          : t('featuredInProgress')}</span>
         <p className="world-featured-copy">{featuredWork.summary[locale]}</p>
         <p className="world-featured-note">{featuredWork.note[locale]}</p>
         <div className="mt-7 flex flex-wrap gap-3">
           {featuredWork.slug && <Link href={`/works/${featuredWork.slug}`} className="cta !px-5 !py-3 text-[12px]">
-            {locale === 'ja' ? '無料体験版・作品紹介へ' : 'Free demo & project details'} →
+            {locale === 'ja' ? 'ゲーム・作品紹介へ' : 'Play & project details'} →
           </Link>}
           <button type="button" className="world-tool" onClick={() => setFeaturedId(null)}>{t('continueExploring')} →</button>
         </div>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TAMAGO.exe · 竜のごはん</title>
+<style>
+html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#24212e;color:#eee8dc;font-family:system-ui,sans-serif}
+#canvas{display:block;width:100%;height:100%;outline:none;touch-action:none}
+#status{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:#24212e;text-align:center;padding:24px}
+#status h1{margin:0;font-size:clamp(26px,5vw,44px);letter-spacing:.05em;color:#bbdb88}
+#status p{margin:0;line-height:1.6;font-size:16px}
+#progress{width:min(320px,80vw);height:12px;accent-color:#bbdb88}
+#notice{max-width:560px;white-space:pre-wrap;color:#f5b66e}
+</style>
+<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
+<link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
+<meta name="description" content="5つの食材を組み替え、カプセルの連鎖で竜を育てる。9つの関門に挑む構築ゲーム。"><meta name="theme-color" content="#24212e">
+</head>
+<body>
+<canvas id="canvas" aria-label="TAMAGO.exe ゲーム画面">このブラウザではゲームを表示できません。</canvas>
+<noscript>ゲームを遊ぶには JavaScript を有効にしてください。</noscript>
+<div id="status" role="status"><h1>TAMAGO.exe</h1><p id="loading">たまごを準備しています…</p><progress id="progress"></progress><p id="notice"></p></div>
+<script src="index.js"></script>
+<script>
+const GODOT_CONFIG={"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":11823844,"index.wasm":39509339},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const engine=new Engine(GODOT_CONFIG);
+const statusOverlay=document.getElementById('status');
+const progress=document.getElementById('progress');
+function failed(error){
+  console.error(error);
+  document.getElementById('loading').textContent='ゲームを読み込めませんでした。';
+  document.getElementById('notice').textContent='最新の Chrome / Firefox / Safari で、ページを開き直してください。\n'+String(error?.message||error);
+  progress.hidden=true;
+}
+const missing=Engine.getMissingFeatures({threads:false});
+if(missing.length){failed(missing.join(', '));}
+else{
+  engine.startGame({onProgress:(current,total)=>{
+    if(total>0){progress.value=current;progress.max=total;}
+    else{progress.removeAttribute('value');}
+  }}).then(()=>statusOverlay.remove()).catch(failed);
+}
+</script>
+</body>
+</html>
+

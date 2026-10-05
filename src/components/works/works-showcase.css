@@ -207,7 +207,7 @@
   .project-card--compact .project-card__cover > img { transform: none; transition: none; }
 }
 
-/* The released game fills its original exhibit slot; the second slot stays a study. */
+/* Released games keep their original exhibit positions and show real artwork. */
 .featured-work--released .featured-work__title { font-family: var(--font-mincho); font-size: clamp(48px, 5.8vw, 76px); line-height: 1.25; letter-spacing: 0.02em; }
 .featured-work--released .featured-work__category { line-height: 1.8; letter-spacing: 0.08em; }
 .featured-work--released .featured-work__summary { margin-top: 20px; }
@@ -226,4 +226,17 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .featured-work__cover img, .featured-work__action { transition: none; }
+}
+
+/* The Latin game title needs a narrower face than the Japanese exhibit heading. */
+.featured-work--tamago-exe.featured-work--released .featured-work__title {
+  font-family: var(--font-display);
+  font-size: clamp(42px, 4.8vw, 68px);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+@media (max-width: 767px) {
+  .featured-work--tamago-exe.featured-work--released .featured-work__title {
+    font-size: clamp(38px, 11vw, 56px);
+  }
 }

@@ -115,10 +115,10 @@ export function FeaturedWorks({ locale }: { locale: 'ja' | 'en' }) {
         >
           <div className="featured-work__topline">
             <span className="featured-work__index">{work.index}<span> / FEATURED GAME</span></span>
-            <span className="featured-work__status"><span aria-hidden="true" />{work.status === 'LIVE' ? `${locale === 'ja' ? '無料体験版' : 'FREE DEMO'} v${work.version}` : locale === 'ja' ? '制作中' : 'IN DEVELOPMENT'}</span>
+            <span className="featured-work__status"><span aria-hidden="true" />{work.status === 'LIVE' ? work.releaseLabel[locale] : locale === 'ja' ? '制作中' : 'IN DEVELOPMENT'}</span>
           </div>
           <div className="featured-work__copy">
-            <p className="featured-work__category">{work.status === 'LIVE' ? 'HYAKKI LANTERN CITY / 2048 × AUTO DEFENSE' : 'WORK IN PROGRESS'}</p>
+            <p className="featured-work__category">{work.category}</p>
             <h3 id={`featured-title-${work.id}`} className="featured-work__title">{work.title}</h3>
             <p className="featured-work__summary">{work.summary[locale]}</p>
             {work.slug && (
@@ -135,14 +135,14 @@ export function FeaturedWorks({ locale }: { locale: 'ja' | 'en' }) {
           <div className="featured-work__visual">
             <div className="featured-work__art">
               {work.cover && work.slug ? (
-                <Link href={`/works/${work.slug}`} className="featured-work__cover" aria-label={locale === 'ja' ? '百鬼灯市の作品紹介と無料体験版へ' : 'Explore Hyakki Lantern City and its free demo'}>
-                  <Image src={work.cover} alt={locale === 'ja' ? '月明かりの灯市に式神と百鬼が集う、百鬼灯市のキービジュアル' : 'Hyakki Lantern City key visual: spirits and yokai gather in a moonlit lantern market'} width={1408} height={1117} sizes="(max-width: 767px) 90vw, 55vw" />
+                <Link href={`/works/${work.slug}`} className="featured-work__cover" aria-label={locale === 'ja' ? `${work.title}の作品紹介とゲームへ` : `Explore and play ${work.title}`}>
+                  <Image src={work.cover} alt={work.coverAlt[locale]} width={1408} height={1117} sizes="(max-width: 767px) 90vw, 55vw" />
                 </Link>
               ) : work.id === '2048' ? <NumberStudy /> : <EggStudy />}
             </div>
             <p className="featured-work__visual-label">
-              <span>{work.cover ? 'KEY VISUAL / FREE DEMO v0.6.0' : 'VISUAL IN PREPARATION'}</span>
-              <span>{work.cover ? (locale === 'ja' ? '実際のゲーム画面と動画は作品ページへ' : 'Real screenshots and gameplay on the project page') : (locale === 'ja' ? '仮ビジュアル / 実際のゲーム画面ではありません' : 'Placeholder study / not gameplay')}</span>
+              <span>{work.cover ? work.visualLabel : 'VISUAL IN PREPARATION'}</span>
+              <span>{work.cover ? (locale === 'ja' ? '実際のゲーム画面と遊び方は作品ページへ' : 'Real screenshots and how to play on the project page') : (locale === 'ja' ? '仮ビジュアル / 実際のゲーム画面ではありません' : 'Placeholder study / not gameplay')}</span>
             </p>
           </div>
           <div className="featured-work__read-line" aria-hidden="true"><span /></div>

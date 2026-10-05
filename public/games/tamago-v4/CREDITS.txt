@@ -1,0 +1,13 @@
+TAMAGO.exe · 竜のごはん v4.0.0
+
+Godot Engine: MIT License. licenses/Godot-LICENSE.txt
+Noto Sans JP / DotGothic16: SIL Open Font License. licenses/
+筐体・竜の画像: 本作のために画像生成ツールで制作。
+食材、UI、音楽・効果音: 本作向けの素材。
+
+遊び方
+クリック: 食材を残す。ドラッグ: 1皿に1回、2つの食材を交換。
+R: 残していない食材を引きなおす。Space: たべる。
+4皿以内に目標へ届けば、商店で食材袋とカプセルを組み直す。
+全9関。ブラウザの保存領域に自動保存されます。
+サイトデータを削除すると、このブラウザの記録も消えます。

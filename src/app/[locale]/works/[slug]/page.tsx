@@ -11,6 +11,8 @@ import { ImageLightbox } from '@/components/works/image-lightbox'
 import { ProjectNextPreview } from '@/components/works/project-next-preview'
 import { TechStackChips } from '@/components/works/tech-stack-chips'
 import { HyakkiCredits, HyakkiExperience } from '@/components/works/hyakki-experience'
+import { TamagoExperience } from '@/components/works/tamago-experience'
+import { tamagoGame } from '@/content/tamago'
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
@@ -38,6 +40,17 @@ export async function generateMetadata({
       twitter: { card: 'summary_large_image', title, description: work.summary[language], images: ['https://kashin.ink/assets/works/hyakki-lantern/cover.webp'] },
     }
   }
+  if (work.slug === tamagoGame.slug) {
+    const title = 'TAMAGO.exe | Kashin Ou'
+    const canonical = `https://kashin.ink/${language === 'en' ? 'en/' : ''}works/tamago-exe`
+    const cover = `https://kashin.ink${tamagoGame.cover}`
+    return {
+      title, description: work.summary[language],
+      alternates: { canonical, languages: { ja: 'https://kashin.ink/works/tamago-exe', en: 'https://kashin.ink/en/works/tamago-exe' } },
+      openGraph: { title, description: work.summary[language], url: canonical, type: 'website', images: [{ url: cover, width: 1152, height: 768, alt: 'TAMAGO.exe — actual gameplay' }] },
+      twitter: { card: 'summary_large_image', title, description: work.summary[language], images: [cover] },
+    }
+  }
   return {
     title: `${work.title} | Kashin Ou`,
     description: work.summary[language],
@@ -56,6 +69,7 @@ export default async function WorkPage({
   const work = works.find((item) => item.slug === slug)
   if (!work) notFound()
   const isHyakki = work.slug === 'hyakki-lantern'
+  const isTamago = work.slug === tamagoGame.slug
   const statusLabel = work.releaseLabel?.[locale] ?? (work.status === 'LIVE'
     ? t('statusLive')
     : work.status === 'ARCHIVED'
@@ -107,6 +121,8 @@ export default async function WorkPage({
             {(work.links?.demo || work.links?.itch || work.links?.repo || work.links?.video) && (
               <div className="mt-10 flex flex-wrap gap-3">
                 {isHyakki && <a href="#play" className="cta">{locale === 'ja' ? '無料体験版を遊ぶ' : 'Try the free demo'}<span aria-hidden="true">↓</span></a>}
+                {isTamago && <a href="#play" className="cta">{locale === 'ja' ? '新版を遊ぶ' : 'Play the new version'}<span aria-hidden="true">↓</span></a>}
+                {isTamago && <a href={tamagoGame.designPdf} download className="cta">{locale === 'ja' ? '企画書（PDF）' : 'Design document (PDF)'}<span aria-hidden="true">↓</span></a>}
                 {work.links.demo && (
                   <a href={work.links.demo} target="_blank" rel="noopener noreferrer" className="cta">
                     {t('liveDemo')} <ArrowUpRightIcon className="h-4 w-4" />
@@ -114,7 +130,7 @@ export default async function WorkPage({
                 )}
                 {work.links.itch && (
                   <a href={work.links.itch} target="_blank" rel="noopener noreferrer" className="cta">
-                    {isHyakki ? (locale === 'ja' ? 'itch.ioで遊ぶ・ダウンロード' : 'Play or download on itch.io') : t('itch')} <ArrowUpRightIcon className="h-4 w-4" />
+                    {isHyakki ? (locale === 'ja' ? 'itch.ioで遊ぶ・ダウンロード' : 'Play or download on itch.io') : isTamago ? (locale === 'ja' ? 'itch.io（旧バージョン）' : 'Earlier version on itch.io') : t('itch')} <ArrowUpRightIcon className="h-4 w-4" />
                   </a>
                 )}
                 {work.links.repo && (
@@ -141,13 +157,14 @@ export default async function WorkPage({
                   decoding="async"
                 />
               </picture>
-              <span aria-hidden="true">{isHyakki ? 'ACTUAL GAMEPLAY / v0.6.0' : `PROJECT / ${work.year}`}</span>
+              <span aria-hidden="true">{isHyakki ? 'ACTUAL GAMEPLAY / v0.6.0' : isTamago ? 'ACTUAL GAMEPLAY / v4' : `PROJECT / ${work.year}`}</span>
             </div>
           </div>
         </header>
 
         <div className="mx-auto max-w-[1180px] px-[clamp(20px,6vw,64px)] py-[clamp(80px,12vw,150px)]">
           {isHyakki && <HyakkiExperience locale={locale} />}
+          {isTamago && <TamagoExperience locale={locale} />}
           {work.caseStudy ? (
             <>
               {work.caseStudy.highlights && work.caseStudy.highlights.length > 0 && (

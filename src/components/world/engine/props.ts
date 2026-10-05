@@ -125,7 +125,7 @@ export function buildFeaturedStand(id: '2048' | 'tamago-exe', title: string, loc
   }
   const sign = new THREE.Mesh(new THREE.PlaneGeometry(3.55, 1.33), new THREE.MeshBasicMaterial({
     map: labelTexture(title, status === 'LIVE'
-      ? (locale === 'ja' ? '無料体験版 公開中' : 'FREE DEMO AVAILABLE')
+      ? (id === '2048' ? (locale === 'ja' ? '無料体験版 公開中' : 'FREE DEMO AVAILABLE') : (locale === 'ja' ? '新版プレイ公開中' : 'NEW VERSION / PLAYABLE'))
       : (locale === 'ja' ? '制作中 · FEATURED PROJECT' : 'IN PROGRESS · FEATURED PROJECT')),
     toneMapped: false,
   }))

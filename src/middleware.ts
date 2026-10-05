@@ -4,6 +4,6 @@ import { routing } from './i18n/routing'
 export default createMiddleware(routing)
 
 export const config = {
-  // skip api routes, next internals and all static files
-  matcher: ['/((?!api|_next|_vercel|.*\\..*).*)'],
+  // Game exports use their own relative assets and must never enter locale routing.
+  matcher: ['/((?!api|games(?:/|$)|_next|_vercel|.*\\..*).*)'],
 }
