@@ -44,13 +44,13 @@ export function PleaseSitExperience({ locale }: { locale: 'ja' | 'en' }) {
     }
   }
   const beats = ja ? [
-    ['まず、見る。', '揺れている自販機。空いた椅子。こちらと同じ動きをする人。小さな仕草が、次の一手の手がかりです。'],
-    ['動いて、止まる。', '青いものを動かします。近づくだけで道を譲ってくれる人もいれば、こちらが止まるのを待っている相手もいます。'],
-    ['もう一度、ためす。', '近づきすぎたら「すみません」。声が重なると、周りの反応も変わります。戻す・やり直すで、別の動きも気軽に。'],
+    ['まず、見る。', '休みたい自販機と、まだ買いたいお客さん。席を詰めるハト。相手にも、したいことがあります。'],
+    ['押して、止まる。', '青いものを動かすと、相手がよけたり、隣の人を押したり。手を止めると、混んでいた場所にすき間ができます。'],
+    ['もう一度、ためす。', '少し押す、押し続ける、引き返す。後半7場面はクリア後も動かせるので、気になる反応をもう一度試せます。'],
   ] : [
-    ['Look first.', 'A wobbling machine. An empty chair. A person mirroring your steps. Small gestures suggest what to try next.'],
-    ['Move, then stop.', 'Move the blue object. Some people make room when you approach; others are waiting for you to stand still.'],
-    ['Try it again.', 'Get too close and apologies start overlapping. Nearby characters respond. Undo or restart to try a different approach.'],
+    ['Look first.', 'A machine wants a break; its customers still want drinks. Pigeons shuffle along a bench. Everyone has something they want to do.'],
+    ['Nudge, then stop.', 'Move the blue object and others make room or bump their neighbours. Stop for a moment and a new gap can appear.'],
+    ['Try it again.', 'Nudge gently, keep pushing, or turn back. The last seven scenes stay playable after completion so you can revisit a reaction.'],
   ]
 
   return (
