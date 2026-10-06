@@ -38,7 +38,7 @@ function EggStudy() {
   )
 }
 
-export function FeaturedWorks({ locale }: { locale: 'ja' | 'en' }) {
+export function FeaturedWorks({ locale, indexOffset = 0, hideIntro = false }: { locale: 'ja' | 'en'; indexOffset?: number; hideIntro?: boolean }) {
   const rootRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -101,10 +101,10 @@ export function FeaturedWorks({ locale }: { locale: 'ja' | 'en' }) {
 
   return (
     <div ref={rootRef} className="featured-works">
-      <div className="featured-works__intro">
+      {!hideIntro && <div className="featured-works__intro">
         <p className="featured-works__eyebrow">SELECTED WORKS / 01—02</p>
         <p>{locale === 'ja' ? '新しい遊びを、ここから。' : 'New worlds to discover.'}</p>
-      </div>
+      </div>}
       {featuredWorks.map((work) => (
         <article
           key={work.id}
@@ -114,7 +114,7 @@ export function FeaturedWorks({ locale }: { locale: 'ja' | 'en' }) {
           onPointerMove={followPointer}
         >
           <div className="featured-work__topline">
-            <span className="featured-work__index">{work.index}<span> / FEATURED GAME</span></span>
+            <span className="featured-work__index">{String(Number(work.index) + indexOffset).padStart(2, '0')}<span> / FEATURED GAME</span></span>
             <span className="featured-work__status"><span aria-hidden="true" />{work.status === 'LIVE' ? work.releaseLabel[locale] : locale === 'ja' ? '制作中' : 'IN DEVELOPMENT'}</span>
           </div>
           <div className="featured-work__copy">

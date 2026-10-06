@@ -5,6 +5,7 @@ import { WorksGallery } from '../works/works-gallery'
 import { BrushUnderline } from '../motion/brush-underline'
 import { ArrowUpRightIcon } from '../ui/icons'
 import { FeaturedWorks } from '../works/featured-works'
+import { PleaseSitFeature } from '../works/please-sit-feature'
 import '../works/works-showcase.css'
 
 export async function Works() {
@@ -36,7 +37,8 @@ export async function Works() {
         </div>
       </Reveal>
 
-      <FeaturedWorks locale={locale} />
+      <PleaseSitFeature locale={locale} />
+      <FeaturedWorks locale={locale} indexOffset={1} hideIntro />
 
       <div className="works-archive-heading">
         <div>
@@ -48,7 +50,7 @@ export async function Works() {
 
       <Reveal delay={40}>
         <WorksGallery
-          works={works.filter((work) => !['tamago-exe', 'hyakki-lantern'].includes(work.slug))}
+          works={works.filter((work) => !['please-take-a-seat', 'tamago-exe', 'hyakki-lantern'].includes(work.slug))}
           locale={locale}
           compact
           labels={{

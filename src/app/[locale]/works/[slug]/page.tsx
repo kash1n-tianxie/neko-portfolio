@@ -13,6 +13,8 @@ import { TechStackChips } from '@/components/works/tech-stack-chips'
 import { HyakkiCredits, HyakkiExperience } from '@/components/works/hyakki-experience'
 import { TamagoExperience } from '@/components/works/tamago-experience'
 import { tamagoGame } from '@/content/tamago'
+import { PleaseSitExperience } from '@/components/works/please-sit-experience'
+import { pleaseSitGame } from '@/content/please-take-a-seat'
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
@@ -29,6 +31,17 @@ export async function generateMetadata({
   const work = works.find((item) => item.slug === slug)
   if (!work) return {}
   const language = locale === 'en' ? 'en' : 'ja'
+  if (work.slug === pleaseSitGame.slug) {
+    const title = `${language === 'ja' ? 'どうぞ、おかけください。' : 'Please, Take a Seat.'} | Kashin Ou`
+    const canonical = `https://kashin.ink/${language === 'en' ? 'en/' : ''}works/${pleaseSitGame.slug}`
+    const cover = `https://kashin.ink${pleaseSitGame.cover}`
+    return {
+      title, description: work.summary[language],
+      alternates: { canonical, languages: { ja: `https://kashin.ink/works/${pleaseSitGame.slug}`, en: `https://kashin.ink/en/works/${pleaseSitGame.slug}` } },
+      openGraph: { title, description: work.summary[language], url: canonical, type: 'website', images: [{ url: cover, width: 1152, height: 720, alt: 'どうぞ、おかけください。 — Please, Take a Seat.' }] },
+      twitter: { card: 'summary_large_image', title, description: work.summary[language], images: [cover] },
+    }
+  }
   if (work.slug === 'hyakki-lantern') {
     const title = `${language === 'en' ? 'Hyakki Lantern City (百鬼灯市)' : '百鬼灯市'} | Kashin Ou`
     const canonical = `https://kashin.ink/${language === 'en' ? 'en/' : ''}works/hyakki-lantern`
@@ -70,6 +83,12 @@ export default async function WorkPage({
   if (!work) notFound()
   const isHyakki = work.slug === 'hyakki-lantern'
   const isTamago = work.slug === tamagoGame.slug
+  const isPleaseSit = work.slug === pleaseSitGame.slug
+  const caseStudyLabels = isPleaseSit
+    ? locale === 'ja'
+      ? ['座るだけ、から会議室へ', '触ったときの反応を増やす', '会議室から、10の場面へ', '試遊を次の変更につなげる']
+      : ['From chairs to a meeting room', 'Giving movement a response', 'Beyond the meeting room', 'Turning playtests into changes']
+    : [t('problem'), t('challenge'), t('solution'), t('result')]
   const statusLabel = work.releaseLabel?.[locale] ?? (work.status === 'LIVE'
     ? t('statusLive')
     : work.status === 'ARCHIVED'
@@ -77,7 +96,7 @@ export default async function WorkPage({
       : t('statusProgress'))
 
   return (
-    <main id="main-content" className={`case-study${isHyakki ? ' case-study--hyakki' : ''}`}>
+    <main id="main-content" className={`case-study${isHyakki ? ' case-study--hyakki' : ''}${isPleaseSit ? ' case-study--please-sit' : ''}`}>
       <CaseStudyProgress label={t('progress')} />
 
       <article>
@@ -94,7 +113,7 @@ export default async function WorkPage({
                   {work.tag} / {work.year}
                 </p>
                 <h1 className="case-title font-mincho m-0 mt-5 max-w-[16ch] text-[clamp(44px,9vw,108px)] font-extrabold leading-[0.95]">
-                  {work.title}
+                  {isPleaseSit ? <><span>どうぞ、</span><br /><span>おかけください。</span></> : work.title}
                 </h1>
                 {isHyakki && <p className="hyakki-subtitle">HYAKKI LANTERN CITY / 2048 × AUTO DEFENSE</p>}
                 <p className="m-0 mt-7 max-w-[62ch] text-[clamp(16px,2vw,20px)] leading-[1.9] text-muted">
@@ -120,6 +139,8 @@ export default async function WorkPage({
 
             {(work.links?.demo || work.links?.itch || work.links?.repo || work.links?.video) && (
               <div className="mt-10 flex flex-wrap gap-3">
+                {isPleaseSit && <a href="#play" className="cta">{locale === 'ja' ? 'ブラウザで遊ぶ' : 'Play in browser'}<span aria-hidden="true">↓</span></a>}
+                {isPleaseSit && <a href={pleaseSitGame.designPdf} download className="cta">{locale === 'ja' ? '企画書（PDF）' : 'Design document (PDF)'}<span aria-hidden="true">↓</span></a>}
                 {isHyakki && <a href="#play" className="cta">{locale === 'ja' ? '無料体験版を遊ぶ' : 'Try the free demo'}<span aria-hidden="true">↓</span></a>}
                 {isTamago && <a href="#play" className="cta">{locale === 'ja' ? '新版を遊ぶ' : 'Play the new version'}<span aria-hidden="true">↓</span></a>}
                 {isTamago && <a href={tamagoGame.designPdf} download className="cta">{locale === 'ja' ? '企画書（PDF）' : 'Design document (PDF)'}<span aria-hidden="true">↓</span></a>}
@@ -152,17 +173,18 @@ export default async function WorkPage({
                 <img
                   src={work.coverGif ?? work.thumbnail}
                   alt={`${work.title} — ${work.summary[locale]}`}
-                  width={isHyakki ? 1440 : 1200}
-                  height={isHyakki ? 900 : 800}
+                  width={isPleaseSit ? 1152 : isHyakki ? 1440 : 1200}
+                  height={isPleaseSit ? 720 : isHyakki ? 900 : 800}
                   decoding="async"
                 />
               </picture>
-              <span aria-hidden="true">{isHyakki ? 'ACTUAL GAMEPLAY / v0.6.0' : isTamago ? 'ACTUAL GAMEPLAY / v4' : `PROJECT / ${work.year}`}</span>
+              <span aria-hidden="true">{isPleaseSit ? 'ACTUAL GAMEPLAY / v1.0.0' : isHyakki ? 'ACTUAL GAMEPLAY / v0.6.0' : isTamago ? 'ACTUAL GAMEPLAY / v4' : `PROJECT / ${work.year}`}</span>
             </div>
           </div>
         </header>
 
         <div className="mx-auto max-w-[1180px] px-[clamp(20px,6vw,64px)] py-[clamp(80px,12vw,150px)]">
+          {isPleaseSit && <PleaseSitExperience locale={locale} />}
           {isHyakki && <HyakkiExperience locale={locale} />}
           {isTamago && <TamagoExperience locale={locale} />}
           {work.caseStudy ? (
@@ -180,10 +202,10 @@ export default async function WorkPage({
 
               <div className="case-sections">
                 {[
-                  ['01', t('problem'), work.caseStudy.problem[locale]],
-                  ['02', t('challenge'), work.caseStudy.challenge[locale]],
-                  ['03', t('solution'), work.caseStudy.solution[locale]],
-                  ['04', t('result'), work.caseStudy.result[locale]],
+                  ['01', caseStudyLabels[0], work.caseStudy.problem[locale]],
+                  ['02', caseStudyLabels[1], work.caseStudy.challenge[locale]],
+                  ['03', caseStudyLabels[2], work.caseStudy.solution[locale]],
+                  ['04', caseStudyLabels[3], work.caseStudy.result[locale]],
                 ].map(([index, title, body]) => (
                   <section key={index} className="case-section">
                     <span className="case-section__index">{index}</span>
