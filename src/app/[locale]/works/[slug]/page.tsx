@@ -84,6 +84,11 @@ export default async function WorkPage({
   const isHyakki = work.slug === 'hyakki-lantern'
   const isTamago = work.slug === tamagoGame.slug
   const isPleaseSit = work.slug === pleaseSitGame.slug
+  const caseStudyLabels = isPleaseSit
+    ? locale === 'ja'
+      ? ['座るだけ、から会議室へ', '触ったときの反応を増やす', '会議室から、10の場面へ', '試遊を次の変更につなげる']
+      : ['From chairs to a meeting room', 'Giving movement a response', 'Beyond the meeting room', 'Turning playtests into changes']
+    : [t('problem'), t('challenge'), t('solution'), t('result')]
   const statusLabel = work.releaseLabel?.[locale] ?? (work.status === 'LIVE'
     ? t('statusLive')
     : work.status === 'ARCHIVED'
@@ -197,10 +202,10 @@ export default async function WorkPage({
 
               <div className="case-sections">
                 {[
-                  ['01', t('problem'), work.caseStudy.problem[locale]],
-                  ['02', t('challenge'), work.caseStudy.challenge[locale]],
-                  ['03', t('solution'), work.caseStudy.solution[locale]],
-                  ['04', t('result'), work.caseStudy.result[locale]],
+                  ['01', caseStudyLabels[0], work.caseStudy.problem[locale]],
+                  ['02', caseStudyLabels[1], work.caseStudy.challenge[locale]],
+                  ['03', caseStudyLabels[2], work.caseStudy.solution[locale]],
+                  ['04', caseStudyLabels[3], work.caseStudy.result[locale]],
                 ].map(([index, title, body]) => (
                   <section key={index} className="case-section">
                     <span className="case-section__index">{index}</span>

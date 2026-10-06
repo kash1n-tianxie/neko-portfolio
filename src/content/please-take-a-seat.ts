@@ -30,8 +30,8 @@ export const pleaseSitWork: Work = {
     en: 'First, help someone find a seat. Then a vending machine, some subtitles, and the Earth itself. Ten short, absurd scenes played by moving—and knowing when to stop.',
   },
   role: {
-    ja: '企画・ルール設計・演出・制作／開発支援：Codex',
-    en: 'Concept, rules, staging, and production; development assistance by Codex',
+    ja: '企画・試遊・ルール設計・改善方針／開発支援：Codex',
+    en: 'Concept, playtesting, rule design, and iteration decisions; development assistance by Codex',
   },
   tech: ['Godot 4.7', 'GDScript', 'HTML5'],
   thumbnail: pleaseSitGame.cover,
@@ -44,24 +44,24 @@ export const pleaseSitWork: Work = {
   ],
   caseStudy: {
     problem: {
-      ja: '「座ってもらう」という小さな気づかいから、どこまで遊びを広げられるか。最初は会議室で人を席へ案内するゲームでした。そこから、場所や動かすものを変え、同じ操作が違う意味になる10場面を考えました。',
-      en: 'How far can a small courtesy—helping someone sit down—carry a game? It began in a meeting room. Changing the setting and the thing you control became a way to give the same movement a different meaning across ten scenes.',
+      ja: '最初の試作は、人と椅子を置いたシンプルなものでした。実際に人に遊んでもらうと、座らせるだけでは退屈だという課題が見えました。操作に目的や状況が必要だと考え、会議室を舞台にして、誰をどこへ案内するのかが伝わる場面へ変えました。',
+      en: 'The first prototype was a simple arrangement of people and chairs. Real players found that seating people alone was dull. I saw a need to give the action a purpose and a context, so I introduced a meeting room that showed whom to guide and where.',
     },
     challenge: {
-      ja: '短い場面でも、何が起きていて、何に触ればよいかは伝えたい。一方で、長い説明や、操作を止める会話は入れたくありませんでした。意外な答えに納得できるよう、反転の前に手がかりを置くことを大事にしています。',
-      en: 'A short scene still needs to communicate what is happening and what the player can affect. Long explanations and interrupting dialogue would work against that. Each surprise needs a visible clue before its punchline.',
+      ja: '会議室にした後の試遊でも、まだ味気ないという課題が残りました。そこで、人にぶつかると「すみません」「通ります」が繰り返される反応を追加しました。丁寧な言葉が重なるほどおかしくなる、少ししつこい間を狙っています。移動の手軽さを保ちながら、触ったときの反応を作る変更です。',
+      en: 'Further playtesting of the meeting-room version still exposed a dry experience. I added repeated “すみません” and “通ります” when the player bumps into people. The intention is for polite phrases to become absurd through repetition, giving simple movement a more expressive response.',
     },
     solution: {
-      ja: '自販機の揺れ、こちらをまねる人、空いた椅子など、登場人物と道具の動きから状況を伝えます。操作はWASD・矢印キー、またはドラッグ。青い操作対象を動かし、ときには手を止めると反応が変わります。結果の演出は、見終わるのを待たずに次へ進めます。',
-      en: 'A wobbling vending machine, people copying your movement, or an empty chair establishes the situation. Use WASD, arrow keys, or dragging to move the blue object. Sometimes releasing the controls changes the response. Players can continue without waiting for the ending animation.',
+      ja: 'その後も試遊の意見をもとに、会議室以外へ舞台を広げました。「座る」は共通にして、操作するものを人からベンチ、犬、字幕、地球へ変えています。自販機の揺れや、小さな椅子を載せた回転寿司の皿が、説明を読ませずに状況を伝えます。WASD・矢印キー、またはドラッグで動かし、ときには止まるだけで反応が変わります。',
+      en: 'Later playtest feedback led me beyond the meeting room. Sitting remains the theme, while the player controls people, a bench, a dog, subtitles, or the Earth. A wobbling vending machine and tiny chairs on conveyor-belt plates establish each situation without a forced story sequence. Move with WASD, arrow keys, or dragging; sometimes stopping changes the response.',
     },
     result: {
-      ja: '会議の3場面と、自販機・コンビニ・回転寿司・犬の体操・映画館・公園・宇宙の7場面を実装しました。やり直し、1手戻す、場面選択、回想を備えています。初めて遊ぶ人に手がかりが伝わるか、どの反応をもう一度見たくなるかは、今後の試遊で確かめたい点です。',
-      en: 'The game contains three meeting-room scenes and seven more in a street, shop, sushi restaurant, exercise park, cinema, pigeon park, and space. Restart, undo, scene selection, and a memory album support trying things again. Future first-time playtests will focus on readable clues and reactions worth revisiting.',
+      ja: '実際の試遊で課題を見つけ、変更を重ねて、会議3場面とそれ以外の7場面を収めたブラウザ版を公開しました。企画書では、受けた意見、自分の判断、実装した変更を分けて記載しています。今後も、場面の手がかりがどう伝わるか、音声の反復が楽しい反応から煩わしさに変わるのはどこかを観察していきたいです。',
+      en: 'The published browser game brings together three meeting-room scenes and seven other settings, developed through repeated changes informed by real playtests. The proposal separates player feedback, my design decisions, and the changes implemented. Further testing can examine how players read scene clues and when repeated speech shifts from amusing to intrusive.',
     },
     highlights: [
       { ja: '10場面。操作は、動く・止まる', en: 'Ten scenes. Move, then stop.' },
-      { ja: '人物や道具の動きで状況を伝える', en: 'Characters and objects tell the story' },
+      { ja: '初期版から、実際の試遊を重ねて改善', en: 'Iterated through real playtests from the first prototype' },
       { ja: '人、ベンチ、犬、字幕、地球を操作', en: 'Control people, a bench, a dog, words, and Earth' },
     ],
   },

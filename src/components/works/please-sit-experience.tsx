@@ -103,7 +103,7 @@ export function PleaseSitExperience({ locale }: { locale: 'ja' | 'en' }) {
         <div>
           <p className="please-sit-kicker">GAME DESIGN / 日本語 PDF</p>
           <h2 id="please-sit-document-title">{ja ? '「座る」を、遊びにする。' : 'Making a game out of taking a seat.'}</h2>
-          <p className="please-sit-intro">{ja ? '企画の狙い、基本操作、10場面の流れ、手がかりと反応の設計をまとめた企画書です。' : 'The Japanese design document covers the concept, controls, ten scenes, and how clues lead to reactions.'}</p>
+          <p className="please-sit-intro">{ja ? '企画の狙いと10場面の設計に加え、実際の試遊で見えた課題、判断、変更の流れをまとめた企画書です。' : 'The Japanese proposal covers the concept, ten scenes, and the feedback, design decisions, and changes from real playtesting.'}</p>
         </div>
         <a href={pleaseSitGame.designPdf} download className="please-sit-button please-sit-button--outline">{ja ? '企画書を読む（PDF）' : 'Design document (PDF, Japanese)'}<span aria-hidden="true">↓</span></a>
       </section>
