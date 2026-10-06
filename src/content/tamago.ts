@@ -36,8 +36,8 @@ export const tamagoWork: Work = {
   ],
   caseStudy: {
     problem: {
-      ja: '試遊で受けた「文字が多い」「何をすればよいか分かりづらい」という指摘が出発点です。説明を減らすだけでなく、繰り返しボタンを押せば終わる育成から、自分で料理を工夫するゲームへ作り直しました。',
-      en: 'Playtest feedback that the game was text-heavy and hard to understand became the starting point. The redesign goes beyond removing copy: it replaces repetitive feeding with meals that players actively shape.',
+      ja: '初版から継続してプレイヤーに試遊してもらい、フィードバックを集めながら改良を重ねています。試遊から、文字情報の多さ、次の操作の分かりづらさ、操作が単調になりやすいことが課題として見えてきました。これらの声を受け、説明の量、操作の導線、料理を工夫する余地を見直しました。',
+      en: 'Since the first version, I have regularly invited players to try the game and used their feedback to guide revisions. Their playtests surfaced text overload, uncertainty about the next action, and repetitive interactions. Those findings shaped changes to the amount of explanation, the interface flow, and the choices involved in preparing a meal.',
     },
     challenge: {
       ja: '操作を増やしすぎず、ランダムな5つの食材に「残す理由」と「並べ替える理由」を作ること。さらに、2回の進化で見た目が変わっても操作位置を保ち、初めて遊ぶ人が次の一手を見失わない構成を目指しました。',
@@ -48,8 +48,8 @@ export const tamagoWork: Work = {
       en: 'Decisions center on four plates per gate, two shared rerolls, and one positional swap per plate. Six foods grow nutrition, replay neighbors, add multipliers, or earn coins. A random shop reshapes a ten-item bag and four capsule slots, with a nutrition-times-multiplier preview before every meal. Evolutions after gates three and six add a new build choice.',
     },
     result: {
-      ja: '9関・3幕、6種の食材、12種のカプセル、2回の進化選択を備えた日本語版を実装しました。4皿で届かなければそのランは終了し、図鑑だけを持ち越して別の構築を試せます。自動テストとシミュレーションで得点・乱数復元・商店・進行を検証しています。「5秒で理解できるか」と面白さは、初見プレイヤーの実測で引き続き確認する項目です。',
-      en: 'The Japanese-language game now spans nine gates and three acts, with six foods, twelve capsules, and two evolution choices. Failing a gate ends the run; only discoveries carry over, inviting a different build. Automated checks and simulations cover scoring, random-state restoration, shops, and progression. Five-second comprehension and enjoyment remain questions for first-time players, not claims established by simulation.',
+      ja: '実際のプレイヤーのフィードバックをもとに改版を重ね、9関・3幕、6種の食材、12種のカプセル、2回の進化選択を備えた日本語版を実装しました。4皿で届かなければそのランは終了し、図鑑だけを持ち越して別の構築を試せます。継続的な試遊に加え、自動テストとシミュレーションで得点・乱数復元・商店・進行を検証しています。',
+      en: 'Repeated revisions informed by real player feedback have led to a Japanese-language game spanning nine gates and three acts, with six foods, twelve capsules, and two evolution choices. Failing a gate ends the run; only discoveries carry over, inviting a different build. Alongside ongoing player playtests, automated checks and simulations cover scoring, random-state restoration, shops, and progression.',
     },
     highlights: [
       { ja: '4皿・2回の引き直し・1回の配置交換', en: 'Four plates · two rerolls · one swap per plate' },

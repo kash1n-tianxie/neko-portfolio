@@ -57,8 +57,8 @@ export const featuredWorks: FeaturedWork[] = [
       en: 'Keep, swap, and serve. Combine five foods with capsules, clear nine gates, and raise an egg into a dragon in a slot-building cooking game.',
     },
     note: {
-      ja: '日本語版をブラウザでプレイ。8-bitから2D、立体へ、竜と画面全体が進化します。実際の画面と企画書を作品ページに掲載。',
-      en: 'Play the Japanese-language game in your browser. The dragon and entire interface evolve through 8-bit, 2D, and dimensional art. Explore real screenshots and the design document.',
+      ja: '初版からのプレイヤーの声をもとに改版。日本語版をブラウザで遊べます。8-bitから2D、立体へ進化する実際の画面と企画書を作品ページに掲載。',
+      en: 'Revised through player feedback since the first version. Play in Japanese in your browser, and explore screenshots of the evolving 8-bit, 2D, and dimensional world alongside the design document.',
     },
   },
 ]
