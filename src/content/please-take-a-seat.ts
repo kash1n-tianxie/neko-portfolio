@@ -10,9 +10,9 @@ export const pleaseSitGame: {
   designPdf: string
 } = {
   slug: 'please-take-a-seat',
-  version: '1.1.0',
+  version: '1.2.0',
   itchUrl: 'https://kashin-ou.itch.io/please-take-a-seat',
-  embedUrl: 'https://itch.io/embed-upload/19600690?color=333333',
+  embedUrl: 'https://itch.io/embed-upload/19601605?color=333333',
   cover: '/assets/works/please-take-a-seat/cover.png',
   poster: '/assets/works/please-take-a-seat/title.png',
   designPdf: '/assets/works/please-take-a-seat/proposal.pdf',
@@ -24,10 +24,10 @@ export const pleaseSitWork: Work = {
   title: 'どうぞ、おかけください。',
   year: '2026',
   status: 'LIVE',
-  releaseLabel: { ja: '無料ブラウザ版 v1.1.0', en: 'Free browser game v1.1.0' },
+  releaseLabel: { ja: '無料ブラウザ版 v1.2.0', en: 'Free browser game v1.2.0' },
   summary: {
-    ja: '人を席へ案内していたら、自販機も、字幕も、地球まで。動く・止まるだけで、日常が少しおかしくなる10の短いゲームです。',
-    en: 'First, help someone find a seat. Then a vending machine, some subtitles, and the Earth itself. Ten short, absurd scenes played by moving—and knowing when to stop.',
+    ja: '「すみません」と人を席へ押していたら、自販機も、字幕も、地球まで。誰から、どちらから押すか。譲り合うほど少しおかしくなる、10の短いゲームです。',
+    en: 'Say “すみません” and nudge everyone into place—even a vending machine, subtitles, and the Earth. Ten absurd scenes where whom you push first and which side you approach change the way through.',
   },
   role: {
     ja: '企画・試遊・ルール設計・改善方針／開発支援：Codex',
@@ -36,11 +36,11 @@ export const pleaseSitWork: Work = {
   tech: ['Godot 4.7', 'GDScript', 'HTML5'],
   thumbnail: pleaseSitGame.cover,
   gallery: [
-    { src: '/assets/works/please-take-a-seat/vending.png', alt: { ja: '休みたい青い自販機を、飲み物を買いたいお客さんが追いかける場面', en: 'Customers follow a blue vending machine that wants to take a break' } },
-    { src: '/assets/works/please-take-a-seat/sushi.png', alt: { ja: '回転寿司のお皿に置かれた小さな椅子へ、人間のお客さまを案内する場面', en: 'Guiding human customers to tiny chairs on a sushi conveyor belt' } },
-    { src: '/assets/works/please-take-a-seat/cinema.png', alt: { ja: '映画を隠している青い字幕を、下の空席へ移動する場面', en: 'Moving blue subtitles away from the screen and into a row of seats' } },
-    { src: '/assets/works/please-take-a-seat/park.png', alt: { ja: '公園のベンチと、こちらを見ている三羽のハト', en: 'A park bench and three pigeons watching the player' } },
-    { src: '/assets/works/please-take-a-seat/cosmos.png', alt: { ja: '宇宙の大きな椅子へ青い地球を運ぶ最後の場面', en: 'The final scene: moving the blue Earth toward a large chair in space' } },
+    { src: '/assets/works/please-take-a-seat/vending.png', alt: { ja: '青い自販機が、入口をふさぐ二人を両側の足あとへ案内する場面', en: 'A blue vending machine makes space by nudging two customers to waiting footprints' } },
+    { src: '/assets/works/please-take-a-seat/sushi.png', alt: { ja: '湯のみでお皿を止めながら、二人を隣り合う椅子へ案内する場面', en: 'Using a tea cup to stop plates while seating two neighbours on the conveyor' } },
+    { src: '/assets/works/please-take-a-seat/cinema.png', alt: { ja: '背の違う観客を、後ろの人にも字幕が見えるように座らせる場面', en: 'Seating viewers of different heights while keeping the subtitles visible from behind' } },
+    { src: '/assets/works/please-take-a-seat/park.png', alt: { ja: '横から押すと羽をたたむ三羽のハトと、面接用のベンチ', en: 'Three pigeons fold their wings when nudged from the side at an interview bench' } },
+    { src: '/assets/works/please-take-a-seat/cosmos.png', alt: { ja: '土星の輪を回し、惑星を席へ案内してから地球も座る最後の場面', en: 'Turning Saturn’s ring and seating the planets before the Earth takes its own seat' } },
   ],
   caseStudy: {
     problem: {
@@ -52,17 +52,17 @@ export const pleaseSitWork: Work = {
       en: 'Further playtesting of the meeting-room version still exposed a dry experience. I added repeated “すみません” and “通ります” when the player bumps into people. The intention is for polite phrases to become absurd through repetition, giving simple movement a more expressive response.',
     },
     solution: {
-      ja: '試遊の意見をもとに会議室以外へ舞台を広げ、10場面にしました。その後、自分でも後半を遊び直し、物を決まった場所へ運ぶだけになっていることに気づきました。結末は変わっても、途中で人を押したときの反応が薄い。場面を増やす中で、最初にあった「触ると相手が動き、もう一度試したくなる」という面白さを弱めてしまったと考えました。',
-      en: 'Playtest feedback led me beyond the meeting room and into ten scenes. Replaying the later scenes myself revealed another problem: too much of the play had become carrying an object to a destination. The endings differed, but the responses along the way were thin. Expanding the settings had weakened the original appeal of nudging someone, seeing them react, and trying again.',
+      ja: '試遊の意見をもとに会議室以外へ舞台を広げ、10場面にしました。その後、自分でも後半を遊び直し、物を決まった場所へ運ぶだけになっていることに気づきました。v1.1では連鎖する押し合いや動く皿など、操作中の返事を増やしました。しかし、もう一度遊ぶと「反応は増えたが、どう押すかを考える場面はまだ少ない」という課題が残りました。',
+      en: 'Playtest feedback led me beyond the meeting room and into ten scenes. Replaying the later scenes myself revealed that too much of the play had become carrying an object to a destination. Version 1.1 added responses during movement, including chain reactions and moving plates. A further replay exposed a remaining problem: there were more reactions, but still too few reasons to choose how to push.',
     },
     result: {
-      ja: 'v1.1では後半7場面を作り直し、相手の反応が次の操作を変えるようにしました。自販機を動かすと買い物客が追いかけ、回転寿司では人が座った皿を押したり止めたりでき、字幕に押された観客は隣へ場所を譲ります。クリア後も動かせます。次の試遊では、プレイヤーが反応を見て動きを変えるか、自分から同じやり取りを繰り返すかを確かめたいです。',
-      en: 'Version 1.1 reworks the last seven scenes so that another character’s response changes the next move. Customers pursue the vending machine; occupied sushi plates can be pushed or held; spectators move aside for subtitles. Controls remain active after completion. Further playtesting will examine whether these responses change players’ decisions and whether they choose to repeat an interaction.',
+      ja: 'v1.2では「すみませんと言いながら、相手を決まった場所へ押す」を全話の軸に据えました。自販機は入口の二人を外側へ、映画館は全員を座らせたうえで字幕が見える配置へ。回転寿司では湯のみを押して皿を止め、宇宙では土星の輪の端を押して狭い通路を通します。順番・方向・空間の使い方が結果を変える改修です。新しい企画書には各話の目標、判断、NPCの反応、笑いどころを一頁ずつ記載しました。新版の面白さは、次の人による試遊で確かめます。',
+      en: 'Version 1.2 anchors every scene in saying “すみません” while pushing others into designated places. The vending machine must move two customers outward; the cinema requires both seated viewers and readable subtitles. A pushed tea cup stops sushi plates, while pushing the edge of Saturn’s ring turns it through a narrow passage. Order, direction, and space now affect the result. The proposal gives each scene its own page covering goals, decisions, NPC responses, and the joke. Whether these changes are more fun remains a question for the next human playtest.',
     },
     highlights: [
-      { ja: '10場面。操作は、動く・止まる', en: 'Ten scenes. Move, then stop.' },
+      { ja: '10場面。押す順番と向きを考える', en: 'Ten scenes. Choose the order and direction of each push.' },
       { ja: '初期版から、実際の試遊を重ねて改善', en: 'Iterated through real playtests from the first prototype' },
-      { ja: '相手が動くから、次の動きも変わる', en: 'Their response changes your next move' },
+      { ja: '押す → 相手が反応する → 配置を直す', en: 'Nudge, watch the response, then adjust the arrangement' },
     ],
   },
   links: { itch: pleaseSitGame.itchUrl },

@@ -86,8 +86,8 @@ export default async function WorkPage({
   const isPleaseSit = work.slug === pleaseSitGame.slug
   const caseStudyLabels = isPleaseSit
     ? locale === 'ja'
-      ? ['座るだけ、から会議室へ', '触ったときの反応を増やす', '広げたあと、薄くなった手応え', '操作の途中に、相手の返事を戻す']
-      : ['From chairs to a meeting room', 'Giving movement a response', 'What expanding the scenes left behind', 'Bringing responses back into play']
+      ? ['座るだけ、から会議室へ', '触ったときの反応を増やす', '広げたあと、薄くなった手応え', '押す順番と向きに、考える余地を']
+      : ['From chairs to a meeting room', 'Giving movement a response', 'What expanding the scenes left behind', 'Making order and direction matter']
     : [t('problem'), t('challenge'), t('solution'), t('result')]
   const statusLabel = work.releaseLabel?.[locale] ?? (work.status === 'LIVE'
     ? t('statusLive')

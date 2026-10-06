@@ -44,13 +44,13 @@ export function PleaseSitExperience({ locale }: { locale: 'ja' | 'en' }) {
     }
   }
   const beats = ja ? [
-    ['まず、見る。', '休みたい自販機と、まだ買いたいお客さん。席を詰めるハト。相手にも、したいことがあります。'],
-    ['押して、止まる。', '青いものを動かすと、相手がよけたり、隣の人を押したり。手を止めると、混んでいた場所にすき間ができます。'],
-    ['もう一度、ためす。', '少し押す、押し続ける、引き返す。後半7場面はクリア後も動かせるので、気になる反応をもう一度試せます。'],
+    ['まず、見る。', '入口をふさぐ二人、羽を広げるハト、後ろが見えない映画館。相手と席のあいだに、小さな困りごとがあります。'],
+    ['どちらから、押す？', '青いものを動かして、相手を足あとや席へ。正面からでは詰まるなら、先に一人を横へ。操作は同じでも、順番と向きで結果が変わります。'],
+    ['ひと押し、直す。', 'お礼のおじぎが隣の人に当たったら、配置を直す。Zで戻せます。後半7場面はクリア後も動かせるので、反応をもう一度試せます。'],
   ] : [
-    ['Look first.', 'A machine wants a break; its customers still want drinks. Pigeons shuffle along a bench. Everyone has something they want to do.'],
-    ['Nudge, then stop.', 'Move the blue object and others make room or bump their neighbours. Stop for a moment and a new gap can appear.'],
-    ['Try it again.', 'Nudge gently, keep pushing, or turn back. The last seven scenes stay playable after completion so you can revisit a reaction.'],
+    ['Look first.', 'Two customers block an entrance, pigeons spread their wings, and a viewer cannot see the screen. Each scene has a small problem between its guests and their seats.'],
+    ['Which side first?', 'Move the blue object and push others onto footprints or seats. If a direct push jams the entrance, make room at the side first. The controls stay simple; order and direction change the result.'],
+    ['Adjust one more time.', 'A polite bow can bump a neighbour out of place. Fix the arrangement, or press Z to undo. The last seven scenes remain playable after completion so you can revisit their reactions.'],
   ]
 
   return (
@@ -103,7 +103,7 @@ export function PleaseSitExperience({ locale }: { locale: 'ja' | 'en' }) {
         <div>
           <p className="please-sit-kicker">GAME DESIGN / 日本語 PDF</p>
           <h2 id="please-sit-document-title">{ja ? '「座る」を、遊びにする。' : 'Making a game out of taking a seat.'}</h2>
-          <p className="please-sit-intro">{ja ? '企画の狙いと10場面の設計に加え、実際の試遊で見えた課題、判断、変更の流れをまとめた企画書です。' : 'The Japanese proposal covers the concept, ten scenes, and the feedback, design decisions, and changes from real playtesting.'}</p>
+          <p className="please-sit-intro">{ja ? '各話を一頁ずつ、場面・目標・考える点・相手の反応・笑いどころで解説。初期の試遊と作者自身の再プレイで見つけた課題、5段階の改善もまとめています。' : 'The Japanese proposal gives every scene a page for its setting, goals, decisions, NPC responses, and joke. It also records five iterations, distinguishing early external playtests from the author’s later replay findings.'}</p>
         </div>
         <a href={pleaseSitGame.designPdf} download className="please-sit-button please-sit-button--outline">{ja ? '企画書を読む（PDF）' : 'Design document (PDF, Japanese)'}<span aria-hidden="true">↓</span></a>
       </section>
