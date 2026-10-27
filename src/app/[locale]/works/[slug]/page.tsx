@@ -17,6 +17,8 @@ import { PleaseSitExperience } from '@/components/works/please-sit-experience'
 import { pleaseSitGame } from '@/content/please-take-a-seat'
 import { nyankoHomeGame } from '@/content/nyanko-home'
 import { parkMasterProject } from '@/content/park-master'
+import { memeClashGame } from '@/content/meme-clash'
+import { MemeClashExperience } from '@/components/works/meme-clash-experience'
 import '@/components/works/park-master-feature.css'
 import '@/components/works/nyanko-home.css'
 
@@ -35,6 +37,17 @@ export async function generateMetadata({
   const work = works.find((item) => item.slug === slug)
   if (!work) return {}
   const language = locale === 'en' ? 'en' : 'ja'
+  if (work.slug === memeClashGame.slug) {
+    const title = 'ミーム大乱闘 — MEME CLASH | Kashin Ou'
+    const canonical = `https://kashin.ink/${language === 'en' ? 'en/' : ''}works/${memeClashGame.slug}`
+    const cover = `https://kashin.ink${memeClashGame.cover}`
+    return {
+      title, description: work.summary[language],
+      alternates: { canonical, languages: { ja: `https://kashin.ink/works/${memeClashGame.slug}`, en: `https://kashin.ink/en/works/${memeClashGame.slug}` } },
+      openGraph: { title, description: work.summary[language], url: canonical, type: 'website', images: [{ url: cover, width: 1280, height: 720, alt: 'ミーム大乱闘 — MEME CLASH v0.39.0' }] },
+      twitter: { card: 'summary_large_image', title, description: work.summary[language], images: [cover] },
+    }
+  }
   if (work.slug === parkMasterProject.slug) {
     const title = `${language === 'ja' ? 'Park Master マップ拡張企画' : 'Park Master Map Expansion Proposal'} | Kashin Ou`
     const canonical = `https://kashin.ink/${language === 'en' ? 'en/' : ''}works/${work.slug}`
@@ -112,6 +125,7 @@ export default async function WorkPage({
   const isPleaseSit = work.slug === pleaseSitGame.slug
   const isNyankoHome = work.slug === nyankoHomeGame.slug
   const isParkMaster = work.slug === parkMasterProject.slug
+  const isMemeClash = work.slug === memeClashGame.slug
   const caseStudyLabels = isParkMaster
     ? locale === 'ja'
       ? ['操作を増やさず、遊びを変える', '地形を避けるだけで終わらせない', '企画を、触って理解できる形に', 'つくったものと、これから確かめること']
@@ -132,7 +146,7 @@ export default async function WorkPage({
       : t('statusProgress'))
 
   return (
-    <main id="main-content" className={`case-study${isHyakki ? ' case-study--hyakki' : ''}${isPleaseSit ? ' case-study--please-sit' : ''}${isNyankoHome ? ' case-study--nyanko-home' : ''}${isParkMaster ? ' case-study--park-master' : ''}`}>
+    <main id="main-content" className={`case-study${isHyakki ? ' case-study--hyakki' : ''}${isPleaseSit ? ' case-study--please-sit' : ''}${isNyankoHome ? ' case-study--nyanko-home' : ''}${isParkMaster ? ' case-study--park-master' : ''}${isMemeClash ? ' case-study--meme-clash' : ''}`}>
       <CaseStudyProgress label={t('progress')} />
 
       <article>
@@ -176,6 +190,7 @@ export default async function WorkPage({
 
             {(work.links?.demo || work.links?.itch || work.links?.repo || work.links?.video) && (
               <div className="mt-10 flex flex-wrap gap-3">
+                {isMemeClash && <a href="#play" className="cta">{locale === 'ja' ? '体験版を遊ぶ' : 'Play the demo'}<span aria-hidden="true">↓</span></a>}
                 {isParkMaster && <a href={parkMasterProject.pdfUrl} target="_blank" rel="noopener noreferrer" className="cta">{locale === 'ja' ? '企画書（PDF）を読む' : 'Read the proposal (PDF)'}<ArrowUpRightIcon className="h-4 w-4" /></a>}
                 {isPleaseSit && <a href="#play" className="cta">{locale === 'ja' ? 'ブラウザで遊ぶ' : 'Play in browser'}<span aria-hidden="true">↓</span></a>}
                 {isPleaseSit && <a href={pleaseSitGame.designPdf} download className="cta">{locale === 'ja' ? '企画書（PDF）' : 'Design document (PDF)'}<span aria-hidden="true">↓</span></a>}
@@ -211,17 +226,18 @@ export default async function WorkPage({
                 <img
                   src={work.coverGif ?? work.thumbnail}
                   alt={`${work.title} — ${work.summary[locale]}`}
-                  width={isParkMaster || isNyankoHome ? 1280 : isPleaseSit ? 1152 : isHyakki ? 1440 : 1200}
-                  height={isParkMaster || isNyankoHome || isPleaseSit ? 720 : isHyakki ? 900 : 800}
+                  width={isMemeClash || isParkMaster || isNyankoHome ? 1280 : isPleaseSit ? 1152 : isHyakki ? 1440 : 1200}
+                  height={isMemeClash || isParkMaster || isNyankoHome || isPleaseSit ? 720 : isHyakki ? 900 : 800}
                   decoding="async"
                 />
               </picture>
-              <span aria-hidden="true">{isParkMaster ? 'ACTUAL WEBSITE / INTERACTIVE PROPOSAL' : isNyankoHome ? `GAME SCREEN / v${nyankoHomeGame.version}` : isPleaseSit ? 'ACTUAL GAMEPLAY / v1.0.0' : isHyakki ? 'ACTUAL GAMEPLAY / v0.6.0' : isTamago ? 'ACTUAL GAMEPLAY / v4' : `PROJECT / ${work.year}`}</span>
+              <span aria-hidden="true">{isMemeClash ? `ACTUAL GAME CAPTURE / v${memeClashGame.version}` : isParkMaster ? 'ACTUAL WEBSITE / INTERACTIVE PROPOSAL' : isNyankoHome ? `GAME SCREEN / v${nyankoHomeGame.version}` : isPleaseSit ? 'ACTUAL GAMEPLAY / v1.0.0' : isHyakki ? 'ACTUAL GAMEPLAY / v0.6.0' : isTamago ? 'ACTUAL GAMEPLAY / v4' : `PROJECT / ${work.year}`}</span>
             </div>
           </div>
         </header>
 
         <div className="mx-auto max-w-[1180px] px-[clamp(20px,6vw,64px)] py-[clamp(80px,12vw,150px)]">
+          {isMemeClash && <MemeClashExperience locale={locale} />}
           {isPleaseSit && <PleaseSitExperience locale={locale} />}
           {isHyakki && <HyakkiExperience locale={locale} />}
           {isTamago && <TamagoExperience locale={locale} />}

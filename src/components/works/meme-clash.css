@@ -17,3 +17,28 @@
   .meme-clash-controls > div { padding: 20px; }
   .meme-clash-controls dl > div { grid-template-columns: minmax(100px, .7fr) minmax(0, 1fr); gap: 12px; }
 }
+
+.editorial-current--six { grid-template-columns: .8fr 1fr 1fr 1fr 1.25fr .9fr .9fr; }
+.editorial-current--six > a { min-width: 0; padding: 20px 8px; gap: 6px; font-size: clamp(13px, 1.1vw, 17px); line-height: 1.5; }
+@media (max-width: 1100px) {
+  .editorial-current--six { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .editorial-current--six > p { display: none; }
+  .editorial-current--six > a:first-of-type { border-left: 0; }
+}
+@media (max-width: 767px) {
+  .editorial-current--six { grid-template-columns: 1fr 1fr; }
+  .editorial-current--six > a { min-height: 60px; padding: 12px; font-size: 17px; }
+  .editorial-current--six > a:nth-of-type(odd) { border-left: 0; padding-left: 0; }
+  .editorial-current--six > a:nth-of-type(even) { border-left: 1px solid var(--line); }
+}
+
+@media (max-width: 767px) {
+  .editorial-hero--six .editorial-hero__stage { min-height: 1010px; }
+  .editorial-hero--six .editorial-hero__cat { bottom: 215px; }
+  .editorial-hero--six .editorial-hero__orbit { bottom: 245px; }
+  .editorial-hero--six .editorial-hero__kanji { bottom: 250px; }
+  .editorial-hero--six .editorial-hero__cat-caption { bottom: 245px; }
+}
+@media (max-width: 380px) {
+  .editorial-hero--six .editorial-hero__stage { min-height: 1060px; }
+}

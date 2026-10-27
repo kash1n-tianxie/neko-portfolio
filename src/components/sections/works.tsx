@@ -8,6 +8,7 @@ import { FeaturedWorks } from '../works/featured-works'
 import { PleaseSitFeature } from '../works/please-sit-feature'
 import { NyankoHomeFeature } from '../works/nyanko-home-feature'
 import { ParkMasterFeature } from '../works/park-master-feature'
+import { MemeClashFeature } from '../works/meme-clash-feature'
 import '../works/works-showcase.css'
 
 export async function Works() {
@@ -40,9 +41,10 @@ export async function Works() {
       </Reveal>
 
       <NyankoHomeFeature locale={locale} />
-      <ParkMasterFeature locale={locale} index={2} />
-      <PleaseSitFeature locale={locale} index={3} hideIntro />
-      <FeaturedWorks locale={locale} indexOffset={3} hideIntro />
+      <MemeClashFeature locale={locale} index={2} />
+      <ParkMasterFeature locale={locale} index={3} />
+      <PleaseSitFeature locale={locale} index={4} hideIntro />
+      <FeaturedWorks locale={locale} indexOffset={4} hideIntro />
 
       <div className="works-archive-heading">
         <div>
@@ -54,10 +56,10 @@ export async function Works() {
 
       <Reveal delay={40}>
         <WorksGallery
-          works={works.filter((work) => !['nyanko-home', 'park-master', 'please-take-a-seat', 'tamago-exe', 'hyakki-lantern'].includes(work.slug))}
+          works={works.filter((work) => !['nyanko-home', 'meme-clash', 'park-master', 'please-take-a-seat', 'tamago-exe', 'hyakki-lantern'].includes(work.slug))}
           locale={locale}
           compact
-          indexOffset={5}
+          indexOffset={6}
           labels={{
             filters: {
               ALL: t('filterAll'),

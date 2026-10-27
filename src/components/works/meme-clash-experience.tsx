@@ -79,7 +79,7 @@ export function MemeClashExperience({ locale }: { locale: 'ja' | 'en' }) {
       <section id="play" className="please-sit-section" aria-labelledby="meme-clash-play-title">
         <p className="please-sit-kicker">PLAY / IN DEVELOPMENT / v{memeClashGame.version}</p>
         <h2 id="meme-clash-play-title">{ja ? 'その「！」を、一撃に。' : 'Turn that “!” into an attack.'}</h2>
-        <p className="please-sit-intro">{ja ? '日本語の無料体験版。PCとキーボードで遊んでください。読み込み後、ゲーム画面をクリックして操作を始めます。' : 'A free demo with a Japanese interface. Play on a desktop computer with a keyboard. Click the game after loading to begin using the controls.'}</p>
+        <p className="please-sit-intro">{ja ? '日本語の無料体験版。PCとキーボードで遊んでください。初回は約500 MBを読み込むため、通信環境によって数分かかります。読み込み後、ゲーム画面をクリックして操作を始めます。' : 'A free demo with a Japanese interface. Use a desktop computer and keyboard. The initial download is about 500 MB and may take several minutes, depending on your connection. Click the game after loading to begin using the controls.'}</p>
         <div className="please-sit-player">
           {active ? (
             <iframe ref={frameRef} src={memeClashGame.embedUrl} title={ja ? 'ミーム大乱闘 v0.39.0 — itch.io' : 'MEME CLASH v0.39.0 — itch.io'} tabIndex={0} allow="autoplay; fullscreen; gamepad" allowFullScreen

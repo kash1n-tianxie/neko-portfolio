@@ -4,7 +4,7 @@ export const memeClashGame = {
   slug: 'meme-clash',
   version: '0.39.0',
   itchUrl: 'https://kashin-ou.itch.io/meme-clash',
-  embedUrl: '',
+  embedUrl: 'https://itch.io/embed-upload/20068590?color=333333',
   cover: '/assets/works/meme-clash/title.webp',
   poster: '/assets/works/meme-clash/title.webp',
 }

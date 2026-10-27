@@ -21,7 +21,7 @@ export function MemeClashFeature({ locale, index = 2 }: { locale: 'ja' | 'en'; i
           <Link href={`/works/${memeClashGame.slug}`} className="featured-work__action">
             {ja ? '作品を見る・遊ぶ' : 'Explore & play'}<ArrowUpRightIcon className="h-5 w-5" />
           </Link>
-          <p className="please-sit-feature__note">{ja ? '日本語版。PCのキーボード操作に対応。まずはトレーニングで一撃ずつ。' : 'Japanese game interface. Use a desktop keyboard; start with one move at a time in training.'}</p>
+          <p className="please-sit-feature__note">{ja ? '日本語版・PCキーボード操作。初回読み込みは約500 MB。まずはトレーニングで一撃ずつ。' : 'Japanese interface. Desktop keyboard required. Initial download: about 500 MB. Start one move at a time in training.'}</p>
         </div>
         <div className="please-sit-feature__visual">
           <Link href={`/works/${memeClashGame.slug}`} aria-label={ja ? 'ミーム大乱闘の作品ページへ' : 'Explore MEME CLASH'}>
