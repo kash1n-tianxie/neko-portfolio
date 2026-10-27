@@ -163,7 +163,7 @@ export default async function WorkPage({
                   {work.tag} / {work.year}
                 </p>
                 <h1 className="case-title font-mincho m-0 mt-5 max-w-[16ch] text-[clamp(44px,9vw,108px)] font-extrabold leading-[0.95]">
-                  {isPleaseSit ? <><span>どうぞ、</span><br /><span>おかけください。</span></> : isParkMaster && locale === 'en' ? 'Park Master Map Expansion' : work.title}
+                  {isPleaseSit ? <><span>どうぞ、</span><br /><span>おかけください。</span></> : isParkMaster ? <><span>Park Master</span><br /><span>{locale === 'ja' ? 'マップ拡張企画' : 'Map Expansion'}</span></> : work.title}
                 </h1>
                 {isHyakki && <p className="hyakki-subtitle">HYAKKI LANTERN CITY / 2048 × AUTO DEFENSE</p>}
                 {isNyankoHome && <p className="font-mono mt-5 text-[11px] tracking-[0.12em] text-accent">NYANKO HOME / CATS & DRIED FISH</p>}
