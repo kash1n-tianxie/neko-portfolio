@@ -2,6 +2,7 @@ import { hyakkiLanternWork } from './hyakki-lantern'
 import { tamagoWork } from './tamago'
 import { pleaseSitWork } from './please-take-a-seat'
 import { nyankoHomeWork } from './nyanko-home'
+import { parkMasterWork } from './park-master'
 
 export type L10n = { ja: string; en: string }
 
@@ -43,6 +44,7 @@ export type Work = {
  */
 export const works: Work[] = [
   nyankoHomeWork,
+  parkMasterWork,
   pleaseSitWork,
   hyakkiLanternWork,
   tamagoWork,

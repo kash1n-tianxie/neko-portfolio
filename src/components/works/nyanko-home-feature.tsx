@@ -9,7 +9,7 @@ export function NyankoHomeFeature({ locale }: { locale: 'ja' | 'en' }) {
   return (
     <div className="nyanko-home-feature">
       <div className="featured-works__intro">
-        <p className="featured-works__eyebrow">SELECTED WORKS / 01—04</p>
+        <p className="featured-works__eyebrow">SELECTED WORKS / 01—05</p>
         <p>{ja ? '新しい遊びを、ここから。' : 'New worlds to discover.'}</p>
       </div>
       <article id="featured-nyanko-home" className="featured-work featured-work--released featured-work--nyanko-home" aria-labelledby="nyanko-home-feature-title">

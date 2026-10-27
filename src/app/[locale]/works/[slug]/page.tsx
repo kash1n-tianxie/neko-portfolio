@@ -16,6 +16,8 @@ import { tamagoGame } from '@/content/tamago'
 import { PleaseSitExperience } from '@/components/works/please-sit-experience'
 import { pleaseSitGame } from '@/content/please-take-a-seat'
 import { nyankoHomeGame } from '@/content/nyanko-home'
+import { parkMasterProject } from '@/content/park-master'
+import '@/components/works/park-master-feature.css'
 import '@/components/works/nyanko-home.css'
 
 export function generateStaticParams() {
@@ -33,6 +35,17 @@ export async function generateMetadata({
   const work = works.find((item) => item.slug === slug)
   if (!work) return {}
   const language = locale === 'en' ? 'en' : 'ja'
+  if (work.slug === parkMasterProject.slug) {
+    const title = `${language === 'ja' ? 'Park Master マップ拡張企画' : 'Park Master Map Expansion Proposal'} | Kashin Ou`
+    const canonical = `https://kashin.ink/${language === 'en' ? 'en/' : ''}works/${work.slug}`
+    const cover = `https://kashin.ink${parkMasterProject.cover}`
+    return {
+      title, description: work.summary[language],
+      alternates: { canonical, languages: { ja: 'https://kashin.ink/works/park-master', en: 'https://kashin.ink/en/works/park-master' } },
+      openGraph: { title, description: work.summary[language], url: canonical, type: 'website', images: [{ url: cover, width: 1280, height: 720, alt: 'Park Master — interactive map expansion proposal' }] },
+      twitter: { card: 'summary_large_image', title, description: work.summary[language], images: [cover] },
+    }
+  }
   if (work.slug === nyankoHomeGame.slug) {
     const title = `にゃんこホーム${language === 'en' ? ' — Nyanko Home' : ''} | Kashin Ou`
     const canonical = `https://kashin.ink/${language === 'en' ? 'en/' : ''}works/${nyankoHomeGame.slug}`
@@ -98,7 +111,12 @@ export default async function WorkPage({
   const isTamago = work.slug === tamagoGame.slug
   const isPleaseSit = work.slug === pleaseSitGame.slug
   const isNyankoHome = work.slug === nyankoHomeGame.slug
-  const caseStudyLabels = isNyankoHome
+  const isParkMaster = work.slug === parkMasterProject.slug
+  const caseStudyLabels = isParkMaster
+    ? locale === 'ja'
+      ? ['操作を増やさず、遊びを変える', '地形を避けるだけで終わらせない', '企画を、触って理解できる形に', 'つくったものと、これから確かめること']
+      : ['Change the play, keep the input', 'Make the terrain matter', 'A proposal you can understand by playing', 'What is built, and what comes next']
+    : isNyankoHome
     ? locale === 'ja'
       ? ['月を取り戻しに、出発。', '戦いの前に、ひと工夫。', '干物とおもちゃで、戦い方が変わる。', 'ここぞの一手は、ネコをクリック。']
       : ['Bring the moon home.', 'Make a plan before the next battle.', 'Fish and toys change the way you fight.', 'Click a cat when the moment is right.']
@@ -114,7 +132,7 @@ export default async function WorkPage({
       : t('statusProgress'))
 
   return (
-    <main id="main-content" className={`case-study${isHyakki ? ' case-study--hyakki' : ''}${isPleaseSit ? ' case-study--please-sit' : ''}${isNyankoHome ? ' case-study--nyanko-home' : ''}`}>
+    <main id="main-content" className={`case-study${isHyakki ? ' case-study--hyakki' : ''}${isPleaseSit ? ' case-study--please-sit' : ''}${isNyankoHome ? ' case-study--nyanko-home' : ''}${isParkMaster ? ' case-study--park-master' : ''}`}>
       <CaseStudyProgress label={t('progress')} />
 
       <article>
@@ -131,7 +149,7 @@ export default async function WorkPage({
                   {work.tag} / {work.year}
                 </p>
                 <h1 className="case-title font-mincho m-0 mt-5 max-w-[16ch] text-[clamp(44px,9vw,108px)] font-extrabold leading-[0.95]">
-                  {isPleaseSit ? <><span>どうぞ、</span><br /><span>おかけください。</span></> : work.title}
+                  {isPleaseSit ? <><span>どうぞ、</span><br /><span>おかけください。</span></> : isParkMaster && locale === 'en' ? 'Park Master Map Expansion' : work.title}
                 </h1>
                 {isHyakki && <p className="hyakki-subtitle">HYAKKI LANTERN CITY / 2048 × AUTO DEFENSE</p>}
                 {isNyankoHome && <p className="font-mono mt-5 text-[11px] tracking-[0.12em] text-accent">NYANKO HOME / CATS & DRIED FISH</p>}
@@ -158,6 +176,7 @@ export default async function WorkPage({
 
             {(work.links?.demo || work.links?.itch || work.links?.repo || work.links?.video) && (
               <div className="mt-10 flex flex-wrap gap-3">
+                {isParkMaster && <a href={parkMasterProject.pdfUrl} target="_blank" rel="noopener noreferrer" className="cta">{locale === 'ja' ? '企画書（PDF）を読む' : 'Read the proposal (PDF)'}<ArrowUpRightIcon className="h-4 w-4" /></a>}
                 {isPleaseSit && <a href="#play" className="cta">{locale === 'ja' ? 'ブラウザで遊ぶ' : 'Play in browser'}<span aria-hidden="true">↓</span></a>}
                 {isPleaseSit && <a href={pleaseSitGame.designPdf} download className="cta">{locale === 'ja' ? '企画書（PDF）' : 'Design document (PDF)'}<span aria-hidden="true">↓</span></a>}
                 {isHyakki && <a href="#play" className="cta">{locale === 'ja' ? '無料体験版を遊ぶ' : 'Try the free demo'}<span aria-hidden="true">↓</span></a>}
@@ -165,7 +184,7 @@ export default async function WorkPage({
                 {isTamago && <a href={tamagoGame.designPdf} download className="cta">{locale === 'ja' ? '企画書（PDF）' : 'Design document (PDF)'}<span aria-hidden="true">↓</span></a>}
                 {work.links.demo && (
                   <a href={work.links.demo} target="_blank" rel="noopener noreferrer" className="cta">
-                    {t('liveDemo')} <ArrowUpRightIcon className="h-4 w-4" />
+                    {isParkMaster ? (locale === 'ja' ? 'Web企画書を体験する' : 'Play the interactive proposal') : t('liveDemo')} <ArrowUpRightIcon className="h-4 w-4" />
                   </a>
                 )}
                 {work.links.itch && (
@@ -192,12 +211,12 @@ export default async function WorkPage({
                 <img
                   src={work.coverGif ?? work.thumbnail}
                   alt={`${work.title} — ${work.summary[locale]}`}
-                  width={isNyankoHome ? 1280 : isPleaseSit ? 1152 : isHyakki ? 1440 : 1200}
-                  height={isNyankoHome || isPleaseSit ? 720 : isHyakki ? 900 : 800}
+                  width={isParkMaster || isNyankoHome ? 1280 : isPleaseSit ? 1152 : isHyakki ? 1440 : 1200}
+                  height={isParkMaster || isNyankoHome || isPleaseSit ? 720 : isHyakki ? 900 : 800}
                   decoding="async"
                 />
               </picture>
-              <span aria-hidden="true">{isNyankoHome ? `GAME SCREEN / v${nyankoHomeGame.version}` : isPleaseSit ? 'ACTUAL GAMEPLAY / v1.0.0' : isHyakki ? 'ACTUAL GAMEPLAY / v0.6.0' : isTamago ? 'ACTUAL GAMEPLAY / v4' : `PROJECT / ${work.year}`}</span>
+              <span aria-hidden="true">{isParkMaster ? 'ACTUAL WEBSITE / INTERACTIVE PROPOSAL' : isNyankoHome ? `GAME SCREEN / v${nyankoHomeGame.version}` : isPleaseSit ? 'ACTUAL GAMEPLAY / v1.0.0' : isHyakki ? 'ACTUAL GAMEPLAY / v0.6.0' : isTamago ? 'ACTUAL GAMEPLAY / v4' : `PROJECT / ${work.year}`}</span>
             </div>
           </div>
         </header>
