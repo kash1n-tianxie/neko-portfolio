@@ -1,6 +1,7 @@
 import { hyakkiLanternWork } from './hyakki-lantern'
 import { tamagoWork } from './tamago'
 import { pleaseSitWork } from './please-take-a-seat'
+import { nyankoHomeWork } from './nyanko-home'
 
 export type L10n = { ja: string; en: string }
 
@@ -41,6 +42,7 @@ export type Work = {
  * カード、フィルター、詳細ページ、ギャラリーはこの配列から自動生成される。
  */
 export const works: Work[] = [
+  nyankoHomeWork,
   pleaseSitWork,
   hyakkiLanternWork,
   tamagoWork,

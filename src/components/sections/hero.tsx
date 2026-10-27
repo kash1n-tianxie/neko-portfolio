@@ -5,6 +5,7 @@ import { CatCompanion } from '../motion/cat-companion'
 import { ArrowUpRightIcon } from '../ui/icons'
 import './home-editorial.css'
 import '../works/please-sit-experience.css'
+import '../works/nyanko-home.css'
 
 export async function Hero() {
   const t = await getTranslations('hero')
@@ -45,11 +46,12 @@ export async function Hero() {
           <span>{ja ? '目が合ったら、はじまり。' : 'A little curiosity starts here.'}</span>
         </div>
 
-        <div className="editorial-current editorial-current--three" data-hero-detail>
+        <div className="editorial-current editorial-current--four" data-hero-detail>
           <p><span className="editorial-dot" aria-hidden="true" /> LATEST GAMES <small>{ja ? '公開・制作中の作品' : 'PLAY & DISCOVER'}</small></p>
-          <a href="#featured-please-sit"><span>01</span>{ja ? 'どうぞ、おかけください。' : 'Please, Take a Seat.'}<span aria-hidden="true">↘</span></a>
-          <a href="#featured-2048"><span>02</span>{ja ? '百鬼灯市' : 'Hyakki Lantern City'}<span aria-hidden="true">↘</span></a>
-          <a href="#featured-tamago-exe"><span>03</span>tamago.exe<span aria-hidden="true">↘</span></a>
+          <a href="#featured-nyanko-home"><span>01</span><span lang="ja">にゃんこホーム</span><span aria-hidden="true">↘</span></a>
+          <a href="#featured-please-sit"><span>02</span>{ja ? 'どうぞ、おかけください。' : 'Please, Take a Seat.'}<span aria-hidden="true">↘</span></a>
+          <a href="#featured-2048"><span>03</span>{ja ? '百鬼灯市' : 'Hyakki Lantern City'}<span aria-hidden="true">↘</span></a>
+          <a href="#featured-tamago-exe"><span>04</span>tamago.exe<span aria-hidden="true">↘</span></a>
         </div>
       </div>
     </section>

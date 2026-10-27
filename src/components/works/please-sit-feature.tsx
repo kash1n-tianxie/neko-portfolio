@@ -4,17 +4,17 @@ import { pleaseSitGame, pleaseSitWork } from '@/content/please-take-a-seat'
 import { ArrowUpRightIcon } from '@/components/ui/icons'
 import './please-sit-experience.css'
 
-export function PleaseSitFeature({ locale }: { locale: 'ja' | 'en' }) {
+export function PleaseSitFeature({ locale, index = 1, hideIntro = false }: { locale: 'ja' | 'en'; index?: number; hideIntro?: boolean }) {
   const ja = locale === 'ja'
   return (
     <div className="please-sit-feature">
-      <div className="featured-works__intro">
+      {!hideIntro && <div className="featured-works__intro">
         <p className="featured-works__eyebrow">SELECTED WORKS / 01—03</p>
         <p>{ja ? '新しい遊びを、ここから。' : 'New worlds to discover.'}</p>
-      </div>
+      </div>}
       <article id="featured-please-sit" className="please-sit-feature__card" aria-labelledby="please-sit-feature-title">
         <div className="please-sit-feature__topline">
-          <span>01 <span>/ FEATURED GAME</span></span>
+          <span>{String(index).padStart(2, '0')} <span>/ FEATURED GAME</span></span>
           <span>{ja ? '無料ブラウザ版' : 'FREE BROWSER GAME'} · v{pleaseSitGame.version}</span>
         </div>
         <div className="please-sit-feature__copy">

@@ -24,11 +24,13 @@ export function WorksGallery({
   locale,
   labels,
   compact = false,
+  indexOffset = 0,
 }: {
   works: Work[]
   locale: 'ja' | 'en'
   labels: WorksGalleryLabels
   compact?: boolean
+  indexOffset?: number
 }) {
   const [active, setActive] = useState<Filter>('ALL')
   const filtered = useMemo(
@@ -86,7 +88,7 @@ export function WorksGallery({
               key={work.slug}
               work={work}
               locale={locale}
-              index={works.indexOf(work) + (compact ? 2 : 0)}
+              index={works.indexOf(work) + indexOffset}
               compact={compact}
               labels={{
                 viewCase: labels.viewCase,

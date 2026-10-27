@@ -15,6 +15,8 @@ import { TamagoExperience } from '@/components/works/tamago-experience'
 import { tamagoGame } from '@/content/tamago'
 import { PleaseSitExperience } from '@/components/works/please-sit-experience'
 import { pleaseSitGame } from '@/content/please-take-a-seat'
+import { nyankoHomeGame } from '@/content/nyanko-home'
+import '@/components/works/nyanko-home.css'
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
@@ -31,6 +33,17 @@ export async function generateMetadata({
   const work = works.find((item) => item.slug === slug)
   if (!work) return {}
   const language = locale === 'en' ? 'en' : 'ja'
+  if (work.slug === nyankoHomeGame.slug) {
+    const title = `にゃんこホーム${language === 'en' ? ' — Nyanko Home' : ''} | Kashin Ou`
+    const canonical = `https://kashin.ink/${language === 'en' ? 'en/' : ''}works/${nyankoHomeGame.slug}`
+    const cover = `https://kashin.ink${nyankoHomeGame.cover}`
+    return {
+      title, description: work.summary[language],
+      alternates: { canonical, languages: { ja: `https://kashin.ink/works/${nyankoHomeGame.slug}`, en: `https://kashin.ink/en/works/${nyankoHomeGame.slug}` } },
+      openGraph: { title, description: work.summary[language], url: canonical, type: 'website', images: [{ url: cover, width: 1280, height: 720, alt: 'にゃんこホーム — Nyanko Home' }] },
+      twitter: { card: 'summary_large_image', title, description: work.summary[language], images: [cover] },
+    }
+  }
   if (work.slug === pleaseSitGame.slug) {
     const title = `${language === 'ja' ? 'どうぞ、おかけください。' : 'Please, Take a Seat.'} | Kashin Ou`
     const canonical = `https://kashin.ink/${language === 'en' ? 'en/' : ''}works/${pleaseSitGame.slug}`
@@ -84,7 +97,12 @@ export default async function WorkPage({
   const isHyakki = work.slug === 'hyakki-lantern'
   const isTamago = work.slug === tamagoGame.slug
   const isPleaseSit = work.slug === pleaseSitGame.slug
-  const caseStudyLabels = isPleaseSit
+  const isNyankoHome = work.slug === nyankoHomeGame.slug
+  const caseStudyLabels = isNyankoHome
+    ? locale === 'ja'
+      ? ['月を取り戻しに、出発。', '戦いの前に、ひと工夫。', '干物とおもちゃで、戦い方が変わる。', 'ここぞの一手は、ネコをクリック。']
+      : ['Bring the moon home.', 'Make a plan before the next battle.', 'Fish and toys change the way you fight.', 'Click a cat when the moment is right.']
+    : isPleaseSit
     ? locale === 'ja'
       ? ['座るだけ、から会議室へ', '触ったときの反応を増やす', '広げたあと、薄くなった手応え', '押す順番と向きに、考える余地を']
       : ['From chairs to a meeting room', 'Giving movement a response', 'What expanding the scenes left behind', 'Making order and direction matter']
@@ -96,7 +114,7 @@ export default async function WorkPage({
       : t('statusProgress'))
 
   return (
-    <main id="main-content" className={`case-study${isHyakki ? ' case-study--hyakki' : ''}${isPleaseSit ? ' case-study--please-sit' : ''}`}>
+    <main id="main-content" className={`case-study${isHyakki ? ' case-study--hyakki' : ''}${isPleaseSit ? ' case-study--please-sit' : ''}${isNyankoHome ? ' case-study--nyanko-home' : ''}`}>
       <CaseStudyProgress label={t('progress')} />
 
       <article>
@@ -116,6 +134,7 @@ export default async function WorkPage({
                   {isPleaseSit ? <><span>どうぞ、</span><br /><span>おかけください。</span></> : work.title}
                 </h1>
                 {isHyakki && <p className="hyakki-subtitle">HYAKKI LANTERN CITY / 2048 × AUTO DEFENSE</p>}
+                {isNyankoHome && <p className="font-mono mt-5 text-[11px] tracking-[0.12em] text-accent">NYANKO HOME / CATS & DRIED FISH</p>}
                 <p className="m-0 mt-7 max-w-[62ch] text-[clamp(16px,2vw,20px)] leading-[1.9] text-muted">
                   {work.summary[locale]}
                 </p>
@@ -123,8 +142,8 @@ export default async function WorkPage({
 
               <dl className="case-meta">
                 <div>
-                  <dt>{t('role')}</dt>
-                  <dd>{work.role?.[locale] ?? t('pending')}</dd>
+                  <dt>{isNyankoHome ? (locale === 'ja' ? 'ジャンル' : 'Genre') : t('role')}</dt>
+                  <dd>{isNyankoHome ? (locale === 'ja' ? 'チーム構築 × 2D防衛' : 'Team building × 2D defense') : work.role?.[locale] ?? t('pending')}</dd>
                 </div>
                 <div>
                   <dt>{t('status')}</dt>
@@ -151,7 +170,7 @@ export default async function WorkPage({
                 )}
                 {work.links.itch && (
                   <a href={work.links.itch} target="_blank" rel="noopener noreferrer" className="cta">
-                    {isHyakki ? (locale === 'ja' ? 'itch.ioで遊ぶ・ダウンロード' : 'Play or download on itch.io') : isTamago ? (locale === 'ja' ? 'itch.io（旧バージョン）' : 'Earlier version on itch.io') : t('itch')} <ArrowUpRightIcon className="h-4 w-4" />
+                    {isNyankoHome ? (locale === 'ja' ? 'itch.ioで遊ぶ' : 'Play on itch.io') : isHyakki ? (locale === 'ja' ? 'itch.ioで遊ぶ・ダウンロード' : 'Play or download on itch.io') : isTamago ? (locale === 'ja' ? 'itch.io（旧バージョン）' : 'Earlier version on itch.io') : t('itch')} <ArrowUpRightIcon className="h-4 w-4" />
                   </a>
                 )}
                 {work.links.repo && (
@@ -173,12 +192,12 @@ export default async function WorkPage({
                 <img
                   src={work.coverGif ?? work.thumbnail}
                   alt={`${work.title} — ${work.summary[locale]}`}
-                  width={isPleaseSit ? 1152 : isHyakki ? 1440 : 1200}
-                  height={isPleaseSit ? 720 : isHyakki ? 900 : 800}
+                  width={isNyankoHome ? 1280 : isPleaseSit ? 1152 : isHyakki ? 1440 : 1200}
+                  height={isNyankoHome || isPleaseSit ? 720 : isHyakki ? 900 : 800}
                   decoding="async"
                 />
               </picture>
-              <span aria-hidden="true">{isPleaseSit ? 'ACTUAL GAMEPLAY / v1.0.0' : isHyakki ? 'ACTUAL GAMEPLAY / v0.6.0' : isTamago ? 'ACTUAL GAMEPLAY / v4' : `PROJECT / ${work.year}`}</span>
+              <span aria-hidden="true">{isNyankoHome ? `GAME SCREEN / v${nyankoHomeGame.version}` : isPleaseSit ? 'ACTUAL GAMEPLAY / v1.0.0' : isHyakki ? 'ACTUAL GAMEPLAY / v0.6.0' : isTamago ? 'ACTUAL GAMEPLAY / v4' : `PROJECT / ${work.year}`}</span>
             </div>
           </div>
         </header>
@@ -246,6 +265,13 @@ export default async function WorkPage({
           )}
 
           {isHyakki && <div className="mt-24"><HyakkiCredits locale={locale} /></div>}
+
+          {isNyankoHome && (
+            <div className="nyanko-home-play">
+              <p>{locale === 'ja' ? '日本語ではじめる、ネコたちの月探し。' : 'Join the cats on their search for the moon.'}<br />{locale === 'ja' ? 'v0.4.0 · 日本語／簡体字中国語' : 'v0.4.0 · Japanese / Simplified Chinese'}</p>
+              <a href={nyankoHomeGame.itchUrl} target="_blank" rel="noopener noreferrer" className="cta">{locale === 'ja' ? 'itch.ioで遊ぶ' : 'Play on itch.io'}<ArrowUpRightIcon className="h-4 w-4" /></a>
+            </div>
+          )}
 
           <div className="mt-24">
             <ProjectNextPreview
