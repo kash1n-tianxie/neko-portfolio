@@ -1,5 +1,5 @@
-.world-entry__art { position:relative; display:block; min-width:0; overflow:hidden; background:#8bba9c; }
-.world-entry__art img { display:block; width:100%; height:100%; object-fit:cover; object-position:center; image-rendering:pixelated; filter:none; }
+.world-entry__art { position:relative; display:block; min-width:0; overflow:hidden; background:#fffdea; }
+.world-entry__art img { display:block; width:100%; height:100%; object-fit:contain; object-position:center; image-rendering:pixelated; filter:none; }
 .world-entry__arrow { display:block; flex:none; font:28px/1 sans-serif; transition:transform .2s ease; }
 .world-entry__cue { animation:world-entry-beckon 3.6s ease-in-out infinite; }
 @keyframes world-entry-beckon { 0%,100% { opacity:1; } 50% { opacity:.8; } }
