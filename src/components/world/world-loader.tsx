@@ -1,30 +1,40 @@
 'use client'
 
 import dynamic from 'next/dynamic'
+import { Component, type ReactNode } from 'react'
 import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/navigation'
+import './pixel-world.css'
 
-/** Three.js を含むチャンクは踏み込んだ人だけがダウンロードする */
-const NekoWorld3D = dynamic(() => import('./neko-world').then((m) => m.NekoWorld3D), {
+/** The 2D pixel town is downloaded only when the visitor enters /world. */
+const PixelTown = dynamic(() => import('./pixel-world').then((m) => m.PixelWorld), {
   ssr: false,
   loading: () => <WorldFallback />,
 })
 
-function WorldFallback() {
+function WorldFallback({ failed = false }: { failed?: boolean }) {
   const t = useTranslations('world')
   return (
-    <div className="fixed inset-0 z-[60] grid place-items-center bg-[#0b0b0d]">
-      <div className="text-center">
-        <span className="font-display outline-text--thin block text-[clamp(60px,12vw,120px)] leading-none" aria-hidden="true">
-          墨
-        </span>
-        <p className="font-mono m-0 mt-5 animate-pulse text-[11px] tracking-[0.28em] text-muted">
-          {t('loading')}
-        </p>
-      </div>
-    </div>
+    <main className="pixel-town" data-palette="blue-yellow">
+      <section className="pixel-town__welcome" role={failed ? 'alert' : 'status'}>
+        <span className="pixel-town__eyebrow">NEKO TOWN</span>
+        <h1>{t(failed ? 'webglError' : 'loading')}</h1>
+        <Link href="/" className="pixel-town__button">← {t('back')}</Link>
+      </section>
+    </main>
   )
 }
 
+class WorldErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false }
+  static getDerivedStateFromError() { return { failed: true } }
+  componentDidCatch() {
+    delete document.documentElement.dataset.worldReady
+    window.dispatchEvent(new CustomEvent('neko:world-error', { detail: { pathname: window.location.pathname } }))
+  }
+  render() { return this.state.failed ? <WorldFallback failed /> : this.props.children }
+}
+
 export function WorldLoader() {
-  return <NekoWorld3D />
+  return <WorldErrorBoundary><PixelTown /></WorldErrorBoundary>
 }

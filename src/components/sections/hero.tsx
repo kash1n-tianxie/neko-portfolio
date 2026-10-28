@@ -35,7 +35,7 @@ export async function Hero() {
           </div>
           <div className="editorial-hero__actions hero-enter" data-hero-detail>
             <a href="#works" className="cta editorial-primary">{t('ctaWorks')}<span aria-hidden="true">↓</span></a>
-            <Link href="/world" data-canvas-transition className="editorial-world-link">{ja ? '猫になって、散歩する' : 'Take a walk as a cat'}<ArrowUpRightIcon className="h-4 w-4" /><span className="editorial-world-link__badge">3D</span></Link>
+            <Link href="/world" data-canvas-transition className="editorial-world-link">{ja ? '猫になって、散歩する' : 'Take a walk as a cat'}<ArrowUpRightIcon className="h-4 w-4" /><span className="editorial-world-link__badge">PIXEL</span></Link>
           </div>
         </div>
 

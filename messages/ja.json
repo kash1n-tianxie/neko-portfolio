@@ -24,9 +24,9 @@
     "scroll": "SCROLL"
   },
   "world": {
-    "metaTitle": "雲の上の島 3D | 王家進",
-    "loading": "島を描いています…",
-    "webglError": "この環境では 3D 表示（WebGL）を利用できないようです。2D サイトで作品をご覧ください。",
+    "metaTitle": "NEKO TOWN — 猫の小さな冒険 | 王家進",
+    "loading": "小さな町を準備しています…",
+    "webglError": "町を読み込めませんでした。ページを再読み込みするか、作品ページをご覧ください。",
     "prologueLine": "猫になったことを、想像したことがありますか。",
     "prologueSub": "用事もない。締め切りもない。ただ、気になるものに近づいて、静かに知るだけ。",
     "introKicker": "NEKO WORLD / 3D",

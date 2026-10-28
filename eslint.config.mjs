@@ -18,6 +18,8 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      // Godot-generated bundles are vendored output, not handwritten app code.
+      "public/games/**",
     ],
   },
 ];

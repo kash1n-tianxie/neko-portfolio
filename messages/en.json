@@ -24,9 +24,9 @@
     "scroll": "SCROLL"
   },
   "world": {
-    "metaTitle": "The Island Above the Clouds 3D | Kashin Ou",
-    "loading": "Drawing the island…",
-    "webglError": "3D (WebGL) does not seem to be available in this environment. Please enjoy the works on the 2D site.",
+    "metaTitle": "NEKO TOWN — A Little Cat Adventure | Kashin Ou",
+    "loading": "Preparing the little town…",
+    "webglError": "The town could not load. Please reload the page or visit the portfolio instead.",
     "prologueLine": "Have you ever imagined being a cat?",
     "prologueSub": "No errands. No deadlines. Just walking toward whatever catches your eye, and quietly getting to know it.",
     "introKicker": "NEKO WORLD / 3D",
