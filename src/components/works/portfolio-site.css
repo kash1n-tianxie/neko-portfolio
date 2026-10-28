@@ -1,0 +1,10 @@
+.portfolio-site-feature { display: grid; gap: 28px; }
+.featured-work--portfolio-site .featured-work__title { font-size: clamp(44px, 6vw, 78px); line-height: 1.05; overflow-wrap: anywhere; }
+.featured-work--portfolio-site .featured-work__cover img { aspect-ratio: 8 / 5; object-fit: contain; }
+.portfolio-site-feature__links { display: flex; flex-wrap: wrap; gap: 14px 20px; margin-top: 24px; }
+.portfolio-site-feature__links a { display: inline-flex; align-items: center; gap: 7px; color: inherit; font-size: 12px; line-height: 1.6; text-underline-offset: 4px; }
+.portfolio-site-feature a:focus-visible { outline: 3px solid var(--accent); outline-offset: 5px; }
+.case-study--portfolio-site .case-cover { aspect-ratio: 8 / 5; }
+.case-study--portfolio-site .case-cover img { object-fit: contain; }
+.case-study--portfolio-site .case-gallery__item { aspect-ratio: 8 / 5; }
+.case-study--portfolio-site .case-gallery__item img { object-fit: contain; }

@@ -4,17 +4,17 @@ import { nyankoHomeGame, nyankoHomeWork } from '@/content/nyanko-home'
 import { ArrowUpRightIcon } from '@/components/ui/icons'
 import './nyanko-home.css'
 
-export function NyankoHomeFeature({ locale }: { locale: 'ja' | 'en' }) {
+export function NyankoHomeFeature({ locale, index = 1, hideIntro = false }: { locale: 'ja' | 'en'; index?: number; hideIntro?: boolean }) {
   const ja = locale === 'ja'
   return (
     <div className="nyanko-home-feature">
-      <div className="featured-works__intro">
+      {!hideIntro && <div className="featured-works__intro">
         <p className="featured-works__eyebrow">SELECTED WORKS / 01—06</p>
         <p>{ja ? '新しい遊びを、ここから。' : 'New worlds to discover.'}</p>
-      </div>
+      </div>}
       <article id="featured-nyanko-home" className="featured-work featured-work--released featured-work--nyanko-home" aria-labelledby="nyanko-home-feature-title">
         <div className="featured-work__topline">
-          <span className="featured-work__index">01<span>/ FEATURED GAME</span></span>
+          <span className="featured-work__index">{String(index).padStart(2, '0')}<span>/ FEATURED GAME</span></span>
           <span className="featured-work__status"><span aria-hidden="true" />v{nyankoHomeGame.version}</span>
         </div>
         <div className="featured-work__copy">

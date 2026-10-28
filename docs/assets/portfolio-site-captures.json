@@ -1,0 +1,19 @@
+{
+  "project": "KASHIN.INK",
+  "capturedOn": "2026-10-29",
+  "sourceUrls": ["https://kashin.ink/", "https://kashin.ink/world"],
+  "sourceRevision": "5e447a7c3f8a176a6c110f585496584342efc076",
+  "method": "Actual browser screenshots at 1280x800. No generated or conceptual frames.",
+  "cover": {
+    "path": "public/assets/works/kashin-ink/cover.gif",
+    "description": "Looping digest of actual screenshots, not a continuous screen recording.",
+    "scenes": ["Blue/yellow homepage", "Red/black homepage", "Pixel town", "Walking near Mint", "NPC dialogue"],
+    "staticFallback": "public/assets/works/kashin-ink/cover.webp"
+  },
+  "gallery": [
+    "public/assets/works/kashin-ink/blue-yellow.webp",
+    "public/assets/works/kashin-ink/red-black.webp",
+    "public/assets/works/kashin-ink/pixel-world.webp"
+  ],
+  "processing": "Screenshots converted to WebP. GIF encoded at 5 fps with a 192-color palette; original theme colors retained."
+}

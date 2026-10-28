@@ -25,6 +25,7 @@ function TitleGraphics() {
 export async function Hero() {
   const ja = (await getLocale()) === 'ja'
   const latest = [
+    ['kashin-ink', 'KASHIN.INK'],
     ['nyanko-home', ja ? 'にゃんこホーム' : 'Nyanko Home'],
     ['meme-clash', 'MEME CLASH'],
     ['park-master', 'PARK MASTER'],

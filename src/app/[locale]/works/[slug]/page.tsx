@@ -20,8 +20,10 @@ import { parkMasterProject } from '@/content/park-master'
 import { memeClashGame } from '@/content/meme-clash'
 import { MemeClashExperience } from '@/components/works/meme-clash-experience'
 import { AnimatedWorkCover } from '@/components/works/animated-work-cover'
+import { portfolioSite, portfolioSiteSectionLabels } from '@/content/portfolio-site'
 import '@/components/works/park-master-feature.css'
 import '@/components/works/nyanko-home.css'
+import '@/components/works/portfolio-site.css'
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
@@ -127,7 +129,10 @@ export default async function WorkPage({
   const isNyankoHome = work.slug === nyankoHomeGame.slug
   const isParkMaster = work.slug === parkMasterProject.slug
   const isMemeClash = work.slug === memeClashGame.slug
-  const caseStudyLabels = isParkMaster
+  const isPortfolioSite = work.slug === portfolioSite.slug
+  const caseStudyLabels = isPortfolioSite
+    ? portfolioSiteSectionLabels[locale]
+    : isParkMaster
     ? locale === 'ja'
       ? ['操作を増やさず、遊びを変える', '地形を避けるだけで終わらせない', '企画を、触って理解できる形に', 'つくったものと、これから確かめること']
       : ['Change the play, keep the input', 'Make the terrain matter', 'A proposal you can understand by playing', 'What is built, and what comes next']
@@ -147,7 +152,7 @@ export default async function WorkPage({
       : t('statusProgress'))
 
   return (
-    <main id="main-content" className={`case-study${isHyakki ? ' case-study--hyakki' : ''}${isPleaseSit ? ' case-study--please-sit' : ''}${isNyankoHome ? ' case-study--nyanko-home' : ''}${isParkMaster ? ' case-study--park-master' : ''}${isMemeClash ? ' case-study--meme-clash' : ''}`}>
+    <main id="main-content" className={`case-study${isHyakki ? ' case-study--hyakki' : ''}${isPleaseSit ? ' case-study--please-sit' : ''}${isNyankoHome ? ' case-study--nyanko-home' : ''}${isParkMaster ? ' case-study--park-master' : ''}${isMemeClash ? ' case-study--meme-clash' : ''}${isPortfolioSite ? ' case-study--portfolio-site' : ''}`}>
       <CaseStudyProgress label={t('progress')} />
 
       <article>
@@ -200,7 +205,7 @@ export default async function WorkPage({
                 {isTamago && <a href={tamagoGame.designPdf} download className="cta">{locale === 'ja' ? '企画書（PDF）' : 'Design document (PDF)'}<span aria-hidden="true">↓</span></a>}
                 {work.links.demo && (
                   <a href={work.links.demo} target="_blank" rel="noopener noreferrer" className="cta">
-                    {isParkMaster ? (locale === 'ja' ? 'Web企画書を体験する' : 'Play the interactive proposal') : t('liveDemo')} <ArrowUpRightIcon className="h-4 w-4" />
+                    {isPortfolioSite ? (locale === 'ja' ? 'サイトのトップへ' : 'Visit the homepage') : isParkMaster ? (locale === 'ja' ? 'Web企画書を体験する' : 'Play the interactive proposal') : t('liveDemo')} <ArrowUpRightIcon className="h-4 w-4" />
                   </a>
                 )}
                 {work.links.itch && (
@@ -213,6 +218,7 @@ export default async function WorkPage({
                     GitHub <ArrowUpRightIcon className="h-4 w-4" />
                   </a>
                 )}
+                {isPortfolioSite && <Link href={portfolioSite.worldPath} className="cta" data-canvas-transition>{locale === 'ja' ? 'ピクセルの街を歩く' : 'Walk the pixel town'}<ArrowUpRightIcon className="h-4 w-4" /></Link>}
                 {work.links.video && (
                   <a href={work.links.video} target="_blank" rel="noopener noreferrer" className="cta">
                     {t('video')} <ArrowUpRightIcon className="h-4 w-4" />
@@ -222,12 +228,12 @@ export default async function WorkPage({
             )}
 
             <div className="case-cover">
-              {isMemeClash || isParkMaster || isNyankoHome ? <AnimatedWorkCover
+              {isPortfolioSite || isMemeClash || isParkMaster || isNyankoHome ? <AnimatedWorkCover
                 src={work.coverGif}
                 fallback={work.thumbnail}
                 alt={`${work.title} — ${work.summary[locale]}`}
                 width={isMemeClash ? 960 : isParkMaster ? 944 : 1280}
-                height={isParkMaster ? 800 : 720}
+                height={isPortfolioSite || isParkMaster ? 800 : 720}
                 sizes="(max-width: 1180px) 90vw, 1180px"
               /> : <picture>
                 <source media="(prefers-reduced-motion: reduce)" srcSet={work.thumbnail} />

@@ -8,10 +8,12 @@ import { PleaseSitFeature } from '../works/please-sit-feature'
 import { NyankoHomeFeature } from '../works/nyanko-home-feature'
 import { ParkMasterFeature } from '../works/park-master-feature'
 import { MemeClashFeature } from '../works/meme-clash-feature'
+import { PortfolioSiteFeature } from '../works/portfolio-site-feature'
 import '../works/works-showcase.css'
 import '../works/street-works.css'
 
 const workSelect = [
+  { id: 'featured-kashin-ink', title: 'KASHIN.INK' },
   { id: 'featured-nyanko-home', title: 'NYANKO HOME' },
   { id: 'featured-meme-clash', title: 'MEME CLASH' },
   { id: 'featured-park-master', title: 'PARK MASTER' },
@@ -33,7 +35,7 @@ export async function Works() {
       <Reveal>
         <header className="street-works__header" data-street-scene>
           <span className="street-works__paint" data-street-paint aria-hidden="true" />
-          <p className="street-works__eyebrow"><span>01 / THE PLAYLIST</span><span>SELECTED WORKS — 06</span></p>
+          <p className="street-works__eyebrow"><span>01 / THE PLAYLIST</span><span>SELECTED WORKS — {String(workSelect.length).padStart(2, '0')}</span></p>
           <h2 id="street-works-title" data-chapter-title className="street-works__title">
             <span>SELECT</span>
             <strong>WORKS<span aria-hidden="true">↙</span></strong>
@@ -48,7 +50,7 @@ export async function Works() {
         </header>
       </Reveal>
 
-      <nav className="street-works__select" aria-label={locale === 'ja' ? '注目の6作品へ移動' : 'Jump to a featured project'}>
+      <nav className="street-works__select" aria-label={locale === 'ja' ? `注目の${workSelect.length}作品へ移動` : 'Jump to a featured project'}>
         {workSelect.map((work, index) => (
           <a key={work.id} href={`#${work.id}`}>
             <span>{String(index + 1).padStart(2, '0')}</span>
@@ -59,11 +61,12 @@ export async function Works() {
       </nav>
 
       <div className="street-works__selection">
-        <NyankoHomeFeature locale={locale} />
-        <MemeClashFeature locale={locale} index={2} />
-        <ParkMasterFeature locale={locale} index={3} />
-        <PleaseSitFeature locale={locale} index={4} hideIntro />
-        <FeaturedWorks locale={locale} indexOffset={4} hideIntro />
+        <PortfolioSiteFeature locale={locale} />
+        <NyankoHomeFeature locale={locale} index={2} hideIntro />
+        <MemeClashFeature locale={locale} index={3} />
+        <ParkMasterFeature locale={locale} index={4} />
+        <PleaseSitFeature locale={locale} index={5} hideIntro />
+        <FeaturedWorks locale={locale} indexOffset={5} hideIntro />
       </div>
 
       <div className="works-archive-heading">
@@ -79,7 +82,7 @@ export async function Works() {
           works={works.filter((work) => !featuredWorkSlugs.some((slug) => slug === work.slug))}
           locale={locale}
           compact
-          indexOffset={6}
+          indexOffset={featuredWorkSlugs.length}
           labels={{
             filters: {
               ALL: t('filterAll'),

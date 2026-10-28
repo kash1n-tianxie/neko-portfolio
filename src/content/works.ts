@@ -4,6 +4,7 @@ import { pleaseSitWork } from './please-take-a-seat'
 import { nyankoHomeWork } from './nyanko-home'
 import { parkMasterWork } from './park-master'
 import { memeClashWork } from './meme-clash'
+import { portfolioSiteWork } from './portfolio-site'
 
 export type L10n = { ja: string; en: string }
 
@@ -45,9 +46,10 @@ export type Work = {
  * 作品データの公開元。
  * カード、フィルター、詳細ページ、ギャラリーはこの配列から自動生成される。
  */
-export const featuredWorkSlugs = ['nyanko-home', 'meme-clash', 'park-master', 'please-take-a-seat', 'hyakki-lantern', 'tamago-exe'] as const
+export const featuredWorkSlugs = ['kashin-ink', 'nyanko-home', 'meme-clash', 'park-master', 'please-take-a-seat', 'hyakki-lantern', 'tamago-exe'] as const
 
 export const works: Work[] = [
+  portfolioSiteWork,
   nyankoHomeWork,
   memeClashWork,
   parkMasterWork,

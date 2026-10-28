@@ -16,13 +16,22 @@ function contentUrl(path) {
 }
 
 const { works, featuredWorkSlugs } = await import(contentUrl(resolve('src/content/works.ts')))
-const selected = ['nyanko-home', 'meme-clash', 'park-master', 'please-take-a-seat', 'hyakki-lantern', 'tamago-exe']
+const selected = ['kashin-ink', 'nyanko-home', 'meme-clash', 'park-master', 'please-take-a-seat', 'hyakki-lantern', 'tamago-exe']
 
-test('six current featured works exist once in live-site order', () => {
-  assert.deepEqual(works.slice(0, 6).map(({ slug }) => slug), selected)
+test('portfolio leads seven featured works once, preserving the existing project order', () => {
+  assert.deepEqual(works.slice(0, 7).map(({ slug }) => slug), selected)
   assert.deepEqual(featuredWorkSlugs, selected)
   assert.equal(new Set(works.map(({ slug }) => slug)).size, works.length)
-  assert.ok(works.length > 6, 'existing smaller projects remain')
+  assert.ok(works.length > 7, 'existing smaller projects remain')
+})
+
+test('the portfolio project points to its public source and production home', () => {
+  const work = works.find(({ slug }) => slug === 'kashin-ink')
+  assert.ok(work, 'the portfolio itself is a public case study')
+  assert.equal(work.title, 'KASHIN.INK')
+  assert.equal(work.links.repo, 'https://github.com/kash1n-tianxie/neko-portfolio')
+  assert.equal(work.links.demo, 'https://kashin.ink/')
+  assert.equal(work.gallery.length, 3)
 })
 
 test('every project cover and gallery image exists locally', () => {
@@ -44,7 +53,7 @@ test('current play links and release labels remain aligned with published projec
 })
 
 test('new featured covers are genuine animated GIFs with static fallbacks', () => {
-  for (const slug of selected.slice(0, 3)) {
+  for (const slug of selected.slice(0, 4)) {
     const work = works.find((item) => item.slug === slug)
     assert.ok(work?.coverGif?.endsWith('.gif'), `${slug}: needs an actual GIF cover`)
     const bytes = readFileSync(resolve(`public${work.coverGif}`))
