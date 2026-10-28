@@ -3,6 +3,8 @@ import { Link } from '@/i18n/navigation'
 import { CatCompanion } from '../motion/cat-companion'
 import { ChapterTransition } from '../motion/chapter-transition'
 import { ThemeCards } from '../theme-toggle'
+import { WorldEntryContent } from './world-entry'
+import './world-entry.css'
 
 /** Generated paint alpha is tinted by theme; typography and controls remain real HTML. */
 function TitleGraphics() {
@@ -51,7 +53,7 @@ export async function Hero() {
             </div>
             <div className="manga-game-menu">
               <a className="manga-game-menu__primary" href="#works"><span aria-hidden="true">▶</span><b>SELECT WORKS</b><small>{ja ? '作品を見る' : 'MY PROJECTS'}</small><span aria-hidden="true">↗</span></a>
-              <Link href="/world" data-canvas-transition><span aria-hidden="true">◇</span><b>ENTER THE WORLD</b><small>{ja ? '猫になって散歩' : 'A CAT’S WALK'}</small><span aria-hidden="true">↗</span></Link>
+              <Link href="/world" className="world-entry--compact" data-canvas-transition><WorldEntryContent ja={ja} compact /></Link>
               <a href="#contact"><span aria-hidden="true">＋</span><b>LET’S TALK</b><small>{ja ? '連絡する' : 'GET IN TOUCH'}</small><span aria-hidden="true">↗</span></a>
             </div>
           </div>

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "art_direction_brief": "Classic minimal8-bit cat sprite inspired by the user's orange-cat reference: square black eyes, large aligned pixel clusters, simple four-legged side body, red collar, no scenery or lighting. Six flat colors, cream background, ample negative space; all interactive copy remains semantic HTML.",
+  "assets": [
+    {
+      "id": "pixel-world-invitation",
+      "role": "promotional world-entry illustration",
+      "path": "public/assets/world/pixel-world-invitation.webp",
+      "status": "verified-in-browser",
+      "technical": {
+        "dimensions": "768x512",
+        "alpha": false,
+        "anchor": "center",
+        "frames": 1,
+        "filtering": "nearest",
+        "native_grid": "96x64",
+        "color_budget": 6,
+        "verified_color_count": 6,
+        "bytes": 316
+      },
+      "source": {
+        "kind": "generated",
+        "url_or_tool": "OpenAI built-in image_gen",
+        "created_at": "2026-10-29",
+        "prompt": "Use case: stylized-concept. Create one EXTREMELY SIMPLE CLASSIC 8-BIT CAT SPRITE matching the attached reference's graphic simplicity very closely. This is a tiny retro game sprite, NOT an illustration and NOT a pixelated painting. Orange four-legged cat with a front-facing square head, body extending sideways, short legs, upright curled tail, tiny two black SQUARE eyes, a white rectangular muzzle/chest, and a single red collar stripe. Follow the reference proportions and pose. Maximum 8 flat solid colors. Very thick dark blocky outline. Every shape made of large perfectly aligned square pixel blocks as if the entire cat were only 18 pixels wide by 14 pixels tall and then enlarged with nearest-neighbor. No diagonally rotated pixels, no curves, no fur strands, no whiskers, no cheek blush, no eye highlights, no realistic anatomy, no expressive anime eyes, no bell, no shading gradients, no texture, no glow, no lighting. Cat centered on a completely flat warm cream #fffbea background. Empty background only, absolutely no scenery, ground, grass, path, buildings, shadows or other objects. Landscape3:2canvas. Cat around55 percent of imageheight, fullyvisiblewithcomfortableemptyspaceallaround. No text, no labels, no border, no watermark. Preserve the naive simple old-game character appeal of the reference, do not embellish.",
+        "source_record": "exec-8e0fe148-6aae-4d2b-bc7a-f1ddade21d53.png",
+        "reference_record": "User-provided codex-clipboard-392f3d86-aec9-455e-beac-4dc21d9498f9.png",
+        "generation_note": "Generated with the built-in image tool using the user's supplied cat reference, then normalized for the website; no separate asset license assertion."
+      },
+      "edit_history": [
+        "User rejected detailed and painterly pixel illustrations; regenerated from their original simple orange-cat reference.",
+        "Nearest-neighbor normalization to96x64, fixed six-color palette mapping to remove generated texture and gradients,8x nearest-neighbor upscale to768x512 and lossless WebP encoding."
+      ],
+      "verification": {
+        "native_scale_reviewed": true,
+        "in_browser_reviewed": true,
+        "technical_checks_passed": true
+      }
+    }
+  ]
+}

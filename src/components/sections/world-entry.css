@@ -1,0 +1,39 @@
+.world-entry__art { position:relative; display:block; min-width:0; overflow:hidden; background:#8bba9c; }
+.world-entry__art img { display:block; width:100%; height:100%; object-fit:cover; object-position:center; image-rendering:pixelated; filter:none; }
+.world-entry__arrow { display:block; flex:none; font:28px/1 sans-serif; transition:transform .2s ease; }
+.world-entry__cue { animation:world-entry-beckon 3.6s ease-in-out infinite; }
+@keyframes world-entry-beckon { 0%,100% { opacity:1; } 50% { opacity:.8; } }
+
+/* Higher specificity keeps the illustrated band independent of the ink-menu rows. */
+.manga-home .manga-game-menu > .world-entry--compact { display:grid; grid-template-columns:110px minmax(0,1fr) 22px; gap:12px; height:94px; min-height:94px; margin-block:7px; padding:0 12px 0 0; border:2px solid var(--scene-paper); background:var(--scene-bg); color:var(--scene-paper); box-shadow:4px 4px 0 var(--scene-accent); overflow:hidden; }
+.manga-home .manga-game-menu > .world-entry--compact:before { content:none; }
+.manga-home .manga-game-menu > .world-entry--compact .world-entry__art { align-self:stretch; border-right:2px solid var(--scene-paper); }
+.world-entry__preview-copy { display:flex; flex-direction:column; gap:8px; min-width:0; }
+.world-entry__preview-copy b { font:400 clamp(23px,2.4vw,33px)/1 var(--font-anton),sans-serif; white-space:nowrap; letter-spacing:.02em; }
+.world-entry__preview-copy .world-entry__cue { font:700 10px/1.5 var(--font-zen),sans-serif; letter-spacing:.02em; }
+.manga-home .manga-game-menu > .world-entry--compact:hover,
+.manga-home .manga-game-menu > .world-entry--compact:focus-visible { background:var(--scene-paper); color:var(--scene-on-paper); }
+.manga-home .manga-game-menu > .world-entry--compact:focus-visible { outline:3px solid var(--scene-accent); outline-offset:5px; }
+.world-entry--compact:hover .world-entry__arrow,
+.world-entry--compact:focus-visible .world-entry__arrow { transform:translate(2px,-2px); }
+
+@media(max-width:1100px) {
+  .manga-home .manga-game-menu > .world-entry--compact { grid-template-columns:86px minmax(0,1fr) 18px; gap:9px; padding-right:9px; height:90px; min-height:90px; }
+  .world-entry__preview-copy b { font-size:25px; }
+  .world-entry__preview-copy .world-entry__cue { font-size:9px; }
+}
+@media(max-width:650px) {
+  .manga-home .manga-game-menu > .world-entry--compact { grid-template-columns:98px minmax(0,1fr) 20px; height:92px; min-height:92px; gap:12px; }
+  .world-entry__preview-copy b { font-size:28px; }
+}
+@media(max-width:380px) {
+  .manga-home .manga-game-menu > .world-entry--compact { grid-template-columns:70px minmax(0,1fr) 18px; gap:8px; padding-right:8px; }
+  .world-entry__preview-copy b { font-size:24px; }
+  .world-entry__preview-copy .world-entry__cue { font-size:8px; letter-spacing:0; }
+}
+html[data-motion='off'] .world-entry__cue { animation:none!important; opacity:1; }
+html[data-motion='off'] .world-entry__arrow { transition:none!important; transform:none!important; }
+@media(prefers-reduced-motion:reduce) {
+  .world-entry__cue { animation:none!important; opacity:1; }
+  .world-entry__arrow { transition:none!important; transform:none!important; }
+}
