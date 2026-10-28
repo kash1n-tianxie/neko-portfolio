@@ -1,0 +1,3 @@
+.motion-ready .manga-home [data-street-paint] { translate:var(--street-drift-x,0px) var(--street-drift-y,0px); }
+html[data-motion='off'] .manga-home [data-street-paint] { translate:none!important; }
+@media(prefers-reduced-motion:reduce) { .manga-home [data-street-paint] { translate:none!important; } }

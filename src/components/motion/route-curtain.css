@@ -1,0 +1,68 @@
+.route-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 180;
+  overflow: hidden;
+  contain: strict;
+  pointer-events: none;
+  visibility: hidden;
+  background: var(--scene-accent);
+  color: var(--scene-paper);
+  transform: translate3d(0, 0, 0);
+}
+
+.route-curtain[data-phase='active'],
+.route-curtain[data-phase='leaving'] {
+  visibility: visible;
+}
+
+.route-curtain[data-phase='leaving'] {
+  transform: translate3d(110%, -12%, 0);
+  transition: transform 360ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.route-curtain__ink,
+.route-curtain__paper {
+  position: absolute;
+  inset: 0;
+}
+
+.route-curtain__ink {
+  background: var(--scene-bg);
+  clip-path: polygon(0 0, 73% 0, 31% 100%, 0 100%);
+}
+
+.route-curtain__paper {
+  background: var(--scene-paper);
+  clip-path: polygon(73% 0, 76% 0, 34% 100%, 31% 100%);
+}
+
+.route-curtain__mark {
+  position: absolute;
+  left: 12%;
+  top: 50%;
+  transform: translateY(-54%) rotate(-7deg);
+  font-family: var(--font-shippori), serif;
+  font-size: clamp(120px, 32vw, 420px);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.route-curtain__index {
+  position: absolute;
+  right: 5%;
+  bottom: 8%;
+  font-family: var(--font-jbmono), monospace;
+  font-size: clamp(9px, 1.2vw, 14px);
+  letter-spacing: 0.14em;
+  writing-mode: vertical-rl;
+}
+
+html[data-motion='off'] .route-curtain {
+  display: none;
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-curtain { display: none; transition: none; }
+}

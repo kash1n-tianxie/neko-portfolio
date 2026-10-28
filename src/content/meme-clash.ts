@@ -6,6 +6,7 @@ export const memeClashGame = {
   itchUrl: 'https://kashin-ou.itch.io/meme-clash',
   embedUrl: 'https://itch.io/embed-upload/20068590?color=333333',
   cover: '/assets/works/meme-clash/title.webp',
+  coverGif: '/assets/works/meme-clash/cover.gif',
   poster: '/assets/works/meme-clash/title.webp',
 }
 
@@ -26,6 +27,8 @@ export const memeClashWork: Work = {
   },
   tech: ['Godot 4.7', 'GDScript', 'HTML5'],
   thumbnail: memeClashGame.cover,
+  coverGif: memeClashGame.coverGif,
+  coverCaption: { ja: '実機プレイ映像 / v0.35', en: 'GAMEPLAY RECORDING / v0.35' },
   gallery: [
     { src: '/assets/works/meme-clash/select.webp', alt: { ja: '7人から対戦キャラクターを選ぶ画面', en: 'The character selection screen with seven fighters' } },
     { src: '/assets/works/meme-clash/wojak-combo.webp', alt: { ja: 'ウォジャックが記号で繰り出す連続攻撃', en: 'Wojak attacking with a chain of punctuation effects' } },

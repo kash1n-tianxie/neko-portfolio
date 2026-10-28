@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { useReducedMotion } from './use-reduced-motion'
 
 /**
  * 近接集墨 — proximity "ink focus" (React Bits "Variable Proximity" idea).
@@ -19,13 +20,14 @@ export function InkFocusText({
   radius?: number
 }) {
   const ref = useRef<HTMLSpanElement>(null)
+  const reducedMotion = useReducedMotion()
 
   useEffect(() => {
     const el = ref.current
     if (!el) return
     if (
       !window.matchMedia('(pointer: fine)').matches ||
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      reducedMotion
     )
       return
 
@@ -44,6 +46,7 @@ export function InkFocusText({
       }
     }
     const onMove = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse') return
       px = e.clientX
       py = e.clientY
       if (!raf) raf = requestAnimationFrame(tick)
@@ -59,8 +62,9 @@ export function InkFocusText({
       window.removeEventListener('pointermove', onMove)
       window.removeEventListener('blur', reset)
       cancelAnimationFrame(raf)
+      reset()
     }
-  }, [text, radius])
+  }, [text, radius, reducedMotion])
 
   return (
     <span ref={ref} className={`ink-focus ${className}`} aria-label={text}>

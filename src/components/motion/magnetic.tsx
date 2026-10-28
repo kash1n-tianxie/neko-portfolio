@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { useReducedMotion } from './use-reduced-motion'
 
 /**
  * 磁吸 — the classic award-site magnetic element: it leans toward the
@@ -16,15 +17,16 @@ export function Magnetic({
   className?: string
 }) {
   const ref = useRef<HTMLDivElement>(null)
+  const reducedMotion = useReducedMotion()
 
   useEffect(() => {
     const fine = window.matchMedia('(pointer: fine)').matches
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const el = ref.current
-    if (!fine || reduce || !el) return
+    if (!fine || reducedMotion || !el) return
 
     let raf = 0
     const onMove = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse') return
       cancelAnimationFrame(raf)
       raf = requestAnimationFrame(() => {
         const r = el.getBoundingClientRect()
@@ -43,8 +45,9 @@ export function Magnetic({
       cancelAnimationFrame(raf)
       el.removeEventListener('pointermove', onMove)
       el.removeEventListener('pointerleave', onLeave)
+      el.style.transform = ''
     }
-  }, [strength])
+  }, [strength, reducedMotion])
 
   return (
     <div ref={ref} className={`magnetic ${className}`}>

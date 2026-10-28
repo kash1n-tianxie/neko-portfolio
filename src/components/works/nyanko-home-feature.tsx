@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { AnimatedWorkCover } from './animated-work-cover'
 import { Link } from '@/i18n/navigation'
 import { nyankoHomeGame, nyankoHomeWork } from '@/content/nyanko-home'
 import { ArrowUpRightIcon } from '@/components/ui/icons'
@@ -31,9 +31,9 @@ export function NyankoHomeFeature({ locale }: { locale: 'ja' | 'en' }) {
         </div>
         <div className="featured-work__visual">
           <Link href={`/works/${nyankoHomeGame.slug}`} className="featured-work__cover" aria-label={ja ? 'にゃんこホームの作品紹介へ' : 'Explore Nyanko Home'}>
-            <Image src={nyankoHomeGame.cover} alt={ja ? 'にゃんこホームのタイトル画面。6匹のネコが、月を奪った洗濯機に立ち向かう' : 'Nyanko Home title screen: six cats face the washing machine that stole the moon'} width={1280} height={720} sizes="(max-width: 767px) 90vw, 55vw" />
+            <AnimatedWorkCover src={nyankoHomeGame.coverGif} fallback={nyankoHomeGame.cover} alt={ja ? 'にゃんこホーム。ネコと干物で家財の敵を迎え撃つ防衛ゲーム' : 'Nyanko Home: cats and dried fish defend against household enemies'} width={1280} height={720} sizes="(max-width: 767px) 90vw, 55vw" />
           </Link>
-          <p className="featured-work__visual-label"><span>GAME SCREEN / v{nyankoHomeGame.version}</span><span>{ja ? '6匹のネコ、月ひとつ。' : 'Six cats. One missing moon.'}</span></p>
+          <p className="featured-work__visual-label"><span>{nyankoHomeWork.coverCaption?.[locale]}</span><span>{ja ? '6匹のネコ、月ひとつ。' : 'Six cats. One missing moon.'}</span></p>
         </div>
       </article>
     </div>

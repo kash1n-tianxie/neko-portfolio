@@ -1,0 +1,85 @@
+/* Each ornament is local to its real chapter heading, never a page-sized overlay. */
+.manga-home .chapter-linkage-anchor {
+  position: relative;
+  isolation: isolate;
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+.manga-home .chapter-linked-title {
+  transform: translate3d(var(--chapter-title-x, 0px), var(--chapter-title-y, 0px), 0)
+    rotate(var(--chapter-title-rotate, 0deg));
+  transform-origin: left center;
+}
+
+.chapter-linkage-motif {
+  position: absolute;
+  z-index: -1;
+  top: -48px;
+  right: -24px;
+  width: clamp(145px, 31vw, 420px);
+  height: clamp(145px, 24vw, 280px);
+  color: var(--scene-accent);
+  opacity: var(--chapter-motif-opacity, 0.54);
+  transform: translate3d(var(--chapter-motif-x, 0px), var(--chapter-motif-y, 0px), 0)
+    rotate(var(--chapter-motif-rotate, -8deg));
+  pointer-events: none;
+  user-select: none;
+}
+
+.chapter-linkage-motif > span {
+  position: absolute;
+  inset: 0 0 auto auto;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--scene-paper);
+  font: clamp(130px, 22vw, 270px) / 0.9 var(--font-anton), sans-serif;
+  letter-spacing: -0.045em;
+}
+
+.chapter-linkage-motif::before {
+  content: '';
+  position: absolute;
+  inset: -12% -30% -15% -15%;
+  background: currentColor;
+  -webkit-mask: url('/assets/ink/spray-hero.webp') center / contain no-repeat;
+  mask: url('/assets/ink/spray-hero.webp') center / contain no-repeat;
+  opacity: 0.5;
+}
+
+.chapter-linkage-motif::after {
+  content: '';
+  position: absolute;
+  width: 50%;
+  height: 38px;
+  bottom: 8%;
+  right: 8%;
+  background: currentColor;
+  -webkit-mask: url('/assets/ink/spray-menu.webp') center / 100% 100% no-repeat;
+  mask: url('/assets/ink/spray-menu.webp') center / 100% 100% no-repeat;
+  transform: rotate(-24deg);
+}
+
+@media (max-width: 600px) {
+  .chapter-linkage-motif {
+    top: -24px;
+    right: -44px;
+    width: 140px;
+    height: 144px;
+    opacity: calc(var(--chapter-motif-opacity, 0.54) * 0.68);
+  }
+
+  .chapter-linkage-motif > span { font-size: 132px; }
+  .chapter-linkage-motif::after { height: 4px; }
+}
+
+/* Defensive CSS covers preference changes before the effect cleanup runs. */
+html[data-motion='off'] .manga-home .chapter-linked-title,
+html[data-motion='off'] .chapter-linkage-motif {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .manga-home .chapter-linked-title,
+  .chapter-linkage-motif { transform: none; }
+}

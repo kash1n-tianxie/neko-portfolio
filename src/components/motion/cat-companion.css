@@ -1,0 +1,11 @@
+.cat-companion { --look-x:0; --look-y:0; }
+.cat-art { position:relative; width:100%; aspect-ratio:1; pointer-events:none; }
+.cat-art__image { display:block; width:100%; height:100%; object-fit:contain; }
+.cat-art__eyes { position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
+.cat-art__gaze { transform:translate(calc(var(--look-x,0) * var(--eye-travel-x)),calc(var(--look-y,0) * var(--eye-travel-y))); transition:transform 90ms linear; }
+.cat-companion>.cat-art { position:absolute; inset:0; }
+.cat-companion>.cat-art[data-cat-palette='red-black'] { visibility:hidden; }
+html[data-palette='red-black'] .cat-companion>.cat-art[data-cat-palette='blue-yellow'] { visibility:hidden; }
+html[data-palette='red-black'] .cat-companion>.cat-art[data-cat-palette='red-black'] { visibility:visible; }
+html[data-motion='off'] .cat-art__gaze { transform:none; transition:none; }
+@media (prefers-reduced-motion:reduce) { .cat-art__gaze { transform:none; transition:none; } }

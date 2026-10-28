@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { Link } from '@/i18n/navigation'
 import { featuredWorks } from '@/content/featured-works'
 import { ArrowUpRightIcon } from '@/components/ui/icons'
+import { useReducedMotion } from '@/components/motion/use-reduced-motion'
 
 function NumberStudy() {
   return (
@@ -40,18 +41,18 @@ function EggStudy() {
 
 export function FeaturedWorks({ locale, indexOffset = 0, hideIntro = false }: { locale: 'ja' | 'en'; indexOffset?: number; hideIntro?: boolean }) {
   const rootRef = useRef<HTMLDivElement>(null)
+  const reducedMotion = useReducedMotion()
 
   useEffect(() => {
     const root = rootRef.current
-    if (!root) return
+    if (!root || reducedMotion) return
     const cards = Array.from(root.querySelectorAll<HTMLElement>('.featured-work'))
-    const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
     let frame = 0
     let visible = false
 
     const render = () => {
       frame = 0
-      if (!visible || motion.matches) return
+      if (!visible) return
       const viewport = window.innerHeight
       const positions = cards.map((card) => card.getBoundingClientRect())
       cards.forEach((card, index) => {
@@ -62,7 +63,7 @@ export function FeaturedWorks({ locale, indexOffset = 0, hideIntro = false }: { 
       })
     }
     const queue = () => {
-      if (!frame && visible && !motion.matches) frame = window.requestAnimationFrame(render)
+      if (!frame && visible) frame = window.requestAnimationFrame(render)
     }
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting
@@ -75,24 +76,22 @@ export function FeaturedWorks({ locale, indexOffset = 0, hideIntro = false }: { 
         card.style.removeProperty('--spot-x')
         card.style.removeProperty('--spot-y')
       })
-      queue()
     }
 
     observer.observe(root)
     window.addEventListener('scroll', queue, { passive: true })
     window.addEventListener('resize', queue)
-    motion.addEventListener('change', resetMotion)
     return () => {
       observer.disconnect()
       window.removeEventListener('scroll', queue)
       window.removeEventListener('resize', queue)
-      motion.removeEventListener('change', resetMotion)
       window.cancelAnimationFrame(frame)
+      resetMotion()
     }
-  }, [])
+  }, [reducedMotion])
 
   const followPointer = (event: PointerEvent<HTMLElement>) => {
-    if (event.pointerType !== 'mouse' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (event.pointerType !== 'mouse' || reducedMotion) return
     const card = event.currentTarget
     const rect = card.getBoundingClientRect()
     card.style.setProperty('--spot-x', `${event.clientX - rect.left}px`)

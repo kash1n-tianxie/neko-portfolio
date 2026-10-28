@@ -1,7 +1,7 @@
 .please-sit-feature,
 .please-sit-experience {
-  --sit-red: #b44846;
-  --sit-blue: #3463a0;
+  --sit-red: var(--accent);
+  --sit-blue: var(--accent);
 }
 .please-sit-feature { display: grid; gap: 28px; margin-bottom: 26px; }
 .please-sit-feature__card { display: grid; grid-template-columns: 43% 57%; border: 1px solid var(--line); background: var(--surface); scroll-margin-top: 112px; overflow: hidden; }
@@ -27,8 +27,8 @@
 .please-sit-player iframe:fullscreen { width: 100vw; height: 100dvh; background: #faf9f6; }
 .please-sit-player__poster { display: block; width: 100%; height: 100%; object-fit: contain; }
 .please-sit-player__launch { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: center; padding: 0 20px 6%; background: linear-gradient(transparent 65%, #faf9f6cc); }
-.please-sit-button { display: inline-flex; align-items: center; justify-content: center; gap: 20px; min-height: 52px; padding: 13px 22px; border: 1px solid var(--sit-blue); background: var(--sit-blue); color: #fff; font-size: 15px; font-weight: 600; line-height: 1.65; text-decoration: none; cursor: pointer; transition: background-color 160ms ease; }
-.please-sit-button:hover { background: #284e7e; }
+.please-sit-button { display: inline-flex; align-items: center; justify-content: center; gap: 20px; min-height: 52px; padding: 13px 22px; border: 1px solid var(--sit-blue); background: var(--sit-blue); color: var(--on-accent); font-size: 15px; font-weight: 600; line-height: 1.65; text-decoration: none; cursor: pointer; transition: background-color 160ms ease; }
+.please-sit-button:hover { background: color-mix(in srgb, var(--sit-blue) 85%, var(--ink)); }
 .please-sit-button--outline { color: var(--ink); background: transparent; border-color: var(--line); }
 .please-sit-button--outline:hover { background: var(--surface); border-color: var(--ink); }
 .please-sit-player__toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 24px; margin-top: 14px; }
@@ -59,8 +59,6 @@
 .case-study--please-sit .case-cover img { object-fit: contain; }
 .editorial-current--three { grid-template-columns: .95fr 1.3fr 1fr 1fr; }
 .editorial-current--three > a:first-of-type { font-size: clamp(15px, 1.65vw, 23px); line-height: 1.5; }
-.please-sit-feature { --sit-red: #ef9390; --sit-blue: #83aae0; }
-:root[data-theme='hiru'] .please-sit-feature { --sit-red: #b44846; --sit-blue: #3463a0; }
 @media (max-width: 1023px) {
   .please-sit-document { flex-direction: column; align-items: flex-start; }
   .editorial-current--three { grid-template-columns: 1.2fr 1fr 1fr; }

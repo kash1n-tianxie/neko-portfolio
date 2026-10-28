@@ -5,6 +5,7 @@ export const nyankoHomeGame = {
   version: '0.4.0',
   itchUrl: 'https://kashin-ou.itch.io/cats-and-dried-fish',
   cover: '/assets/works/nyanko-home/title.webp',
+  coverGif: '/assets/works/nyanko-home/cover.gif',
 }
 
 export const nyankoHomeWork: Work = {
@@ -20,6 +21,8 @@ export const nyankoHomeWork: Work = {
   },
   tech: ['Godot', '2D', 'HTML5'],
   thumbnail: nyankoHomeGame.cover,
+  coverGif: nyankoHomeGame.coverGif,
+  coverCaption: { ja: '実機プレイ映像 / v0.3.7', en: 'GAMEPLAY RECORDING / v0.3.7' },
   gallery: [
     { src: '/assets/works/nyanko-home/camp.webp', alt: { ja: '5つの品ぞろえから干物を買い、ネコの装備を整える日本語版のキャンプ画面', en: 'The Japanese camp screen, with five fish offers and equipment slots for the selected cat' } },
     { src: '/assets/works/nyanko-home/battle.webp', alt: { ja: '固定位置のネコが迫る敵を迎え撃つ防衛戦。光ったネコをクリックすると必殺技を使える', en: 'A cat defends from a fixed position; clicking the glowing cat activates its charged ultimate' } },

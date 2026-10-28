@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { AnimatedWorkCover } from './animated-work-cover'
 import { Link } from '@/i18n/navigation'
 import { memeClashGame, memeClashWork } from '@/content/meme-clash'
 import { ArrowUpRightIcon } from '@/components/ui/icons'
@@ -25,9 +25,9 @@ export function MemeClashFeature({ locale, index = 2 }: { locale: 'ja' | 'en'; i
         </div>
         <div className="please-sit-feature__visual">
           <Link href={`/works/${memeClashGame.slug}`} aria-label={ja ? 'ミーム大乱闘の作品ページへ' : 'Explore MEME CLASH'}>
-            <Image src={memeClashGame.cover} alt={ja ? 'ミーム大乱闘 v0.39.0の実際のタイトル画面' : 'The actual title screen of MEME CLASH v0.39.0'} width={1280} height={720} sizes="(max-width: 767px) 90vw, 55vw" />
+            <AnimatedWorkCover src={memeClashGame.coverGif} fallback={memeClashGame.cover} alt={ja ? 'ミーム大乱闘。ウォジャックとクンチキンの実際の対戦映像' : 'MEME CLASH: actual gameplay with Wojak and Kun Chicken'} width={960} height={720} sizes="(max-width: 767px) 90vw, 55vw" />
           </Link>
-          <p>ACTUAL GAME CAPTURE <span>／ v{memeClashGame.version}</span></p>
+          <p>{memeClashWork.coverCaption?.[locale]}</p>
         </div>
       </article>
     </div>

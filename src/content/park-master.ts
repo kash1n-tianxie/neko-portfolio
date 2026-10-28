@@ -5,6 +5,7 @@ export const parkMasterProject = {
   proposalUrl: 'https://park.kashin.ink/',
   pdfUrl: 'https://park.kashin.ink/assets/Park-Master-Map-Proposal.pdf?v=world6',
   cover: '/assets/works/park-master/cover.webp',
+  coverGif: '/assets/works/park-master/cover.gif',
 } as const
 
 export const parkMasterWork: Work = {
@@ -24,6 +25,8 @@ export const parkMasterWork: Work = {
   },
   tech: ['Game Design', 'Three.js', 'JavaScript', 'HTML / CSS'],
   thumbnail: parkMasterProject.cover,
+  coverGif: parkMasterProject.coverGif,
+  coverCaption: { ja: 'Web試作の実演映像', en: 'ACTUAL WEBSITE / PLAYABLE PROTOTYPE' },
   gallery: [
     { src: '/assets/works/park-master/antarctica.webp', alt: { ja: '広い裂氷を通り、緩やかなカーブで駐車する南極マップのWeb試作', en: 'Antarctic prototype: draw a wide curve across fractured ice to park' } },
     { src: '/assets/works/park-master/desert.webp', alt: { ja: '砂による減速で、2台の交差するタイミングを変える砂漠マップのWeb試作', en: 'Desert prototype: use sand to slow cars and change their crossing times' } },

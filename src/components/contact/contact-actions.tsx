@@ -1,4 +1,3 @@
-import { Magnetic } from '../motion/magnetic'
 import { ArrowUpRightIcon, GithubIcon, MailIcon } from '../ui/icons'
 
 export type ContactActionLabels = {
@@ -18,57 +17,57 @@ export function ContactActions({
   labels: ContactActionLabels
 }) {
   return (
-    <div className="contact-actions">
-      <Magnetic className="h-full">
-        {email ? (
-          <a href={`mailto:${email}`} className="contact-action contact-action--primary h-full">
-            <span className="contact-action__icon" aria-hidden="true">
-              <MailIcon className="h-5 w-5" />
-            </span>
-            <span className="min-w-0">
-              <span className="font-mincho block text-[16px] font-bold text-white">
-                {labels.email}
-              </span>
-              <span className="font-mono mt-1 block truncate text-[10px] tracking-[0.08em] text-white/70">
-                {email}
-              </span>
-            </span>
-            <ArrowUpRightIcon className="ml-auto h-5 w-5 text-white" />
-          </a>
-        ) : (
-          <div className="contact-action contact-action--disabled h-full" aria-disabled="true">
-            <span className="contact-action__icon" aria-hidden="true">
-              <MailIcon className="h-5 w-5" />
-            </span>
-            <span>
-              <span className="font-mincho block text-[16px] font-bold">{labels.email}</span>
-              <span className="font-mono mt-1 block text-[10px] tracking-[0.08em] text-muted">
-                {labels.emailPreparing}
-              </span>
-            </span>
-            <span className="contact-action__arrow" aria-hidden="true">—</span>
-          </div>
-        )}
-      </Magnetic>
+    <div className="street-contact__actions">
+      {email ? (
+        <a href={`mailto:${email}`} className="street-contact__card street-contact__card--email">
+          <span className="street-contact__card-top">
+            <span className="street-contact__channel">01 / SAY HELLO</span>
+            <MailIcon className="street-contact__icon" />
+          </span>
+          <span className="street-contact__card-heading">
+            <strong>E-MAIL</strong>
+            <ArrowUpRightIcon className="street-contact__arrow" />
+          </span>
+          <span className="street-contact__card-bottom">
+            <span className="street-contact__action-label">{labels.email}</span>
+            <span className="street-contact__address">{email}</span>
+          </span>
+        </a>
+      ) : (
+        <div className="street-contact__card street-contact__card--unavailable" aria-disabled="true">
+          <span className="street-contact__card-top">
+            <span className="street-contact__channel">01 / E-MAIL</span>
+            <MailIcon className="street-contact__icon" />
+          </span>
+          <span className="street-contact__card-heading">
+            <strong>E-MAIL</strong>
+            <span aria-hidden="true">—</span>
+          </span>
+          <span className="street-contact__card-bottom">
+            <span className="street-contact__action-label">{labels.email}</span>
+            <span className="street-contact__address">{labels.emailPreparing}</span>
+          </span>
+        </div>
+      )}
 
       <a
         href={githubUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="contact-action"
+        className="street-contact__card street-contact__card--github"
       >
-        <span className="contact-action__icon" aria-hidden="true">
-          <GithubIcon className="h-5 w-5" />
+        <span className="street-contact__card-top">
+          <span className="street-contact__channel">02 / THE SOURCE</span>
+          <GithubIcon className="street-contact__icon" />
         </span>
-        <span>
-          <span className="font-mincho block text-[16px] font-bold">{labels.github}</span>
-          <span className="font-mono mt-1 block text-[10px] tracking-[0.08em] text-muted">
-            {labels.githubMeta}
-          </span>
+        <span className="street-contact__card-heading">
+          <strong>{labels.github}</strong>
+          <ArrowUpRightIcon className="street-contact__arrow" />
         </span>
-        <ArrowUpRightIcon className="ml-auto h-5 w-5" />
+        <span className="street-contact__card-bottom">
+          <span className="street-contact__action-label">{labels.githubMeta}</span>
+        </span>
       </a>
-
     </div>
   )
 }

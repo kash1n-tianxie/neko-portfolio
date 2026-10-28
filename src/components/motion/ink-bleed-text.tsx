@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, type ElementType } from 'react'
+import { useReducedMotion } from './use-reduced-motion'
 
 /**
  * 滲み — ink-bleed prose reveal (React Bits "Blur Text" idea, retuned for
@@ -19,11 +20,12 @@ export function InkBleedText({
   as?: ElementType
 }) {
   const ref = useRef<HTMLElement>(null)
+  const reducedMotion = useReducedMotion()
 
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (reducedMotion) {
       el.classList.add('is-in')
       return
     }
@@ -38,7 +40,7 @@ export function InkBleedText({
     )
     io.observe(el)
     return () => io.disconnect()
-  }, [])
+  }, [reducedMotion])
 
   // keep trailing delimiter with its phrase; drop empty fragments
   const phrases = text.split(/(?<=[、。，,.！!？?\s])/).filter((s) => s.length > 0)

@@ -1,0 +1,405 @@
+.manga-home .street-contact {
+  position: relative;
+  isolation: isolate;
+  scroll-margin-top: 88px;
+  border-top: 8px solid var(--scene-accent);
+  background: var(--scene-bg);
+  color: var(--scene-paper);
+}
+
+.manga-home .street-contact__paint {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.manga-home .street-contact__spray {
+  position: absolute;
+  display: block;
+  background: var(--scene-accent);
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+}
+
+.manga-home .street-contact__spray--large {
+  inset: auto auto -27% -12%;
+  width: 74%;
+  height: 105%;
+  opacity: .32;
+  -webkit-mask-image: url('/assets/ink/spray-hero.webp');
+  mask-image: url('/assets/ink/spray-hero.webp');
+  transform: rotate(17deg);
+}
+
+.manga-home .street-contact__spray--edge {
+  top: -6%;
+  right: -17%;
+  width: 60%;
+  height: 52%;
+  -webkit-mask-image: url('/assets/ink/spray-menu.webp');
+  mask-image: url('/assets/ink/spray-menu.webp');
+  transform: rotate(-25deg);
+}
+
+.manga-home .street-contact__stripes {
+  position: absolute;
+  inset: auto -6% -90px auto;
+  width: 300px;
+  height: 300px;
+  background: repeating-linear-gradient(-45deg, transparent 0 20px, var(--scene-paper) 20px 28px);
+  opacity: .1;
+}
+
+.manga-home .street-contact__layout {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, .94fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(40px, 5vw, 80px);
+  width: min(100%, 1440px);
+  margin-inline: auto;
+  padding: clamp(92px, 10vw, 156px) clamp(24px, 6vw, 88px) clamp(88px, 10vw, 136px);
+}
+
+.manga-home .street-contact__intro,
+.manga-home .street-contact__links {
+  min-width: 0;
+  overflow: visible;
+}
+
+.manga-home .street-contact__eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  width: fit-content;
+  min-width: 195px;
+  margin: 0 0 30px;
+  padding: 6px 12px;
+  border: 2px solid var(--scene-paper);
+  color: var(--scene-paper);
+  background: var(--scene-bg);
+  font: 700 12px/1.4 var(--font-jbmono), monospace;
+  letter-spacing: .12em;
+  transform: rotate(-3deg);
+}
+
+.manga-home .street-contact__eyebrow > span:last-child {
+  font: 24px/1 sans-serif;
+}
+
+.manga-home .street-contact__title {
+  position: relative;
+  display: block;
+  width: fit-content;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: 400 clamp(104px, 11.8vw, 180px)/.88 var(--font-anton), 'Arial Narrow', sans-serif;
+  letter-spacing: -.025em;
+}
+
+.manga-home .street-contact__title > span {
+  display: block;
+  color: var(--scene-paper);
+  transform: rotate(-4deg);
+}
+
+.manga-home .street-contact__title > strong {
+  position: relative;
+  display: block;
+  width: fit-content;
+  margin: .12em 0 0 -.01em;
+  padding: .025em .09em .08em;
+  color: var(--scene-on-accent);
+  background: var(--scene-accent);
+  font-weight: 400;
+  transform: rotate(-4deg);
+  box-shadow: .045em .045em 0 var(--scene-on-paper);
+}
+
+.manga-home .street-contact__lead {
+  position: relative;
+  max-width: 34ch;
+  margin: 43px 0 0;
+  padding: 13px 16px;
+  border-left: 4px solid var(--scene-accent);
+  background: var(--scene-bg);
+  color: var(--scene-paper);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.8;
+}
+
+.manga-home .street-contact__actions {
+  display: grid;
+  gap: 26px;
+  padding: 10px 12px 12px 0;
+}
+
+.manga-home .street-contact__card {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 13px;
+  min-width: 0;
+  min-height: 224px;
+  padding: clamp(20px, 2.4vw, 34px);
+  border: 3px solid var(--scene-on-paper);
+  background: var(--scene-paper);
+  color: var(--scene-on-paper);
+  box-shadow: 8px 8px 0 var(--scene-on-paper), 10px 10px 0 var(--scene-paper);
+  text-decoration: none;
+  transition: transform 200ms ease-out, box-shadow 200ms ease-out;
+}
+
+.manga-home .street-contact__card--email {
+  color: var(--scene-on-accent);
+  background: var(--scene-accent);
+  transform: rotate(-2deg);
+}
+
+.manga-home .street-contact__card--github {
+  margin-left: 26px;
+  transform: rotate(2deg);
+}
+
+.manga-home .street-contact__card-top,
+.manga-home .street-contact__card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.manga-home .street-contact__channel {
+  font: 700 11px/1.5 var(--font-jbmono), monospace;
+  letter-spacing: .12em;
+}
+
+.manga-home .street-contact__icon {
+  flex: none;
+  width: 25px;
+  height: 25px;
+}
+
+.manga-home .street-contact__card-heading > strong {
+  font: 400 clamp(40px, 5vw, 64px)/1 var(--font-anton), 'Arial Narrow', sans-serif;
+  letter-spacing: -.015em;
+  text-transform: uppercase;
+}
+
+.manga-home .street-contact__arrow {
+  flex: none;
+  width: 54px;
+  height: 54px;
+  padding: 10px;
+  border: 2px solid currentColor;
+  transition: transform 200ms ease-out;
+}
+
+.manga-home .street-contact__card-bottom {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding-top: 11px;
+  border-top: 1px solid currentColor;
+}
+
+.manga-home .street-contact__action-label {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.manga-home .street-contact__address {
+  overflow-wrap: anywhere;
+  font: 500 13px/1.6 var(--font-jbmono), monospace;
+}
+
+.manga-home .street-contact__card:focus-visible {
+  outline: 3px solid var(--scene-paper);
+  outline-offset: 7px;
+  transform: translate(-3px, -3px) rotate(0deg);
+  box-shadow: 11px 11px 0 var(--scene-on-paper), 13px 13px 0 var(--scene-paper);
+}
+
+.manga-home .street-contact__card:focus-visible .street-contact__arrow {
+  transform: translate(3px, -3px);
+}
+
+.manga-home .street-contact__card--unavailable {
+  color: var(--scene-muted);
+  background: var(--scene-bg);
+  border-color: var(--scene-muted);
+  box-shadow: none;
+}
+
+.street-footer {
+  position: relative;
+  background: var(--scene-on-paper);
+  color: var(--scene-paper);
+  border-top: 2px solid var(--scene-paper);
+}
+
+.street-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 28px;
+  width: min(100%, 1440px);
+  margin-inline: auto;
+  padding: 21px clamp(24px, 6vw, 88px);
+}
+
+.street-footer__brand {
+  font: 400 20px/1.2 var(--font-anton), 'Arial Narrow', sans-serif;
+  letter-spacing: .035em;
+}
+
+.street-footer__rights {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.street-footer__top {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 8px 14px;
+  border: 1px solid var(--scene-paper);
+  color: var(--scene-paper);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.5;
+  text-decoration: none;
+  transition: color 180ms ease-out, background-color 180ms ease-out;
+}
+
+.street-footer__top > span {
+  font: 22px/1 sans-serif;
+  transition: transform 180ms ease-out;
+}
+
+.street-footer__top:focus-visible {
+  outline: 3px solid var(--scene-paper);
+  outline-offset: 4px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .manga-home .street-contact__card:hover:not([aria-disabled='true']) {
+    transform: translate(-3px, -3px) rotate(0deg);
+    box-shadow: 11px 11px 0 var(--scene-on-paper), 13px 13px 0 var(--scene-paper);
+  }
+
+  .manga-home .street-contact__card:hover .street-contact__arrow {
+    transform: translate(3px, -3px);
+  }
+
+  .street-footer__top:hover {
+    color: var(--scene-on-paper);
+    background: var(--scene-paper);
+  }
+
+  .street-footer__top:hover > span {
+    transform: translateY(-3px);
+  }
+}
+
+.manga-home .street-contact__card:active:not([aria-disabled='true']) {
+  transform: translate(3px, 3px) rotate(0deg);
+  box-shadow: 4px 4px 0 var(--scene-on-paper), 6px 6px 0 var(--scene-paper);
+}
+
+.street-footer__top:active {
+  color: var(--scene-on-accent);
+  background: var(--scene-accent);
+}
+
+@media (max-width: 800px) {
+  .manga-home .street-contact__layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 48px;
+    padding-block: 80px;
+  }
+
+  .manga-home .street-contact__title {
+    font-size: clamp(104px, 20vw, 156px);
+  }
+
+  .manga-home .street-contact__title > span {
+    display: inline-block;
+  }
+
+  .manga-home .street-contact__title > strong {
+    margin-top: .08em;
+  }
+
+  .manga-home .street-contact__lead {
+    max-width: 42ch;
+    margin-top: 32px;
+  }
+
+  .manga-home .street-contact__spray--large {
+    width: 130%;
+    height: 75%;
+    bottom: 20%;
+    left: -40%;
+  }
+
+  .manga-home .street-contact__spray--edge {
+    top: 22%;
+    right: -45%;
+    width: 110%;
+    height: 40%;
+  }
+
+  .manga-home .street-contact__actions {
+    gap: 28px;
+  }
+
+  .manga-home .street-contact__card {
+    min-height: 212px;
+    padding: 21px;
+  }
+
+  .manga-home .street-contact__card--github {
+    margin-left: 10px;
+  }
+
+  .manga-home .street-contact__card-heading > strong {
+    font-size: clamp(42px, 10vw, 64px);
+  }
+
+  .street-footer__inner {
+    gap: 16px 24px;
+  }
+
+  .street-footer__brand {
+    flex: 1 1 100%;
+  }
+}
+
+html[data-motion='off'] .manga-home .street-contact :is(.street-contact__spray, .street-contact__eyebrow, .street-contact__title > span, .street-contact__title > strong, .street-contact__card, .street-contact__arrow),
+html[data-motion='off'] .street-footer__top > span {
+  transform: none !important;
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .manga-home .street-contact :is(.street-contact__spray, .street-contact__eyebrow, .street-contact__title > span, .street-contact__title > strong, .street-contact__card, .street-contact__arrow),
+  .street-footer__top > span {
+    transform: none !important;
+    transition: none !important;
+  }
+}

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { useReducedMotion } from './use-reduced-motion'
 
 /**
  * 墨糸 — a light-weight flowing ink background (React Bits "Threads" idea, hand
@@ -11,11 +12,12 @@ import { useEffect, useRef } from 'react'
  */
 export function InkThreads({ className = '' }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const reducedMotion = useReducedMotion()
 
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (reducedMotion) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
@@ -97,11 +99,12 @@ export function InkThreads({ className = '' }: { className?: string }) {
 
     return () => {
       stop()
+      ctx.clearRect(0, 0, w, h)
       io.disconnect()
       window.removeEventListener('resize', onResize)
       document.removeEventListener('visibilitychange', onVisibility)
     }
-  }, [])
+  }, [reducedMotion])
 
   return <canvas ref={canvasRef} className={`ink-threads ${className}`} aria-hidden="true" />
 }

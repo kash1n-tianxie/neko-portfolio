@@ -1,40 +1,63 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale } from 'next-intl'
+import { CatArt } from './motion/cat-companion'
+import { nextPalette, type Palette } from './palette-preference'
+import { getPalette, usePalette } from './palette-store'
+import './theme-toggle.css'
 
-/**
- * 夜 (default) / 昼 toggle. The button shows the theme you would switch TO,
- * written as a kanji (text, deliberately not an icon).
- */
+const palettes: Palette[] = ['blue-yellow', 'red-black']
+const labels = { 'blue-yellow': 'BLUE / YELLOW', 'red-black': 'RED / BLACK' }
+
+/** Persistent compact switch, also available outside the mobile drawer. */
 export function ThemeToggle() {
-  const t = useTranslations('nav')
-  const [hiru, setHiru] = useState(false)
-
-  useEffect(() => {
-    setHiru(document.documentElement.dataset.theme === 'hiru')
-  }, [])
-
-  const toggle = () => {
-    const next = !hiru
-    setHiru(next)
-    if (next) document.documentElement.dataset.theme = 'hiru'
-    else delete document.documentElement.dataset.theme
-    try {
-      localStorage.setItem('neko-theme', next ? 'hiru' : 'yoru')
-    } catch {
-      /* private mode */
-    }
-  }
-
+  const [palette, selectPalette] = usePalette()
+  const ja = useLocale() === 'ja'
   return (
     <button
       type="button"
-      onClick={toggle}
-      aria-label={hiru ? t('toNight') : t('toDay')}
-      className="font-mincho grid h-11 w-11 place-items-center rounded-full border border-line text-[15px] transition-colors hover:border-accent hover:text-accent"
+      className="palette-toggle"
+      aria-label={ja ? `配色を切り替える：現在 ${labels[palette]}` : `Change palette: currently ${labels[palette]}`}
+      title={ja ? '配色を切り替える' : 'Change palette'}
+      onClick={() => selectPalette(nextPalette(getPalette()))}
     >
-      {hiru ? '夜' : '昼'}
+      <span className="palette-toggle__swatch" data-palette-preview={palette} aria-hidden="true" />
+      <span className="palette-toggle__label" aria-hidden="true">{palette === 'blue-yellow' ? 'B / Y' : 'R / B'}</span>
     </button>
+  )
+}
+
+/** Outfit portraits use the same registered art as the interactive Hero. */
+export function ThemeCards() {
+  const [palette, selectPalette] = usePalette()
+  const ja = useLocale() === 'ja'
+  const cycle = () => selectPalette(nextPalette(getPalette()))
+  return (
+    <div className="palette-cards" role="group" aria-label={ja ? '配色を選ぶ' : 'Choose a palette'}>
+      <button type="button" className="palette-cards__arrow" onClick={cycle} aria-label={ja ? '前の配色' : 'Previous palette'}>
+        <span aria-hidden="true">‹</span>
+      </button>
+      {palettes.map((value, index) => (
+        <button
+          key={value}
+          type="button"
+          className="palette-card"
+          data-palette-preview={value}
+          aria-pressed={palette === value}
+          aria-label={labels[value]}
+          onClick={() => selectPalette(value)}
+        >
+          <span className="palette-card__number" aria-hidden="true">0{index + 1}</span>
+          <span className="palette-card__portrait" aria-hidden="true">
+            <CatArt palette={value} />
+          </span>
+          <span className="palette-card__label">{labels[value]}</span>
+          <span className="palette-card__marker" aria-hidden="true">▲</span>
+        </button>
+      ))}
+      <button type="button" className="palette-cards__arrow" onClick={cycle} aria-label={ja ? '次の配色' : 'Next palette'}>
+        <span aria-hidden="true">›</span>
+      </button>
+    </div>
   )
 }

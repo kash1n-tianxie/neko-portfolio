@@ -2,28 +2,46 @@
 
 /* ===========================================================
    NEKO Portfolio 2.0 — design tokens
-   夜 YORU (default) / 昼 HIRU (toggle, washi paper)
+   BLUE / YELLOW (default) and RED / BLACK
    =========================================================== */
 :root {
-  --bg: #0b0b0d;
-  --surface: #131316;
-  --ink: #f0ede4;
-  --muted: #97949b;
-  --accent: #e24b38;
-  --line: rgba(240, 237, 228, 0.16);
-  --line-soft: rgba(240, 237, 228, 0.08);
-  color-scheme: dark;
+  --scene-bg: #1748df;
+  --scene-accent: #ffdd28;
+  --scene-on-accent: #101d57;
+  --scene-paper: #fff9ed;
+  --scene-on-paper: #151a30;
+  --scene-title: #1748df;
+  --scene-shadow: #101d57;
+  --scene-muted: #c8d5ff;
+  --bg: #fff9ed;
+  --surface: #fffdf6;
+  --ink: #151a30;
+  --muted: #5b6279;
+  --accent: #1748df;
+  --on-accent: #fff9ed;
+  --line: rgba(21, 26, 48, 0.22);
+  --line-soft: rgba(21, 26, 48, 0.1);
+  color-scheme: light;
 }
 
-[data-theme='hiru'] {
-  --bg: #f6f3eb;
-  --surface: #fffef9;
-  --ink: #16161a;
-  --muted: #6e6b66;
-  --accent: #c93a2b;
-  --line: rgba(22, 22, 26, 0.18);
-  --line-soft: rgba(22, 22, 26, 0.08);
-  color-scheme: light;
+[data-palette='red-black'] {
+  --scene-bg: #171719;
+  --scene-accent: #d92f23;
+  --scene-on-accent: #fff9ed;
+  --scene-paper: #fff9ed;
+  --scene-on-paper: #171719;
+  --scene-title: #fff9ed;
+  --scene-shadow: #080809;
+  --scene-muted: #b4b0aa;
+  --bg: #171719;
+  --surface: #222224;
+  --ink: #fff9ed;
+  --muted: #b4b0aa;
+  --accent: #d92f23;
+  --on-accent: #fff9ed;
+  --line: rgba(255, 249, 237, 0.24);
+  --line-soft: rgba(255, 249, 237, 0.1);
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -32,6 +50,7 @@
   --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
   --color-line: var(--line);
   --color-line-soft: var(--line-soft);
 
@@ -1118,6 +1137,13 @@ html.ink-cursor-active * {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+.case-cover > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .case-cover > span {
   position: absolute;

@@ -34,6 +34,8 @@ export type Work = {
   thumbnail: string
   /** Animated 3:2 cover used by the project card; thumbnail remains the reduced-motion fallback. */
   coverGif?: string
+  /** Recording version, which can differ from the current public release. */
+  coverCaption?: L10n
   gallery?: WorkGalleryItem[]
   caseStudy?: WorkCaseStudy
   links?: { demo?: string; itch?: string; repo?: string; video?: string }
@@ -43,6 +45,8 @@ export type Work = {
  * 作品データの公開元。
  * カード、フィルター、詳細ページ、ギャラリーはこの配列から自動生成される。
  */
+export const featuredWorkSlugs = ['nyanko-home', 'meme-clash', 'park-master', 'please-take-a-seat', 'hyakki-lantern', 'tamago-exe'] as const
+
 export const works: Work[] = [
   nyankoHomeWork,
   memeClashWork,

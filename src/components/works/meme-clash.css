@@ -1,4 +1,4 @@
-.meme-clash-feature__punctuation { display: block; color: var(--sit-red); font-family: var(--font-display); font-size: .8em; letter-spacing: .14em; }
+.meme-clash-feature__punctuation { display: block; color: var(--accent); font-family: var(--font-display); font-size: .8em; letter-spacing: .14em; }
 .meme-clash-experience .please-sit-player { aspect-ratio: 16 / 9; background: #0d2136; }
 .meme-clash-experience .please-sit-player__launch { background: linear-gradient(transparent 40%, #0d2136d9); }
 .meme-clash-experience .please-sit-player iframe:fullscreen { background: #0d2136; }

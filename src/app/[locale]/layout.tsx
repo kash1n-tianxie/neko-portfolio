@@ -14,6 +14,7 @@ import { Nav } from '@/components/nav'
 import { MotionProvider } from '@/components/motion/motion-provider'
 import { InkCursor } from '@/components/motion/ink-cursor'
 import { CanvasPageTransition } from '@/components/motion/canvas-page-transition'
+import { PALETTE_PREPAINT_SCRIPT } from '@/components/palette-preference'
 import '../globals.css'
 
 const shippori = Shippori_Mincho_B1({
@@ -48,7 +49,7 @@ const jbmono = JetBrains_Mono({
 })
 
 // applied before paint so the chosen theme never flashes
-const themeScript = `try{if(localStorage.getItem('neko-theme')==='hiru')document.documentElement.dataset.theme='hiru'}catch(e){}`
+const themeScript = PALETTE_PREPAINT_SCRIPT
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))

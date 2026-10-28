@@ -1,61 +1,70 @@
-import { getLocale, getTranslations } from 'next-intl/server'
+import { getLocale } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
-import { AssetSlot } from '../asset-slot'
 import { CatCompanion } from '../motion/cat-companion'
-import { ArrowUpRightIcon } from '../ui/icons'
-import './home-editorial.css'
-import '../works/please-sit-experience.css'
-import '../works/nyanko-home.css'
-import '../works/meme-clash.css'
+import { ChapterTransition } from '../motion/chapter-transition'
+import { ThemeCards } from '../theme-toggle'
+
+/** Generated paint alpha is tinted by theme; typography and controls remain real HTML. */
+function TitleGraphics() {
+  return (
+    <div className="manga-hero__scenery" aria-hidden="true">
+      <div className="manga-hero__paper-slice" />
+      <div className="manga-hero__red" data-hero-slab>
+        <span className="manga-hero__splash" />
+      </div>
+      <svg className="manga-hero__speedlines" viewBox="0 0 1440 800" preserveAspectRatio="none"><path d="M0 708 1440 237M0 724 1440 249M0 737 1440 257M164 0 1169 800M196 0 1191 800" /></svg>
+      <span className="manga-hero__outline">PLAY</span>
+      <span className="manga-hero__halftone" />
+      <span className="manga-hero__star">✦</span>
+    </div>
+  )
+}
 
 export async function Hero() {
-  const t = await getTranslations('hero')
   const ja = (await getLocale()) === 'ja'
-
+  const latest = [
+    ['nyanko-home', ja ? 'にゃんこホーム' : 'Nyanko Home'],
+    ['meme-clash', 'MEME CLASH'],
+    ['park-master', 'PARK MASTER'],
+    ['please-sit', ja ? 'どうぞ、おかけください。' : 'Please, Take a Seat.'],
+    ['2048', ja ? '百鬼灯市' : 'Hyakki Lantern City'],
+    ['tamago-exe', 'TAMAGO.exe'],
+  ]
   return (
-    <section id="top" className="hero-story editorial-hero editorial-hero--six" data-hero-story>
-      <div className="hero-stage editorial-hero__stage" data-hero-stage>
-        <div className="hero-ink absolute inset-0" data-hero-ink aria-hidden="true" />
-        <div className="hero-art absolute inset-0" data-hero-art aria-hidden="true">
-          <AssetSlot silent src="/assets/ink/ink-hero.webp" spec="" className="h-full w-full object-cover" />
-        </div>
-        <div className="editorial-hero__grid" aria-hidden="true" />
-
-        <div className="hero-copy editorial-hero__copy" data-hero-copy>
-          <p className="editorial-eyebrow hero-enter" data-hero-detail>
-            <span className="editorial-dot" aria-hidden="true" />
-            KASHIN OU <span className="editorial-eyebrow__divider">/</span> CREATIVE DEVELOPER
-          </p>
-          <h1 className="hero-title editorial-hero__title hero-enter" data-hero-title>
-            {ja ? <><span>遊びをつくる。</span><span>体験を<span className="editorial-hero__accent">つなぐ。</span></span></> : <><span>Made to play.</span><span>Built to <span className="editorial-hero__accent">connect.</span></span></>}
-          </h1>
-          <div className="editorial-hero__intro hero-enter" data-hero-detail>
-            <p className="editorial-hero__name">王家進 <span>— KASHIN OU</span></p>
-            <p>{ja ? 'ゲームの仕組みから、画面の小さな反応まで。数理と遊び心で、触れてみたくなる体験をつくっています。' : 'From game systems to the smallest response on screen. I build playful experiences through code, mathematics, and curiosity.'}</p>
+    <section id="top" className="manga-hero" data-manga-hero>
+      <div className="manga-hero__stage">
+        <TitleGraphics />
+        <div className="manga-hero__layout" data-hero-scene>
+          <div className="manga-hero__portrait-column">
+            <div className="manga-hero__visual" data-hero-cat-scene>
+              <span className="manga-cat-orbit" aria-hidden="true" />
+              <CatCompanion className="manga-cat" />
+              <span className="manga-cat-cross" aria-hidden="true">＋</span>
+              <span className="manga-cat-label">YOUR GUIDE / NEKO</span>
+            </div>
           </div>
-          <div className="editorial-hero__actions hero-enter" data-hero-detail>
-            <a href="#works" className="cta editorial-primary">{t('ctaWorks')}<span aria-hidden="true">↓</span></a>
-            <Link href="/world" data-canvas-transition className="editorial-world-link">{ja ? '猫になって、散歩する' : 'Take a walk as a cat'}<ArrowUpRightIcon className="h-4 w-4" /><span className="editorial-world-link__badge">PIXEL</span></Link>
+          <div className="manga-hero__copy" data-hero-copy>
+            <p className="manga-eyebrow"><span />KASHIN OU / CREATIVE DEVELOPER</p>
+            <div className="manga-title-lockup">
+              <h1 className="manga-hero__title" data-hero-title><span>KASHIN</span><strong>OU <i aria-hidden="true">×</i> PLAY</strong></h1>
+              <p className="manga-hero__tagline">{ja ? '遊びをつくる。体験をつなぐ。' : 'MADE TO PLAY. BUILT TO CONNECT.'}</p>
+            </div>
+            <div className="manga-game-menu">
+              <a className="manga-game-menu__primary" href="#works"><span aria-hidden="true">▶</span><b>SELECT WORKS</b><small>{ja ? '作品を見る' : 'MY PROJECTS'}</small><span aria-hidden="true">↗</span></a>
+              <Link href="/world" data-canvas-transition><span aria-hidden="true">◇</span><b>ENTER THE WORLD</b><small>{ja ? '猫になって散歩' : 'A CAT’S WALK'}</small><span aria-hidden="true">↗</span></Link>
+              <a href="#contact"><span aria-hidden="true">＋</span><b>LET’S TALK</b><small>{ja ? '連絡する' : 'GET IN TOUCH'}</small><span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+          <div className="manga-hero__theme-dock">
+            <p className="manga-theme-caption">CHOOSE YOUR VIBE <span>{ja ? '世界の色を選ぼう' : 'MAKE IT YOURS'}</span></p>
+            <ThemeCards />
+          </div>
+          <div className="manga-latest">
+            <p><span /> NOW PLAYING <small>{ja ? '公開中の作品' : 'PLAY & DISCOVER'}</small></p>
+            {latest.map(([id, label], index) => <a key={id} href={`#featured-${id}`}><span>{String(index + 1).padStart(2, '0')}</span><b>{label}</b><i aria-hidden="true">↗</i></a>)}
           </div>
         </div>
-
-        <div className="editorial-hero__orbit" aria-hidden="true"><span /><span /></div>
-        <span className="hero-kanji editorial-hero__kanji" data-hero-kanji aria-hidden="true">猫</span>
-        <CatCompanion bodySrc="/assets/cat/cat-awake.png" className="hero-awake editorial-hero__cat" />
-        <div className="editorial-hero__cat-caption" data-hero-detail>
-          <span>YOUR GUIDE / NEKO</span>
-          <span>{ja ? '目が合ったら、はじまり。' : 'A little curiosity starts here.'}</span>
-        </div>
-
-        <div className="editorial-current editorial-current--six" data-hero-detail>
-          <p><span className="editorial-dot" aria-hidden="true" /> LATEST GAMES <small>{ja ? '公開・制作中の作品' : 'PLAY & DISCOVER'}</small></p>
-          <a href="#featured-nyanko-home"><span>01</span><span lang="ja">にゃんこホーム</span><span aria-hidden="true">↘</span></a>
-          <a href="#featured-meme-clash"><span>02</span>{ja ? 'ミーム大乱闘' : 'MEME CLASH'}<span aria-hidden="true">↘</span></a>
-          <a href="#featured-park-master"><span>03</span>PARK MASTER<span aria-hidden="true">↘</span></a>
-          <a href="#featured-please-sit"><span>04</span>{ja ? 'どうぞ、おかけください。' : 'Please, Take a Seat.'}<span aria-hidden="true">↘</span></a>
-          <a href="#featured-2048"><span>05</span>{ja ? '百鬼灯市' : 'Hyakki Lantern City'}<span aria-hidden="true">↘</span></a>
-          <a href="#featured-tamago-exe"><span>06</span>tamago.exe<span aria-hidden="true">↘</span></a>
-        </div>
+        <ChapterTransition ja={ja} />
       </div>
     </section>
   )

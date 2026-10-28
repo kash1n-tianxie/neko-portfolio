@@ -1,0 +1,20 @@
+.manga-home .street-world { position:relative; padding:40px clamp(20px,6vw,80px) 90px; background:var(--scene-bg); color:var(--scene-paper); }
+.street-world__portal { position:relative; isolation:isolate; display:grid; grid-template-columns:1.1fr 1fr; gap:12px 48px; align-items:center; max-width:1180px; margin:auto; padding:42px 38px; color:inherit; text-decoration:none; border-block:2px solid var(--scene-paper); }
+.street-world__paint { position:absolute; inset:-35% -5% -10% 12%; z-index:-1; background:var(--scene-accent); -webkit-mask:url('/assets/ink/spray-menu.webp') center/100% 100% no-repeat; mask:url('/assets/ink/spray-menu.webp') center/100% 100% no-repeat; opacity:.24; transform:rotate(-8deg); pointer-events:none; transition:opacity .2s,transform .25s; }
+.street-world__index { grid-column:1/-1; font:11px/1.5 var(--font-jbmono),monospace; letter-spacing:.16em; }
+.street-world__title h2 { font:clamp(48px,7vw,100px)/.94 var(--font-anton),sans-serif; margin:14px 0 12px; letter-spacing:-.02em; transform:rotate(-4deg); }
+.street-world__title h2 span { color:var(--scene-accent); -webkit-text-stroke:1px var(--scene-bg); }
+.street-world__title p { margin:18px 0 0; font-size:16px; font-weight:700; }
+.street-world__action { padding-top:24px; }
+.street-world__action>span { display:block; font-size:14px; margin-bottom:16px; }
+.street-world__action b { display:flex; align-items:center; justify-content:space-between; gap:20px; font:clamp(24px,3vw,42px)/1.15 var(--font-anton),sans-serif; border-bottom:3px solid var(--scene-accent); padding-bottom:12px; }
+.street-world__action svg { flex:none; width:36px; height:36px; transition:transform .2s; }
+.street-world__action small { display:block; margin-top:12px; font:10px/1.5 var(--font-jbmono),monospace; letter-spacing:.12em; color:var(--scene-muted); }
+.street-world__portal:hover .street-world__paint,.street-world__portal:focus-visible .street-world__paint { opacity:.48; transform:rotate(-5deg) scale(1.04); }
+.street-world__portal:hover svg,.street-world__portal:focus-visible svg { transform:translate(5px,-5px); }
+.street-world__portal:focus-visible { outline:3px solid var(--scene-accent); outline-offset:8px; }
+@media(max-width:650px) { .manga-home .street-world { padding:30px 20px 64px; } .street-world__portal { grid-template-columns:1fr; padding:26px 12px; gap:12px; } .street-world__title h2 { font-size:64px; } .street-world__action { padding-top:16px; } .street-world__paint { inset:-10% -15% 10%; } }
+html[data-motion='off'] .street-world__portal * { transition:none!important; }
+html[data-motion='off'] .street-world__portal:hover .street-world__paint,html[data-motion='off'] .street-world__portal:focus-visible .street-world__paint { transform:rotate(-8deg); }
+html[data-motion='off'] .street-world__portal svg { transform:none!important; }
+@media(prefers-reduced-motion:reduce) { .street-world__portal * { transition:none!important; } .street-world__portal:hover .street-world__paint,.street-world__portal:focus-visible .street-world__paint { transform:rotate(-8deg); } .street-world__portal svg { transform:none!important; } }

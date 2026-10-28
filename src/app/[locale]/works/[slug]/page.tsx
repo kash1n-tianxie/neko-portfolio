@@ -19,6 +19,7 @@ import { nyankoHomeGame } from '@/content/nyanko-home'
 import { parkMasterProject } from '@/content/park-master'
 import { memeClashGame } from '@/content/meme-clash'
 import { MemeClashExperience } from '@/components/works/meme-clash-experience'
+import { AnimatedWorkCover } from '@/components/works/animated-work-cover'
 import '@/components/works/park-master-feature.css'
 import '@/components/works/nyanko-home.css'
 
@@ -221,7 +222,14 @@ export default async function WorkPage({
             )}
 
             <div className="case-cover">
-              <picture>
+              {isMemeClash || isParkMaster || isNyankoHome ? <AnimatedWorkCover
+                src={work.coverGif}
+                fallback={work.thumbnail}
+                alt={`${work.title} — ${work.summary[locale]}`}
+                width={isMemeClash ? 960 : isParkMaster ? 944 : 1280}
+                height={isParkMaster ? 800 : 720}
+                sizes="(max-width: 1180px) 90vw, 1180px"
+              /> : <picture>
                 <source media="(prefers-reduced-motion: reduce)" srcSet={work.thumbnail} />
                 <img
                   src={work.coverGif ?? work.thumbnail}
@@ -230,8 +238,8 @@ export default async function WorkPage({
                   height={isMemeClash || isParkMaster || isNyankoHome || isPleaseSit ? 720 : isHyakki ? 900 : 800}
                   decoding="async"
                 />
-              </picture>
-              <span aria-hidden="true">{isMemeClash ? `ACTUAL GAME CAPTURE / v${memeClashGame.version}` : isParkMaster ? 'ACTUAL WEBSITE / INTERACTIVE PROPOSAL' : isNyankoHome ? `GAME SCREEN / v${nyankoHomeGame.version}` : isPleaseSit ? 'ACTUAL GAMEPLAY / v1.0.0' : isHyakki ? 'ACTUAL GAMEPLAY / v0.6.0' : isTamago ? 'ACTUAL GAMEPLAY / v4' : `PROJECT / ${work.year}`}</span>
+              </picture>}
+              <span aria-hidden="true">{work.coverCaption?.[locale] ?? (isPleaseSit ? `ACTUAL GAMEPLAY / v${pleaseSitGame.version}` : isHyakki ? 'ACTUAL GAMEPLAY / v0.6.0' : isTamago ? 'ACTUAL GAMEPLAY / v4' : `PROJECT / ${work.year}`)}</span>
             </div>
           </div>
         </header>

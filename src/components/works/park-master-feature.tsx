@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { AnimatedWorkCover } from './animated-work-cover'
 import { Link } from '@/i18n/navigation'
 import { parkMasterProject, parkMasterWork } from '@/content/park-master'
 import { ArrowUpRightIcon } from '@/components/ui/icons'
@@ -26,7 +26,7 @@ export function ParkMasterFeature({ locale, index = 3 }: { locale: 'ja' | 'en'; 
       </div>
       <div className="featured-work__visual">
         <Link href={`/works/${parkMasterProject.slug}`} className="park-master-feature__cover" aria-label={ja ? 'Park Master マップ拡張企画の作品紹介へ' : 'View the Park Master proposal case study'}>
-          <Image src={parkMasterWork.thumbnail} alt={ja ? 'マウスで小さな車を走らせ、氷と砂を切り替えられるWeb企画書の実際の画面' : 'Actual interactive proposal website with a pointer-following car and ice and sand controls'} width={1280} height={720} sizes="(max-width: 767px) 90vw, 55vw" />
+          <AnimatedWorkCover src={parkMasterWork.coverGif} fallback={parkMasterWork.thumbnail} alt={ja ? '氷上の線を描いて車を駐車するWeb試作の実演映像' : 'An actual web-prototype recording: draw a route across ice to park the car'} width={944} height={800} sizes="(max-width: 767px) 90vw, 55vw" />
         </Link>
         <p className="featured-work__visual-label"><span>ACTUAL WEBSITE / PLAYABLE MAP STUDIES</span><span>{ja ? '南極・砂漠・港・空島。動画、プレイアブル、PDFを公開。' : 'Ice, desert, harbor, and sky islands. Videos, prototypes, and a PDF.'}</span></p>
       </div>
